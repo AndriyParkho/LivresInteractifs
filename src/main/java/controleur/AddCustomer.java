@@ -55,19 +55,16 @@ public class AddCustomer extends HttpServlet {
         /* Mise à jour de la base de données */
         
         try (Connection c = ds.getConnection()) {
-        	System.out.println(nom);
-        	System.out.println(prenom);
-        	System.out.println(email);
-        	System.out.println(pass);
             PreparedStatement ps =
                 c.prepareStatement("INSERT INTO Utilisateur VALUES (?,?,?,?,?)");
-            ps.setInt(1, 1);
+            ps.setString(1, "idUtil_seq.nextval");
             ps.setString(2, nom);
             ps.setString(3, prenom);
             ps.setString(4, email);
             ps.setString(5, pass);
             ps.executeUpdate();
         } catch (SQLException sqle) {
+        	System.out.println(sqle.getMessage());
             return false;
         }
         return true;
