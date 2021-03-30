@@ -1,6 +1,6 @@
 CREATE SEQUENCE idUtil_seq;
 CREATE TABLE Utilisateur (
-       idUtil integer PRIMARY KEY,
+       idUtil INT DEFAULT idUtil_seq.nextval PRIMARY KEY,
        nom varchar(50) NOT NULL,
        prenom varchar(50) NOT NULL,
        email varchar(255) NOT NULL,
