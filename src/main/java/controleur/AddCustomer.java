@@ -50,10 +50,6 @@ public class AddCustomer extends HttpServlet {
         String pass = request.getParameter("password");
         
  /* Vérification des données */
-  
-        if (login == "" || pass == "" || nom == "" || prenom == "") {
-            return false;
-        }
  
         
         /* Mise à jour de la base de données */
