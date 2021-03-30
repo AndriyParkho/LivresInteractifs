@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Paragraphe {
 	private Histoire hist; // Ou int idHist ?
 	private int numParag;
+	private String titre;
 	private String texte;
 	private boolean valide;
 	private int nbChoix;

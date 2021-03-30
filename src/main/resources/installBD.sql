@@ -18,10 +18,11 @@ CREATE TABLE Histoire (
 CREATE TABLE Paragraphe (
        numParag integer NOT NULL,
        idHist integer NOT NULL REFERENCES Histoire(idHist) ON DELETE CASCADE, --la supression d'une histoire supprime ses parag
-       texte varchar(max) NOT NULL,
+       titre varchar(1000),
+       texte varchar(max),
        valide boolean DEFAULT false,
        nbChoix interger NOT NULL,
-       idWritter integer NOT NULL REFERENCES Utilisateur(idUtil),
+       idWritter integer REFERENCES Utilisateur(idUtil),
        CONSTRAINT pkParag PRIMARY KEY (numParag, idHist)
 );
 
