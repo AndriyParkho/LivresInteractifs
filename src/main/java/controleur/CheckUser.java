@@ -15,23 +15,28 @@ import javax.sql.DataSource;
 @WebServlet(name = "CheckUser", urlPatterns = {"/checkuser"})
 public class CheckUser extends HttpServlet {
 	
-	/*
-	@Resource(name = "jdbc/interactiveStory")
-    private DataSource ds;*/
 	
-	private boolean isLoginValid(String login, String pwd) throws SQLException{
-//        try (Connection conn = ds.getConnection()){
-//        	/* Un PreparedStatement évite les injections SQL */
-//            PreparedStatement s = conn.prepareStatement(
-//                "SELECT login FROM users WHERE login = ? AND password = ?"
-//            );
-//            s.setString(1, login);
-//            s.setString(2, pwd);
-//            ResultSet r = s.executeQuery();
-//            /* r.next() renvoie vrai si et seulement si la réponse contient au moins 1 ligne */
-//            return r.next();
-//        }
-		return true;
+	@Resource(name = "jdbc/projetWeb")
+    private DataSource ds;
+	
+	private boolean isLoginValid(String email, String pwd, HttpServletRequest request) throws SQLException{
+        try (Connection conn = ds.getConnection()){
+        	/* Un PreparedStatement évite les injections SQL */
+            PreparedStatement s = conn.prepareStatement(
+                "SELECT idUtil FROM Utilisateur WHERE email = ? AND password = ?"
+            );
+            s.setString(1, email);
+            s.setString(2, pwd);
+            ResultSet r = s.executeQuery();
+            if (r.next()) {
+            	HttpSession session = request.getSession();
+                session.setAttribute("idUtil", r.getInt(1));
+                return true;
+            }
+            else {
+            	return false;
+            }
+        }
     }
 	
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,22 +44,17 @@ public class CheckUser extends HttpServlet {
 
         /* Récupération des données de formulaire */
         request.setCharacterEncoding("UTF-8");
-        String login = request.getParameter("login");
+        String email = request.getParameter("email");
         String pass = request.getParameter("password");
         
         /* Vérification et traitement des données */
         boolean isValidAccount = true;
         try {
-        	if (login != null && pass != null && isLoginValid(login, pass)) {
-                HttpSession session = request.getSession();
-                session.setAttribute("utilisateur", login);
-                isValidAccount = true;
-            }
-            else {
+        	if (!(email != null && pass != null && isLoginValid(email, pass, request))) {
                 isValidAccount = false;
             }
         } catch (SQLException e) {
-        	//TODO
+        	isValidAccount = false;
         }
         
         /* Envoi de la réponse */

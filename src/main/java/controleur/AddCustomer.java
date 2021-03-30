@@ -38,32 +38,38 @@ public class AddCustomer extends HttpServlet {
         }
     }
     
-    //TODO
-    /*@Resource(name = "jdbc/interactiveStory")
-    private DataSource ds;*/
+    
+    @Resource(name = "jdbc/projetWeb")
+    private DataSource ds;
     
     private boolean traiteDonnees(HttpServletRequest request) {
 
     	String nom = request.getParameter("nom");
         String prenom = request.getParameter("prenom");
-        String login = request.getParameter("login");
+        String email = request.getParameter("email");
         String pass = request.getParameter("password");
         
  /* Vérification des données */
  
         
         /* Mise à jour de la base de données */
-        //TODO
-        /*
+        
         try (Connection c = ds.getConnection()) {
+        	System.out.println(nom);
+        	System.out.println(prenom);
+        	System.out.println(email);
+        	System.out.println(pass);
             PreparedStatement ps =
-                c.prepareStatement("INSERT INTO Users VALUES (?,?,?)");
-            ps.setString(1, login);
-            ps.setString(2, pass);
+                c.prepareStatement("INSERT INTO Utilisateur VALUES (?,?,?,?,?)");
+            ps.setInt(1, 1);
+            ps.setString(2, nom);
+            ps.setString(3, prenom);
+            ps.setString(4, email);
+            ps.setString(5, pass);
             ps.executeUpdate();
         } catch (SQLException sqle) {
-            //TODO
-        }*/
+            return false;
+        }
         return true;
         
     }
