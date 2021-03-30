@@ -16,18 +16,18 @@ CREATE TABLE Histoire (
 );
 
 CREATE TABLE Paragraphe (
-       numParag integer NOT NULL,
-       idHist integer NOT NULL REFERENCES Histoire(idHist) ON DELETE CASCADE, --la supression d'une histoire supprime ses parag
-       titre varchar(1000),
-       texte varchar(max),
-       valide boolean DEFAULT false,
-       nbChoix interger NOT NULL,
+       numParag integer NOT NULL,   
+       titre varchar2(1000),
+       texte varchar2(4000),
+       valide NUMBER(1,0) DEFAULT 0,
+       nbChoix integer NOT NULL,
        idWritter integer REFERENCES Utilisateur(idUtil),
-       CONSTRAINT pkParag PRIMARY KEY (numParag, idHist)
+       idHist integer NOT NULL REFERENCES Histoire (idHist) ON DELETE CASCADE,
+       constraint pkParag PRIMARY KEY (numParag, idHist)  
 );
 
 CREATE TABLE IsInvited (
-       idHist integer NOT NULL REFERENCES Histoire(idHist) ON DELETE CASCADE, --la supression d'une histoire supprime les invit
+       idHist integer NOT NULL REFERENCES Histoire(idHist) ON DELETE CASCADE,
        idUtil integer NOT NULL REFERENCES Utilisateur(idUtil),
        CONSTRAINT pkInvited PRIMARY KEY (idHist, idUtil)
 );
@@ -48,7 +48,7 @@ CREATE TABLE IsFollowing (
        numParagFils integer NOT NULL,
        CONSTRAINT fkFollowingPere FOREIGN KEY (idHistPere, numParagPere) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
        CONSTRAINT fkFollowingFils FOREIGN KEY (idHistFils, numParagFils) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
-       CONSTRAINT pkHasRead PRIMARY KEY (idHistPere, numParagPere, numChoix, idHistFils, numParagFils)
+       CONSTRAINT pkIsFollowing PRIMARY KEY (idHistPere, numParagPere, numChoix, idHistFils, numParagFils)
 );
 
 --INSERT INTO bibliographie (auteur, titre) VALUES
