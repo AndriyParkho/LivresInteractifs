@@ -11,6 +11,7 @@ CREATE SEQUENCE idHist_seq;
 CREATE TABLE Histoire (
        idHist integer DEFAULT idHist_seq.nextval PRIMARY KEY,
        titre varchar(1000) NOT NULL,
+       prive NUMBER(1,0) DEFAULT 0,
        datePubli date, -- Si Null donc histoire non publie
        idAuteur integer NOT NULL REFERENCES Utilisateur(idUtil)
 );
