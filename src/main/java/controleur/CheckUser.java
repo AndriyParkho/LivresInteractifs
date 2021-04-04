@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 public class CheckUser extends HttpServlet {
 	
 	
-	@Resource(name = "jdbc/projetWeb")
+    @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
 	
 	private boolean isLoginValid(String email, String pwd, HttpServletRequest request) throws SQLException{
