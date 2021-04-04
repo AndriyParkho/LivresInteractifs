@@ -16,6 +16,11 @@
 	     Email : <input type="text" name="email" required/><br>
 	     Mot de passe : <input type="password" name="password" required/><br>
 	    </p>
+	    <c:if test="${error}">
+	  	<p>
+	  	Erreur lors de la connexion, veuillez réessayer.
+	  	</p>
+	  </c:if>
 	    <input type="submit" name="Se connecter" />
 	    <input type="button"
 	    	   onclick="self.location.href='register.html'"
@@ -33,6 +38,11 @@
 		Email : <input type="text" name="email" required/> <br>
 		Mot de passe : <input type="password" name="password" required/> <br>
 		</p>
+		<c:if test="${error}">
+	  	<p>
+	  	Erreur lors de la création du compte: l'email est déjà utilisée.
+	  	</p>
+	  </c:if>
 		<input type="submit" value="Créer" />
 	</form>
 </c:if>
