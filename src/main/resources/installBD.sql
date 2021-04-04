@@ -21,7 +21,7 @@ CREATE TABLE Paragraphe (
        titre varchar2(1000),
        texte varchar2(4000),
        valide NUMBER(1,0) DEFAULT 0,
-       nbChoix integer NOT NULL,
+       nbChoix integer,
        idWritter integer REFERENCES Utilisateur(idUtil),
        idHist integer NOT NULL REFERENCES Histoire (idHist) ON DELETE CASCADE,
        constraint pkParag PRIMARY KEY (numParag, idHist)  
@@ -51,10 +51,3 @@ CREATE TABLE IsFollowing (
        CONSTRAINT fkFollowingFils FOREIGN KEY (idHistFils, numParagFils) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
        CONSTRAINT pkIsFollowing PRIMARY KEY (idHistPere, numParagPere, numChoix, idHistFils, numParagFils)
 );
-
---INSERT INTO bibliographie (auteur, titre) VALUES
---   ('Jules Verne','Voyage au centre de la terre');
---INSERT INTO bibliographie (auteur, titre) VALUES
---   ('Arnaldur Indriðason','L’homme du lac');
---INSERT INTO bibliographie (auteur, titre) VALUES
---   ('Victor Hugo','Les misérables');

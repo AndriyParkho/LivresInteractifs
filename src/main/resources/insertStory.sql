@@ -2,7 +2,7 @@ INSERT INTO Utilisateur (nom, prenom, email, password) VALUES
 	('Parkhomenko', 'Andriy', 'andriy.parkhomenko@grenoble-inp.org', 'code');
 
 INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
-	('Random latin', 1, 03/04/2020);
+	('Random latin', 1, TO_DATE('03/04/2020', 'MM/DD/YYYY'));
 INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
 	(1, 'latin first', 'Dein Syria per speciosam interpatet diffusa planitiem. hanc nobilitat Antiochia, 
 						mundo cognita civitas, cui non certaverit alia advecticiis ita adfluere copiis et 
@@ -53,7 +53,7 @@ INSERT INTO IsFollowing(idhistpere, numparagpere, numchoix, idhistfils, numparag
 
 						
 INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
-	('Super histoire latine', 1, 03/04/2020);
+	('Super histoire latine', 1, TO_DATE('03/04/2020', 'MM/DD/YYYY'));
 INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
 	(1, 'latin encore', 'Eodem tempore Serenianus ex duce, cuius ignavia populatam in 
 						Phoenice Celsen ante rettulimus, pulsatae maiestatis imperii reus 
@@ -63,7 +63,7 @@ INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUE
 						portenderetur imperium, ut cupiebat, et cunctum..',
 						3, 1, 2);
 INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
-	('Très grand latin', 1, 03/04/2020);
+	('Très grand latin', 1, TO_DATE('03/04/2020', 'MM/DD/YYYY'));
 INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
 	(1, 'latin encore encore', 'Quam ob rem vita quidem talis fuit vel fortuna vel gloria, 
 								ut nihil posset accedere, moriendi autem sensum celeritas abstulit; 
