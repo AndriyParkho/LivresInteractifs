@@ -6,7 +6,7 @@
     <title>InteractiveStory</title>
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
-  <body>
+  <body>  
      <c:if test="${!isConnected}">
      	<ul>
 		  <li><a href="accueil?action=bouton&bouton=login" class="active">Se connecter</a></li>

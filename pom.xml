@@ -33,11 +33,11 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-	   <groupId>jstl</groupId>
-	   <artifactId>jstl</artifactId>
-	   <version>1.2</version>
-	   <type>jar</type>
-	</dependency>
+      <groupId>jstl</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+      <type>jar</type>
+    </dependency>
   </dependencies>
 
   <build>
