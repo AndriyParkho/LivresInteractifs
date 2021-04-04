@@ -57,18 +57,19 @@ public class CreateStory extends HttpServlet {
         
         try(Connection c = ds.getConnection()){
             
-            PreparedStatement ps_histoire = c.prepareStatement("INSERT INTO Histoire (titre, datePubli, idAuteur) VALUES ( ?, NULL, ?)");
+            PreparedStatement ps_histoire = c.prepareStatement("INSERT INTO Histoire (idHist, titre, datePubli, idAuteur) VALUES ( ?, ?, NULL, ?)");
             PreparedStatement ps_paragraphe = c.prepareStatement("INSERT INTO Paragraphe (numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            PreparedStatement ps_numero_histoire = c.prepareStatement("SELECT idHist_seq.CURRVAL FROM DUAL");
+            PreparedStatement ps_numero_histoire = c.prepareStatement("SELECT idHist_seq.nextval FROM DUAL");
             int numero_histoire = 1;
             
             try{
-                numero_histoire = ps_numero_histoire.getResultSet().next() + 1;
+                numero_histoire = ps_numero_histoire.getResultSet().getInt(1) + 1;
             }catch(SQLException sqle){
                 System.out.println(sqle.getMessage());
             } 
-            ps_histoire.setString(1, "Titre");
-            ps_histoire.setInt(2, 1); //par défaut utilisateur 1, a changer futurement
+            ps_histoire.setInt(1, numero_histoire);
+            ps_histoire.setString(2, "Titre");
+            ps_histoire.setInt(3, 1); //par défaut utilisateur 1, a changer futurement
             
             ps_paragraphe.setInt(1, 1);
             ps_paragraphe.setString(2, titreParagraphe);
