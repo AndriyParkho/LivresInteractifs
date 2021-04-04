@@ -54,7 +54,16 @@
 	 </c:if>
 	 
      <c:if test="${empty param.bouton}">
-     		
+     	<table>
+            <tr>
+                <th>Titre</th>
+            </tr>
+            <c:forEach items="${histoires}" var="histoire">
+                <tr>
+                    <td><a href="read_story?idHist=${histoire.id}">${histoire.titre}</a></td>
+                </tr>
+            </c:forEach>
+        </table>
 	 </c:if>
   </body>
 </html>

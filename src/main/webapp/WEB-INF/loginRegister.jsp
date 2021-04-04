@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
 <body>
-<c:if test="${param.bouton == 'login'}">
+<c:if test="${login}">
 	<h2>Connexion</h2>
 	<form method="post" action="login" accept-charset="UTF-8">
 	    <p>
@@ -22,7 +22,7 @@
 	       	   value="S'enregister">
 	  </form>
 </c:if>
-<c:if test="${param.bouton == 'register'}">
+<c:if test="${!login}">
 	<h1>Création d'un nouveau compte</h1>
 	<form action="register" method="post" accept-charset="UTF-8">
 		<p>

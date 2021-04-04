@@ -6,15 +6,23 @@ public class Histoire {
 	private int id;
 	private String titre;
 	private Date datePubli;
-	private Utilisateur auteur; // Ou juste int idAuteur ?
+	private int idAuteur;
 	private Paragraphe firstParag; // Ou un arbre de paragraphe qui constitue toute l'histoire ?
 	
-	public Histoire(int id, String titre, Date datePubli, Utilisateur auteur, Paragraphe firstParag) {
+	public Histoire(int id, String titre, Date datePubli, int idAuteur) {
 		super();
 		this.id = id;
 		this.titre = titre;
 		this.datePubli = datePubli;
-		this.auteur = auteur;
+		this.idAuteur = idAuteur;
+	}
+	
+	public Histoire(int id, String titre, Date datePubli, int idAuteur, Paragraphe firstParag) {
+		super();
+		this.id = id;
+		this.titre = titre;
+		this.datePubli = datePubli;
+		this.idAuteur = idAuteur;
 		this.firstParag = firstParag;
 	}
 	
@@ -27,11 +35,15 @@ public class Histoire {
 	public Date getDatePubli() {
 		return datePubli;
 	}
-	public Utilisateur getAuteur() {
-		return auteur;
+	public int getIdAuteur() {
+		return idAuteur;
 	}
 	public Paragraphe getFirstParag() {
 		return firstParag;
+	}
+
+	public void setFirstParag(Paragraphe firstParag) {
+		this.firstParag = firstParag;
 	}
 	
 	

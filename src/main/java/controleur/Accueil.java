@@ -20,8 +20,8 @@ import modele.Histoire;
  * Le contrôleur de la page d'accueil
  */
 @WebServlet(name = "Accueil", urlPatterns = {"/accueil"})
-public class Accueil extends HttpServlet {
-
+public class Accueil extends HttpServlet { 
+	
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
 
@@ -40,7 +40,7 @@ public class Accueil extends HttpServlet {
     }
   
     /**
-     * Actions possibles en GET : afficher (correspond à l’absence du param), getOuvrage.
+     * Actions possibles en GET : afficher (correspond à l’absence du param), getHistoire.
      */
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
@@ -55,10 +55,6 @@ public class Accueil extends HttpServlet {
                 actionAfficher(request, response, histoireDAO);
             } else if (action.equals("bouton")){
                 actionBouton(request, response);
-            } else if (action.equals("getHistoire")){
-            	actionGetHistoire(request, response, histoireDAO);
-            } else if (action.equals("logout")){
-            	actionGetHistoire(request, response, histoireDAO);
             } else {
                 invalidParameters(request, response);
             }
@@ -69,7 +65,7 @@ public class Accueil extends HttpServlet {
 
     /**
      * 
-     * Affiche la page d’accueil avec la liste de tous les ouvrages. 
+     * Affiche la page d’accueil avec la liste de toutes les histoires. 
      */
     
     private void actionAfficher(HttpServletRequest request, 
@@ -85,18 +81,12 @@ public class Accueil extends HttpServlet {
             	isConnected = true;
             }
         }
-//        List<Histoire> histoires = histoireDAO.getListeHistoires();
+        List<Histoire> histoires = histoireDAO.getListeHistoires();
         
         request.setAttribute("isConnected", isConnected);
-//        request.setAttribute("histoires", histoires);
+        request.setAttribute("histoires", histoires);
         
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
-    }
-    
-    private void actionGetHistoire(HttpServletRequest request, 
-            HttpServletResponse response, 
-            HistoireDAO histoireDAO) throws ServletException, IOException {
-    	System.err.println("Action non encore implémentée");
     }
     
     /**
@@ -108,13 +98,13 @@ public class Accueil extends HttpServlet {
     	
     	switch(bouton) {
     	case "login":
-    		request.getRequestDispatcher("/login").forward(request, response);
+    		response.sendRedirect("login");
     		break;
     	case "register":
-    		request.getRequestDispatcher("/register").forward(request, response);
+    		response.sendRedirect("register");
     		break;
     	case "storyToRead":
-    		response.sendRedirect("/accueil");
+    		response.sendRedirect("accueil");
     		break;
     	case "storyToWrite":
             System.err.println("Action non encore implémentée");
@@ -128,7 +118,7 @@ public class Accueil extends HttpServlet {
     	case "logout":
     		HttpSession session = request.getSession();
             session.invalidate();
-            response.sendRedirect("/accueil");
+            response.sendRedirect("accueil");
     		break;
     	}
     }

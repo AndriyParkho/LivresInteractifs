@@ -1,6 +1,7 @@
 package controleur;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -12,13 +13,18 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import dao.DAOException;
+import dao.HistoireDAO;
+import modele.Histoire;
+import modele.Paragraphe;
 
 /**
  * Le contrôleur de la page d'accueil
  */
-@WebServlet(name = "LoginRegister", urlPatterns = {"/login", "/register"})
-public class LoginRegister extends HttpServlet {
+@WebServlet(name = "ReadStory", urlPatterns = {"/read_story"})
+public class ReadStory extends HttpServlet {
 
+	private Paragraphe currentParag;  
+	
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
 
@@ -42,25 +48,14 @@ public class LoginRegister extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-    	
-    	HttpSession sess = request.getSession(false);
-    	if (sess != null) {
-            Integer id = (Integer) sess.getAttribute("idUtil");
-            if (id != null) {
-            	response.sendRedirect("accueil");
-            	return ;
-            }
+
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
+        HistoireDAO histoireDAO = new HistoireDAO(ds);
+
+        try {
+        } catch (DAOException e) {
+            erreurBD(request, response, e);
         }
-    	if(request.getRequestURI().equals("/projetWeb/login")) request.setAttribute("login", true);
-    	else request.setAttribute("login", false);
-        request.getRequestDispatcher("/WEB-INF/loginRegister.jsp").forward(request, response);
     }
-
-	@Override
-	protected void doPost(HttpServletRequest arg0, HttpServletResponse arg1) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.doPost(arg0, arg1);
-	}
-
-    
 }

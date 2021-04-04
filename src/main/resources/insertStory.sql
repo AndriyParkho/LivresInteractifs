@@ -1,15 +1,59 @@
 INSERT INTO Utilisateur (nom, prenom, email, password) VALUES
 	('Parkhomenko', 'Andriy', 'andriy.parkhomenko@grenoble-inp.org', 'code');
 
-INSERT INTO Histoire (titre, idauteur) VALUES
-	('Random latin', 1);
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Random latin', 1, 03/04/2020);
 INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
 	(1, 'latin first', 'Dein Syria per speciosam interpatet diffusa planitiem. hanc nobilitat Antiochia, 
 						mundo cognita civitas, cui non certaverit alia advecticiis ita adfluere copiis et 
 						internis, et Laodicia et Apamia itidemque Seleucia iam inde a primis auspiciis florentissimae.',
 						2, 1, 1);
-INSERT INTO Histoire (titre, idauteur) VALUES
-	('Super histoire latine', 1);
+INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
+	(2, 'latin second', 'Nec piget dicere avide magis hanc insulam populum Romanum invasisse quam iuste. 
+						Ptolomaeo enim rege foederato nobis et socio ob aerarii nostri angustias iusso sine 
+						ulla culpa proscribi ideoque hausto veneno voluntaria morte deleto et tributaria facta 
+						est et velut hostiles eius exuviae classi inpositae in urbem advectae sunt per Catonem, 
+						nunc repetetur ordo gestorum.',
+						2, 1, 1);
+INSERT INTO IsFollowing(idhistpere, numparagpere, numchoix, idhistfils, numparagfils) VALUES
+	(1, 1, 1, 1, 2);
+INSERT INTO Paragraphe(numparag, titre, idhist) VALUES
+	(3, 'latin trois', 1);
+INSERT INTO IsFollowing(idhistpere, numparagpere, numchoix, idhistfils, numparagfils) VALUES
+	(1, 1, 2, 1, 3);
+INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
+	(4, 'latin quatre', 'Procedente igitur mox tempore cum adventicium nihil inveniretur, relicta ora maritima 
+						in Lycaoniam adnexam Isauriae se contulerunt ibique densis intersaepientes itinera praetenturis 
+						provincialium et viatorum opibus pascebantur.',
+						2, 1, 1);
+INSERT INTO IsFollowing(idhistpere, numparagpere, numchoix, idhistfils, numparagfils) VALUES
+	(1, 2, 1, 1, 4);
+INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
+	(5, 'latin cinq', 'Quo cognito Constantius ultra mortalem modum exarsit ac nequo casu idem Gallus 
+						de futuris incertus agitare quaedam conducentia saluti suae per itinera conaretur, remoti 
+						sunt omnes de industria milites agentes in civitatibus perviis.',
+						1, 1, 1);
+INSERT INTO IsFollowing(idhistpere, numparagpere, numchoix, idhistfils, numparagfils) VALUES
+	(1, 2, 2, 1, 5);
+INSERT INTO Paragraphe(numparag, titre, idhist) VALUES
+	(6, 'latin six', 1);
+INSERT INTO IsFollowing(idhistpere, numparagpere, numchoix, idhistfils, numparagfils) VALUES
+	(1, 5, 1, 1, 6);
+INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
+	(7, 'latin sept', 'Saraceni tamen nec amici nobis umquam nec hostes optandi, ultro citroque discursantes 
+						quicquid inveniri poterat momento temporis parvi vastabant milvorum rapacium similes, qui si 
+						praedam dispexerint celsius, volatu rapiunt celeri, aut nisi impetraverint, non inmorantur.',
+						0, 1, 1);
+INSERT INTO IsFollowing(idhistpere, numparagpere, numchoix, idhistfils, numparagfils) VALUES
+	(1, 4, 1, 1, 7);
+INSERT INTO Paragraphe(numparag, titre, idhist) VALUES
+	(8, 'latin huit', 1);
+INSERT INTO IsFollowing(idhistpere, numparagpere, numchoix, idhistfils, numparagfils) VALUES
+	(1, 4, 1, 1, 8);
+
+						
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Super histoire latine', 1, 03/04/2020);
 INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
 	(1, 'latin encore', 'Eodem tempore Serenianus ex duce, cuius ignavia populatam in 
 						Phoenice Celsen ante rettulimus, pulsatae maiestatis imperii reus 
@@ -18,8 +62,8 @@ INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUE
 						vetitis artibus ad templum misisse fatidicum, quaeritatum expresse an ei firmum 
 						portenderetur imperium, ut cupiebat, et cunctum..',
 						3, 1, 2);
-INSERT INTO Histoire (titre, idauteur) VALUES
-	('Très grand latin', 1);
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Très grand latin', 1, 03/04/2020);
 INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUES
 	(1, 'latin encore encore', 'Quam ob rem vita quidem talis fuit vel fortuna vel gloria, 
 								ut nihil posset accedere, moriendi autem sensum celeritas abstulit; 
