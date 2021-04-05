@@ -63,7 +63,7 @@ public class CreateStory extends HttpServlet {
             int numero_histoire = 1;
             
             try{
-                numero_histoire = ps_numero_histoire.getResultSet().getInt(1) + 1;
+                numero_histoire = ps_numero_histoire.getResultSet().getInt(1);
             }catch(SQLException sqle){
                 System.out.println(sqle.getMessage());
             } 
@@ -77,7 +77,6 @@ public class CreateStory extends HttpServlet {
             ps_paragraphe.setInt(4, 0);
             ps_paragraphe.setInt(5, nb_choix);
             ps_paragraphe.setInt(6, 1); //par défaut je mets 1, avant qu'il y ait plus d'utilisateur
-            System.out.println("Numero d'histoire : "+numero_histoire);
             ps_paragraphe.setInt(7, numero_histoire);
             
             
@@ -102,7 +101,7 @@ public class CreateStory extends HttpServlet {
             if(session == null){
                 response.sendRedirect("index.html");
             }
-    }
+        }
     */
-    
-}
+        
+    }
