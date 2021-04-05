@@ -7,14 +7,14 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>  
-     <c:if test="${!isConnected}">
+     <c:if test="${user == null}">
      	<ul>
 		  <li><a href="accueil?action=bouton&bouton=login" class="active">Se connecter</a></li>
 		  <li><a href="accueil?action=bouton&bouton=register">S'enregistrer</a></li>
 		  <li><a href="accueil?action=bouton&bouton=historique">Historique</a></li>
 		</ul> 
      </c:if>
-     <c:if test="${isConnected}">
+     <c:if test="${user != null}">
      	<ul>
 	      <li><a href="accueil?action=bouton&bouton=storyToRead" class="active">Histoire à lire</a></li>
 		  <li><a href="accueil?action=bouton&bouton=storyToWrite">Histoire à écrire</a></li>
