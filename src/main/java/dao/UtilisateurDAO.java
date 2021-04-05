@@ -24,7 +24,6 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
             s.setString(2, password);
             
             ResultSet r = s.executeQuery();
-            System.out.println("bb");
             if (r.next()) {
                 int id = r.getInt("idUtil");
                 String nom = r.getString("nom");
