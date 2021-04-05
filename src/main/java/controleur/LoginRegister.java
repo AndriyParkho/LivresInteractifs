@@ -48,7 +48,7 @@ public class LoginRegister extends HttpServlet {
     	
     	HttpSession sess = request.getSession(false);
     	if (sess != null) {
-            Integer id = (Integer) sess.getAttribute("idUtil");
+            Utilisateur id = (Utilisateur) sess.getAttribute("user");
             if (id != null) {
             	response.sendRedirect("accueil");
             	return ;
@@ -71,7 +71,6 @@ public class LoginRegister extends HttpServlet {
                 if (user != null) {
                 	HttpSession session = request.getSession();
                     session.setAttribute("user", user);
-                    request.setAttribute("isConnected", true);
                     request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
                 }
                 else {
@@ -93,7 +92,6 @@ public class LoginRegister extends HttpServlet {
 	        String pass = request.getParameter("password");
             boolean isCreated = userDao.createUser(nom, prenom, email, pass);
             if (isCreated) {
-            	request.setAttribute("isConnected", false);
                 request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
             }
             else {

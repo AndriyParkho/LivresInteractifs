@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 import dao.DAOException;
 import dao.HistoireDAO;
 import modele.Histoire;
+import modele.Utilisateur;
 
 /**
  * Le contrôleur de la page d'accueil
@@ -72,18 +73,9 @@ public class Accueil extends HttpServlet {
             HttpServletResponse response, 
             HistoireDAO histoireDAO) throws ServletException, IOException {
     	
-    	/* On vérifie si l'utilisateur est connecté*/
-    	HttpSession sess = request.getSession(false);       
-    	boolean isConnected = false;
-        if (sess != null) {
-            Integer id = (Integer) sess.getAttribute("idUtil");
-            if (id != null) {
-            	isConnected = true;
-            }
-        }
+    	
         List<Histoire> histoires = histoireDAO.getListeHistoires();
         
-        request.setAttribute("isConnected", isConnected);
         request.setAttribute("histoires", histoires);
         
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
