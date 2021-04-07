@@ -71,7 +71,8 @@ public class LoginRegister extends HttpServlet {
                 if (user != null) {
                 	HttpSession session = request.getSession();
                     session.setAttribute("user", user);
-                    response.sendRedirect("/WEB-INF/accueil.jsp");
+                    request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+
                 }
                 else {
                 	request.setAttribute("error", true);

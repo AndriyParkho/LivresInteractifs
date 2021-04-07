@@ -86,7 +86,9 @@ public class Accueil extends HttpServlet {
     	
     	HistoireDAO histoireDAO = new HistoireDAO(ds);
     	
-        List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire();
+    	HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+        List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire(user.getId());
         
         request.setAttribute("histoires", histoires);
         
@@ -121,7 +123,7 @@ public class Accueil extends HttpServlet {
     	case "logout":
     		HttpSession session = request.getSession();
             session.invalidate();
-            response.sendRedirect("accueil");
+            request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     		break;
     	}
     }
