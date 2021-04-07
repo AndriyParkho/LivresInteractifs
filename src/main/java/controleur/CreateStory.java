@@ -31,7 +31,7 @@ public class CreateStory extends HttpServlet {
         
         /* Envoi de la réponse */
         response.setContentType("text/html;charset=UTF-8");
-        response.sendRedirect("homeConnected.html"); 
+        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
     
     @Resource(name = "jdbc/projetWeb")
@@ -51,7 +51,8 @@ public class CreateStory extends HttpServlet {
         }
             
         String[] auteurs = request.getParameterValues("auteurs");
-        String titreParagraphe = request.getParameter("paragraphe");
+        String title = request.getParameter("title");
+        String titreParagraphe = request.getParameter("titreParagraphe");
         String paragraphe = request.getParameter("story");
         int nb_choix = Integer.parseInt(request.getParameter("nbChoix"));
         
@@ -63,12 +64,15 @@ public class CreateStory extends HttpServlet {
             int numero_histoire = 1;
             
             try{
-                numero_histoire = ps_numero_histoire.getResultSet().getInt(1);
+                ResultSet result_set = ps_numero_histoire.executeQuery();
+                while(result_set.next()){
+                    numero_histoire = result_set.getInt(1);
+                }
             }catch(SQLException sqle){
                 System.out.println(sqle.getMessage());
             } 
             ps_histoire.setInt(1, numero_histoire);
-            ps_histoire.setString(2, "Titre");
+            ps_histoire.setString(2, title);
             ps_histoire.setInt(3, 1); //par défaut utilisateur 1, a changer futurement
             
             ps_paragraphe.setInt(1, 1);
@@ -86,7 +90,6 @@ public class CreateStory extends HttpServlet {
             
         }catch(SQLException sqle){
             System.out.println(sqle.getMessage());
-            System.out.println("Total");
             return false;
         }
         
