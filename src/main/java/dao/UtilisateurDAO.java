@@ -15,7 +15,7 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
 		super(ds);
 	}
 	
-	public Utilisateur getUser(String email, String password) throws SQLException{
+	public Utilisateur getUser(String email, String password){
 		try (Connection conn = dataSource.getConnection()){
             PreparedStatement s = conn.prepareStatement(
                 "SELECT idUtil, nom, prenom FROM Utilisateur WHERE email = ? AND password = ?"
@@ -35,6 +35,8 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
             else {
             	return null;
             }
+        } catch (SQLException e) {
+        	throw new DAOException("Erreur BD" + e.getMessage(), e);
         }
 	}
 	

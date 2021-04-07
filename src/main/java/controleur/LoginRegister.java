@@ -71,7 +71,7 @@ public class LoginRegister extends HttpServlet {
                 if (user != null) {
                 	HttpSession session = request.getSession();
                     session.setAttribute("user", user);
-                    request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+                    response.sendRedirect("/WEB-INF/accueil.jsp");
                 }
                 else {
                 	request.setAttribute("error", true);
@@ -79,10 +79,8 @@ public class LoginRegister extends HttpServlet {
                 	request.getRequestDispatcher("/WEB-INF/loginRegister.jsp").forward(request, response);
                 }
 	            
-	        } catch (SQLException e) {
-	        	e.printStackTrace(); // permet d’avoir le détail de l’erreur dans catalina.out
-	            request.setAttribute("erreurMessage", e.getMessage());
-	            request.getRequestDispatcher("/WEB-INF/bdErreur.jsp").forward(request, response);
+	        } catch (DAOException e) {
+	        	erreurBD(request, response, e);
 	        }
 		}
 		else {
