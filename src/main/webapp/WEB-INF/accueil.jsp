@@ -21,7 +21,7 @@
 		  <li><a href="accueil?action=bouton&bouton=storyToWrite">Histoire à écrire</a></li>
 		  <li><a href="accueil?action=bouton&bouton=createStory" class="active">Créer une histoire</a></li>
 		  <li><a href="accueil?action=bouton&bouton=historique">Historique</a></li>
-		  <li style="float:right"><a href="controleur?action=bouton&bouton=logout">Se déconnecter</a></li>
+		  <li style="float:right"><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
 		  <form method="post" action="createStory" accept-charset="UTF-8">
 		    <p>
@@ -48,7 +48,7 @@
 			  <li><a href="accueil?action=bouton&bouton=storyToWrite" class="active">Histoire à écrire</a></li>
 			  <li><a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a></li>
 			  <li><a href="accueil?action=bouton&bouton=historique">Historique</a></li>
-			  <li style="float:right"><a href="controleur?action=bouton&bouton=logout">Se déconnecter</a></li>
+			  <li style="float:right"><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 			</ul>
 		  	<table>
             <tr>
@@ -70,7 +70,7 @@
 			  <li><a href="accueil?action=bouton&bouton=storyToWrite">Histoire à écrire</a></li>
 			  <li><a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a></li>
 			  <li><a href="accueil?action=bouton&bouton=historique" class="active">Historique</a></li>
-			  <li style="float:right"><a href="controleur?action=bouton&bouton=logout">Se déconnecter</a></li>
+			  <li style="float:right"><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
 	 </c:if>
 	 
@@ -80,7 +80,7 @@
 			  <li><a href="accueil?action=bouton&bouton=storyToWrite">Histoire à écrire</a></li>
 			  <li><a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a></li>
 			  <li><a href="accueil?action=bouton&bouton=historique">Historique</a></li>
-			  <li style="float:right"><a href="controleur?action=bouton&bouton=logout">Se déconnecter</a></li>
+			  <li style="float:right"><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
      	<table>
             <tr>
