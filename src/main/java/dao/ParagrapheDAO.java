@@ -34,21 +34,27 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		return result;
 	}
 	
-	public List<Paragraphe> getFollowingParag(int idHist, int numParag) {
-		List<Paragraphe> result = new ArrayList<Paragraphe>();
-//        try (
-//	     Connection conn = getConn();
-//	     Statement st = conn.createStatement();
-//	     ) {
-//            ResultSet rs = st.executeQuery("SELECT * FROM histoire WHERE datePubli IS NOT NULL");
-//            while (rs.next()) {
-//                Histoire histoire =
-//                    new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
-//                result.add(histoire);
-//            }
-//        } catch (SQLException e) {
-//            throw new DAOException("Erreur BD " + e.getMessage(), e);
-//		}
-		return result;
+	public boolean setFollowingParag(Paragraphe parag, Connection conn) {
+		if(parag.getNbChoix() == 0) {
+			return true;
+		} else {
+			try (
+		     Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		     ) {
+	            ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe JOIN "
+	            		+ "isfollowing ON idhistfils = idhist AND numparagfils = numparag WHERE idhistpere = " + parag.getIdHist() + 
+	            		" AND numparagpere = " + parag.getNumParag()  + "AND texte IS NOT NULL AND valide = 1");
+	            if(!rs.next()) return false;
+	            rs.beforeFirst();
+	            while (rs.next()) {
+	                Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), rs.getString("texte"), rs.getInt("nbchoix"));
+	                if(this.setFollowingParag(childParag, conn)) parag.addParagSuiv(childParag);
+	            }
+	            if(parag.getParagSuiv().isEmpty()) return false;
+	            else return true;
+	        } catch (SQLException e) {
+	            throw new DAOException("Erreur BD " + e.getMessage(), e);
+			}
+		}
 	}
 }

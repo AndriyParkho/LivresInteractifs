@@ -41,7 +41,7 @@ public class Accueil extends HttpServlet {
     }
   
     /**
-     * Actions possibles en GET : afficher (correspond à l’absence du param), getHistoire.
+     * Actions possibles en GET : afficher (correspond à l’absence du param).
      */
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)

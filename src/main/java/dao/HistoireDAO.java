@@ -43,9 +43,13 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     public Paragraphe getHistoireTree(int idHist) {
     	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(super.dataSource);
     	Paragraphe firstParag = paragrapheDAO.getParagraphe(idHist, 1);
-    	
-    	
-    	
+    	try (
+		     Connection conn = getConn();
+		     ) {
+    			paragrapheDAO.setFollowingParag(firstParag, conn);    	
+	        } catch (SQLException e) {
+	            throw new DAOException("Erreur BD " + e.getMessage(), e);
+			}
     	return firstParag;
     }
 }
