@@ -81,6 +81,17 @@ public class Accueil extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
     
+    private void actionAfficherHistoireAEcrire(HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {
+    	
+    	HistoireDAO histoireDAO = new HistoireDAO(ds);
+    	
+        List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire();
+        
+        request.setAttribute("histoires", histoires);
+        
+        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
     /**
      * 
      */
@@ -99,7 +110,7 @@ public class Accueil extends HttpServlet {
     		response.sendRedirect("accueil");
     		break;
     	case "storyToWrite":
-            System.err.println("Action non encore implémentée");
+    		actionAfficherHistoireAEcrire(request, response);
     		break;
     	case "createStory":
     		request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
