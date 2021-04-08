@@ -7,6 +7,31 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
+  <script type="text/javascript">
+ 
+    function activeInvite(){
+ 
+        if(document.getElementById('buttonPublic').checked){
+ 
+            document.getElementById('listAuthors').disabled = 'disabled';
+            document.getElementById('listAuthors').selectedIndex = -1;
+ 
+        }
+ 
+        else{
+ 
+            document.getElementById('listAuthors').disabled = '';
+ 
+        }
+ 
+    }
+    
+    function EraseSelect(){
+            document.getElementById('listAuthors').selectedIndex = -1;
+    }
+ 
+</script>
+
      <c:if test="${user == null}">
      	<ul>
 		  <li><a href="accueil?action=bouton&bouton=login">Se connecter</a></li>
@@ -28,16 +53,15 @@
                         <br>
                         <br>
 		     Nom d'histoire <input type="text" name="title"/><br>
-		     Confidentialité de l'histoire : <label><input type="radio" name="confident" value="0" />Publique</label>
-			   								 <label><input type="radio" name="confident" value="1" />Privée</label> <br>
+		     Confidentialité de l'histoire : <label><input type="radio" onclick="activeInvite();" name="confident" checked="checked" id="buttonPublic"/>Publique</label>
+			   								 <label><input type="radio" onclick="activeInvite();" name="confident"/>Privée</label> <br>
 			Personnes invitées pour l'écriture
-			<select name="auteurs" multiple size="4">
-		      <option value="Chien">Chien</option>
-		      <option value="chat">Chat</option>
-		      <option value="perroquet">Perroquet</option>
-		      <option value="macaw">Macaw</option>
-		      <option value="albatros">Albatros</option>
-			</select> <br>
+			<select name="auteurs"  id="listAuthors" multiple disabled="disabled" size=2>
+				<c:forEach items="${user}" var="user">
+	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
+	            </c:forEach>
+			</select> 
+			 <input type="button" value="Effacer la sélection" onclick="EraseSelect()"> <br>
 			  Nom du premier paragraphe <input type="text" name="titreParagraphe"/><br>
 			  Premier paragraphe<TEXTAREA name="story" rows=4 cols=80></TEXTAREA><br>
                           Nombre de choix <input type="number" name="nbChoix" min="0" max="100"><br>

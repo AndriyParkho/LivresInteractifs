@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
+import modele.Histoire;
 import modele.Utilisateur;
 
 public class UtilisateurDAO extends AbstractDataBaseDAO {
@@ -54,6 +58,25 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
             return false;
         }
 
+	}
+	
+	public List<Utilisateur> getUserExceptMe(int userId) {
+		List<Utilisateur> result = new ArrayList<Utilisateur>();
+		try (Connection conn = dataSource.getConnection()){
+            PreparedStatement s = conn.prepareStatement(
+                "SELECT idUtil, nom, prenom, email, password FROM Utilisateur WHERE idUtil != ?"
+            );
+            s.setInt(1, userId);
+            
+            ResultSet r = s.executeQuery();
+            while (r.next()) {
+            	Utilisateur user = new Utilisateur(r.getInt("idUtil"), r.getString("nom"), r.getString("prenom"), r.getString("email"), r.getString("password"));
+                result.add(user);
+            }
+        } catch (SQLException e) {
+        	throw new DAOException("Erreur BD" + e.getMessage(), e);
+        }
+		return result;
 	}
 	
 
