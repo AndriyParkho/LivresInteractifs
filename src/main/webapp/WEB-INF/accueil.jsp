@@ -25,6 +25,8 @@
 		</ul>
 		  <form method="post" action="createStory" accept-charset="UTF-8">
 		    <p>
+                        <br>
+                        <br>
 		     Nom d'histoire <input type="text" name="title"/><br>
 		     Confidentialité de l'histoire : <label><input type="radio" name="confident" value="0" />Publique</label>
 			   								 <label><input type="radio" name="confident" value="1" />Privée</label> <br>
