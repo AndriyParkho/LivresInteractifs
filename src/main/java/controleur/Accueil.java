@@ -120,7 +120,7 @@ public class Accueil extends HttpServlet {
     	case "logout":
     		HttpSession session = request.getSession();
             session.invalidate();
-            request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+            response.sendRedirect("accueil");
     		break;
     	}
     }

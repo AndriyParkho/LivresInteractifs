@@ -25,6 +25,8 @@
 		  <c:if test="${param.bouton == 'createStory'}">
 		  <form method="post" action="createStory" accept-charset="UTF-8">
 		    <p>
+                        <br>
+                        <br>
 		     Nom d'histoire <input type="text" name="title"/><br>
 		     Confidentialité de l'histoire : <label><input type="radio" name="confident" value="0" />Publique</label>
 			   								 <label><input type="radio" name="confident" value="1" />Privée</label> <br>
@@ -36,8 +38,9 @@
 		      <option value="macaw">Macaw</option>
 		      <option value="albatros">Albatros</option>
 			</select> <br>
-			  Nom du premier paragraphe <input type="text" name="paragraphe"/><br>
-			  Premier paragraphe<TEXTAREA name="nom" rows=4 cols=80></TEXTAREA><br>
+			  Nom du premier paragraphe <input type="text" name="titreParagraphe"/><br>
+			  Premier paragraphe<TEXTAREA name="story" rows=4 cols=80></TEXTAREA><br>
+                          Nombre de choix <input type="number" name="nbChoix" min="0" max="100"><br>
 			  </p>
 			  <input type="submit" name="Créer l'histoire" />
 		  </form>
