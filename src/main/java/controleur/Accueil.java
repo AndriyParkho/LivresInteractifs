@@ -108,9 +108,6 @@ public class Accueil extends HttpServlet {
     	case "register":
     		response.sendRedirect("register");
     		break;
-    	case "storyToRead":
-    		response.sendRedirect("accueil");
-    		break;
     	case "storyToWrite":
     		actionAfficherHistoireAEcrire(request, response);
     		break;
