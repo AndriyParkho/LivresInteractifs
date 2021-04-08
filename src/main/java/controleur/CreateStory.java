@@ -1,5 +1,6 @@
 package controleur;
 
+import dao.HistoireDAO;
 import dao.UtilisateurDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
+import modele.Histoire;
 import modele.Utilisateur;
 
 @WebServlet(name = "CreateStory", urlPatterns = {"/createStory"})
@@ -28,8 +30,9 @@ public class CreateStory extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         
         /* Mise à jour de la base de données*/
-        
-        traiteDonnees(request);
+        HistoireDAO histoireDAO = new HistoireDAO(ds);
+        histoireDAO.createStory(request);
+        //traiteDonnees(request);
         
         /* Envoi de la réponse */
         response.setContentType("text/html;charset=UTF-8");
