@@ -90,7 +90,7 @@ public class LoginRegister extends HttpServlet {
 	        String pass = request.getParameter("password");
             boolean isCreated = userDao.createUser(nom, prenom, email, pass);
             if (isCreated) {
-            	response.sendRedirect("accueil");
+            	response.sendRedirect("login");
             }
             else {
             	request.setAttribute("error", true);
