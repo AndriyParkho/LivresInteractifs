@@ -12,7 +12,6 @@ ul {
   padding: 0;
   overflow: hidden;
   background-color: #333;
-  position: fixed;
   top: 0;
   width: 100%;
 }
@@ -40,3 +39,47 @@ li a:hover {
 .active {
   background-color: #4CAF50;
 }
+
+table {
+	border-radius: 25px;
+    overflow: hidden;
+	border-radius : 25px;
+	margin : 5%;
+	width: 90%;
+	border-collapse: collapse;
+}
+
+th {
+  height: 70px;
+  background-color: #4CAF50;
+  color: white;
+}
+
+th, td {
+  padding: 15px;
+}
+
+td {
+	
+  text-align: center;
+  vertical-align: center;
+}
+
+tr{
+	background-color: black;
+	color: #f2f2f2;
+}
+
+tr:hover {background-color: #f2f2f2;
+	color: black;}
+
+table tr:not(:last-child) { border-bottom: 1px solid #ddd;}
+
+tr:hover a {text-decoration: none;
+	color: black;
+	font-weight: bold;
+	}
+
+tr a {text-decoration: none;
+	color: #f2f2f2;
+	}

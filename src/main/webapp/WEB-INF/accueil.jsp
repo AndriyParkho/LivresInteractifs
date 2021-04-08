@@ -46,16 +46,17 @@
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
-		  	<table>
-            <tr>
-                <th>Titre</th>
-            </tr>
-            <c:forEach items="${histoires}" var="histoire">
-                <tr>
-                    <td><a href="write_story?idHist=${histoire.id}">${histoire.titre}</a></td>
-                </tr>
-            </c:forEach>
-        </table>
+			  	<table>
+	            <tr>
+	                <th>Titre</th>
+	            </tr>
+	            <c:forEach items="${histoires}" var="histoire">
+	                <tr>
+	                    <td><a href="write_story?idHist=${histoire.id}" class="story">${histoire.titre}</a></td>
+	                </tr>
+	            </c:forEach>
+	        	</table>
+	        	<a href="accueil?action=bouton&bouton=login">Se connecter</a>
 	 	  </c:if>
 		  
      </c:if>
