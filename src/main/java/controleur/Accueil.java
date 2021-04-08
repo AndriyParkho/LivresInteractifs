@@ -108,9 +108,6 @@ public class Accueil extends HttpServlet {
     	case "register":
     		response.sendRedirect("register");
     		break;
-    	case "storyToRead":
-    		response.sendRedirect("accueil");
-    		break;
     	case "storyToWrite":
     		actionAfficherHistoireAEcrire(request, response);
     		break;
@@ -123,7 +120,7 @@ public class Accueil extends HttpServlet {
     	case "logout":
     		HttpSession session = request.getSession();
             session.invalidate();
-            request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+            response.sendRedirect("accueil");
     		break;
     	}
     }
