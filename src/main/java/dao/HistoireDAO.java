@@ -59,25 +59,15 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                     new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
                 result.add(histoire);
             }
+            rs = st.executeQuery("SELECT * FROM histoire JOIN isInvited ON histoire.idHist = isInvited.idHist WHERE histoire.datePubli IS NULL AND isInvited.idUtil = " + Integer.toString(idUtil));
+            while (rs.next()) {
+                Histoire histoire =
+                    new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
+                result.add(histoire);
+            }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
-        try (
-       	     Connection conn = getConn();
-       	     Statement st = conn.createStatement();
-       	     ) {
-        		   PreparedStatement s = conn.prepareStatement("SELECT * FROM histoire JOIN isInvited ON histoire.idHist = isInvited.idHist WHERE isInvited.idUtil = ?");
-        		   s.setInt(1, idUtil);
-                   ResultSet rs = st.executeQuery("SELECT * FROM histoire WHERE datePubli IS NULL AND prive = 0");
-                   while (rs.next()) {
-                       Histoire histoire =
-                           new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
-                       result.add(histoire);
-                   }
-               } catch (SQLException e) {
-                   throw new DAOException("Erreur BD " + e.getMessage(), e);
-       		}
-        
 		return result;
 	}
     
