@@ -114,7 +114,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
         
         try(Connection c = dataSource.getConnection()){
             
-            PreparedStatement ps_histoire = c.prepareStatement("INSERT INTO Histoire (idHist, titre, datePubli, idAuteur) VALUES ( ?, ?, NULL, ?)");
+            PreparedStatement ps_histoire = c.prepareStatement("INSERT INTO Histoire (idHist, titre, datePubli, idAuteur, prive) VALUES ( ?, ?, NULL, ?, ?)");
             PreparedStatement ps_paragraphe = c.prepareStatement("INSERT INTO Paragraphe (numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES (?, ?, ?, ?, ?, ?, ?)");
             PreparedStatement ps_numero_histoire = c.prepareStatement("SELECT idHist_seq.nextval FROM DUAL");
             int numero_histoire = 1;
@@ -129,14 +129,16 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             } 
             ps_histoire.setInt(1, numero_histoire);
             ps_histoire.setString(2, title);
-            ps_histoire.setInt(3, 1); //par défaut utilisateur 1, a changer futurement
+            ps_histoire.setInt(3, user.getId()); //par défaut utilisateur 1, a changer futurement
+            ps_histoire.setInt(4, confidentialité);
             
             ps_paragraphe.setInt(1, 1); //on laisse a 1, c'est le premier paragraphe
             ps_paragraphe.setString(2, titreParagraphe);
             ps_paragraphe.setString(3, paragraphe);
             ps_paragraphe.setInt(4, 0); //pas valide au début
             ps_paragraphe.setInt(5, nb_choix);
-            ps_paragraphe.setInt(6, user.getId()); 
+            ps_paragraphe.setInt(6, user.getId());
+            
             ps_paragraphe.setInt(7, numero_histoire);
             
             
