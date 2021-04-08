@@ -59,7 +59,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                     new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
                 result.add(histoire);
             }
-            rs = st.executeQuery("SELECT * FROM histoire JOIN isInvited ON histoire.idHist = isInvited.idHist WHERE isInvited.idUtil = " + Integer.toString(idUtil));
+            rs = st.executeQuery("SELECT * FROM histoire JOIN isInvited ON histoire.idHist = isInvited.idHist WHERE histoire.datePubli IS NULL AND isInvited.idUtil = " + Integer.toString(idUtil));
             while (rs.next()) {
                 Histoire histoire =
                     new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
