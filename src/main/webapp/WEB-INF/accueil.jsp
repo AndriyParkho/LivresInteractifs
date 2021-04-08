@@ -38,14 +38,14 @@
     	var div = document.getElementById("choice");
         while (newNbChoice > nbChoixJs){
         	nbChoixJs++;
-        	div.insertAdjacentHTML('beforeend', '<input type="text" id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'"/> <br>');
+        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'"/></td></tr>');
         }
     	 while (newNbChoice < nbChoixJs){
- 	        div.removeChild(document.getElementById("choix"+nbChoixJs.toString()));
- 	        nbChoixJs--;
-    	} 
+    		nbChoixJs--;
+ 	        div.deleteRow(nbChoixJs);
+ 	      } 
     } 
- 
+    
 </script>
 
      <c:if test="${user == null}">
@@ -85,7 +85,7 @@
                           <input type="button" value="Afficher les choix" onclick="changeChoice();">
                             <input type="submit" value ="Créer l'histoire" name="Créer l'histoire" />
 			  </p>
-			  <div id="choice"></div>
+			  <table id="choice" class="formulaire"></table>
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
