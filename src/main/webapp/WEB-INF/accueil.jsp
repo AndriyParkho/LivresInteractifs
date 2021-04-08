@@ -8,7 +8,8 @@
   </head>
   <body>
   <script type="text/javascript">
- 
+
+  
     function activeInvite(){
  
         if(document.getElementById('buttonPublic').checked){
@@ -29,6 +30,26 @@
     function EraseSelect(){
             document.getElementById('listAuthors').selectedIndex = -1;
     }
+    
+    var nbChoixJs = 0;
+    function addChoice(){
+    	nbChoixJs++;
+    	var div = document.getElementById("choice");
+    	div.innerHTML += '<input type="text" id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'"/> <br>';
+    }
+     
+     function changeChoice(){
+    	var newNbChoice = document.getElementById("nbChoix").value;
+    	var div = document.getElementById("choice");
+        while (newNbChoice > nbChoixJs){
+        	nbChoixJs++;
+        	div.innerHTML += '<input type="text" id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'"/> <br>';
+        }
+    	 while (newNbChoice < nbChoixJs){
+ 	        div.removeChild(document.getElementById("choix"+nbChoixJs.toString()));
+ 	        nbChoixJs--;
+    	} 
+    } 
  
 </script>
 
@@ -38,6 +59,7 @@
 		  <li><a href="accueil?action=bouton&bouton=register">S'enregistrer</a></li>
 		  <li><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
 		</ul> 
+		
      </c:if>
      <c:if test="${user != null}">
      	<ul>
@@ -64,9 +86,11 @@
 			 <input type="button" value="Effacer la sélection" onclick="EraseSelect()"> <br>
 			  Nom du premier paragraphe <input type="text" name="titreParagraphe"/><br>
 			  Premier paragraphe<TEXTAREA name="story" rows=4 cols=80></TEXTAREA><br>
-                          Nombre de choix <input type="number" name="nbChoix" min="0" max="100"><br>
+                          Nombre de choix <input type="number" id="nbChoix" name="nbChoix" min="0" max="100">
+                          <input type="button" value="Afficher les choix" onclick="changeChoice();">
+                            <input type="submit" value ="Créer l'histoire" name="Créer l'histoire" />
 			  </p>
-			  <input type="submit" name="Créer l'histoire" />
+			  <div id="choice"></div>
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
