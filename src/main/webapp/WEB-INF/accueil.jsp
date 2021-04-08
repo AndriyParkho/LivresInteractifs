@@ -32,18 +32,13 @@
     }
     
     var nbChoixJs = 0;
-    function addChoice(){
-    	nbChoixJs++;
-    	var div = document.getElementById("choice");
-    	div.innerHTML += '<input type="text" id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'"/> <br>';
-    }
-     
-     function changeChoice(){
+    
+    function changeChoice(){
     	var newNbChoice = document.getElementById("nbChoix").value;
     	var div = document.getElementById("choice");
         while (newNbChoice > nbChoixJs){
         	nbChoixJs++;
-        	div.innerHTML += '<input type="text" id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'"/> <br>';
+        	div.insertAdjacentHTML('beforeend', '<input type="text" id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'"/> <br>');
         }
     	 while (newNbChoice < nbChoixJs){
  	        div.removeChild(document.getElementById("choix"+nbChoixJs.toString()));
