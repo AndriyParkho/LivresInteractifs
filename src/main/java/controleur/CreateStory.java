@@ -1,5 +1,6 @@
 package controleur;
 
+import dao.UtilisateurDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -11,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
+import modele.Utilisateur;
 
 @WebServlet(name = "CreateStory", urlPatterns = {"/createStory"})
 public class CreateStory extends HttpServlet {
@@ -39,8 +41,8 @@ public class CreateStory extends HttpServlet {
     
     private boolean traiteDonnees(HttpServletRequest request) {
         
-        String titre = request.getParameter("title");
-            
+        HttpSession session = request.getSession();
+        Utilisateur user = (Utilisateur)session.getAttribute("user");
         int confidentialité = 0;
        
         
@@ -75,12 +77,12 @@ public class CreateStory extends HttpServlet {
             ps_histoire.setString(2, title);
             ps_histoire.setInt(3, 1); //par défaut utilisateur 1, a changer futurement
             
-            ps_paragraphe.setInt(1, 1);
+            ps_paragraphe.setInt(1, 1); //on laisse a 1, c'est le premier paragraphe
             ps_paragraphe.setString(2, titreParagraphe);
             ps_paragraphe.setString(3, paragraphe);
-            ps_paragraphe.setInt(4, 0);
+            ps_paragraphe.setInt(4, 0); //pas valide au début
             ps_paragraphe.setInt(5, nb_choix);
-            ps_paragraphe.setInt(6, 1); //par défaut je mets 1, avant qu'il y ait plus d'utilisateur
+            ps_paragraphe.setInt(6, user.getId()); 
             ps_paragraphe.setInt(7, numero_histoire);
             
             
