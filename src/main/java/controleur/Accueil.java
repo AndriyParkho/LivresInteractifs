@@ -41,7 +41,7 @@ public class Accueil extends HttpServlet {
     }
   
     /**
-     * Actions possibles en GET : afficher (correspond à l’absence du param), getHistoire.
+     * Actions possibles en GET : afficher (correspond à l’absence du param).
      */
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
@@ -81,6 +81,19 @@ public class Accueil extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
     
+    private void actionAfficherHistoireAEcrire(HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {
+    	
+    	HistoireDAO histoireDAO = new HistoireDAO(ds);
+    	
+    	HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+        List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire(user.getId());
+        
+        request.setAttribute("histoires", histoires);
+        
+        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
     /**
      * 
      */
@@ -99,7 +112,7 @@ public class Accueil extends HttpServlet {
     		response.sendRedirect("accueil");
     		break;
     	case "storyToWrite":
-            System.err.println("Action non encore implémentée");
+    		actionAfficherHistoireAEcrire(request, response);
     		break;
     	case "createStory":
     		request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
@@ -110,7 +123,7 @@ public class Accueil extends HttpServlet {
     	case "logout":
     		HttpSession session = request.getSession();
             session.invalidate();
-            response.sendRedirect("accueil");
+            request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     		break;
     	}
     }

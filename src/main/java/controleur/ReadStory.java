@@ -1,9 +1,11 @@
 package controleur;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.imageio.stream.FileCacheImageInputStream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +25,7 @@ import modele.Paragraphe;
 @WebServlet(name = "ReadStory", urlPatterns = {"/read_story"})
 public class ReadStory extends HttpServlet {
 
+	private Paragraphe firstParag;
 	private Paragraphe currentParag;  
 	
     @Resource(name = "jdbc/projetWeb")
@@ -50,10 +53,30 @@ public class ReadStory extends HttpServlet {
             throws IOException, ServletException {
 
         request.setCharacterEncoding("UTF-8");
-        String action = request.getParameter("action");
+        int idHist = Integer.parseInt(request.getParameter("idHist"));
+        int numParag = Integer.parseInt(request.getParameter("numParag"));
+        Integer numChoix;
+        if(request.getParameter("choix") == null) numChoix = null;
+        else numChoix = Integer.valueOf(request.getParameter("choix"));
         HistoireDAO histoireDAO = new HistoireDAO(ds);
-
+        List<Paragraphe> paragsToRead = new ArrayList<Paragraphe>();
+        List<Paragraphe> choixParag;
         try {
+        	if(numChoix == null) {
+        		currentParag = histoireDAO.getHistoireTree(idHist);
+        		firstParag = currentParag;
+        	}
+        	else if(currentParag.getNumParag() != numParag) currentParag = firstParag.findParag(numParag);
+        	else currentParag = currentParag.getParagSuiv().get(numChoix);
+        	while(currentParag.getParagSuiv().size() == 1) {
+        		paragsToRead.add(currentParag);
+        		currentParag = currentParag.getParagSuiv().get(0);
+        	}
+        	paragsToRead.add(currentParag);
+        	choixParag = currentParag.getParagSuiv();
+        	request.setAttribute("paragsToRead", paragsToRead);
+        	request.setAttribute("choixParag", choixParag);
+        	request.getRequestDispatcher("/WEB-INF/readStory.jsp").forward(request, response);
         } catch (DAOException e) {
             erreurBD(request, response, e);
         }

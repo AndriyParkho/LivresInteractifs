@@ -9,11 +9,10 @@ public class Paragraphe {
 	private String texte;
 	private boolean valide;
 	private int nbChoix;
-	private ArrayList<Paragraphe> paragSuiv;
+	private ArrayList<Paragraphe> paragSuiv = new ArrayList<Paragraphe>();
 	private int idWritter;
 	
-	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, int nbChoix,
-			ArrayList<Paragraphe> paragSuiv, int idWritter) {
+	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, int nbChoix, int idWritter) {
 		super();
 		this.idHist = idHist;
 		this.numParag = numParag;
@@ -21,7 +20,6 @@ public class Paragraphe {
 		this.texte = texte;
 		this.valide = valide;
 		this.nbChoix = nbChoix;
-		this.paragSuiv = paragSuiv;
 		this.idWritter = idWritter;
 	}
 	
@@ -56,5 +54,27 @@ public class Paragraphe {
 		return idWritter;
 	}
 	
+	public String getTitre() {
+		return titre;
+	}
+
+	public void addParagSuiv(Paragraphe parag) {
+		this.paragSuiv.add(parag);
+	}
 	
+	public Paragraphe findParag(int numParag) {
+		if(this.getNumParag() == numParag) return this;
+		else if(this.getParagSuiv().size() == 0) return null;
+		else {
+			Paragraphe result = null;
+			Paragraphe temp = null;
+			for(Paragraphe parag: this.getParagSuiv()) {
+				temp = parag.findParag(numParag);
+				if(temp != null) {
+					result = temp;
+				}
+			}
+			return result;
+		}
+	}
 }
