@@ -56,7 +56,7 @@
 	                </tr>
 	            </c:forEach>
 	        	</table>
-	        	<a href="accueil?action=bouton&bouton=login">Se connecter</a>
+
 	 	  </c:if>
 		  
      </c:if>
