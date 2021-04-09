@@ -7,7 +7,7 @@ background-size: cover;
 font-family: Arial, sans-serif;
 }
 
-ul {
+ul.menu {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -17,16 +17,16 @@ ul {
   width: 100%;
 }
 
-li {
+li.menu {
   float: left;
   border-right: 1px solid #bbb;
 }
 
-li:last-child {
+li.menu:last-child {
   border-right: none;
 }
 
-li a {
+li.menu a {
   display: block;
   color: white;
   text-align: center;
@@ -34,7 +34,7 @@ li a {
   text-decoration: none;
 }
 
-li a:hover {
+li.menu a:hover {
   background-color: #111;
 }
 .active {
@@ -57,6 +57,10 @@ th {
 
 th, td {
   padding: 15px;
+}
+
+.click a {
+  display: block;
 }
 
 td {
@@ -147,4 +151,36 @@ p{
 TEXTAREA{
 	margin: 10px;
 }
+
+#paragraphStory{
+	width : 60%;
+	overflow: hidden;
+	margin: 4% auto;
+	padding:3%;
+	width: 90%;
+	border-collapse: collapse;
+	color: black;
+	background-color: #4CAF50;
+	border: solid #f2f2f2;
+	border-radius: 25px;
+}
+
+a.choixSuite{
+	text-decoration: none;
+	color: black;
+	display:block;
+	margin: 2% auto;
+	padding:2%;
+	width: 30%;
+	border: solid #4CAF50;
+	border-radius: 10px;
+	background-color: white;
+	text-align: center;
+}
+
+a.choixSuite:hover{
+	font-weight: bold;
+	font-size: 120%;
+}
+
 

@@ -93,20 +93,20 @@
 </script>
 
      <c:if test="${user == null}">
-     	<ul>
-		  <li><a href="accueil?action=bouton&bouton=login">Se connecter</a></li>
-		  <li><a href="accueil?action=bouton&bouton=register">S'enregistrer</a></li>
-		  <li><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
+     	<ul class='menu'>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=login">Se connecter</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=register">S'enregistrer</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
 		</ul> 
 		
      </c:if>
      <c:if test="${user != null}">
-     	<ul>
-	      <li><a href="accueil" <c:if test="${empty param.bouton}"> class="active" </c:if>>Histoire à lire</a></li>
-		  <li><a href="accueil?action=bouton&bouton=storyToWrite" <c:if test="${param.bouton == 'storyToWrite'}"> class="active" </c:if>>Histoire à écrire</a></li>
-		  <li><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}"> class="active" </c:if>>Créer une histoire</a></li>
-		  <li><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
-		  <li style="float:right"><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
+     	<ul class='menu'>
+	      <li class='menu'><a href="accueil" <c:if test="${empty param.bouton}"> class="active" </c:if>>Histoire à lire</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" <c:if test="${param.bouton == 'storyToWrite'}"> class="active" </c:if>>Histoire à écrire</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}"> class="active" </c:if>>Créer une histoire</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
+		  <li style="float:right" class='menu'><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
 		  <c:if test="${param.bouton == 'createStory'}">
 		  <form method="post" id="formCreate" action="createStory" accept-charset="UTF-8">
@@ -154,7 +154,7 @@
                     </c:if>
 	            <c:forEach items="${histoires}" var="histoire">
 	                <tr>
-	                    <td><a href="write_story?idHist=${histoire.id}" class="story">${histoire.titre}</a></td>
+	                    <td class="click"><a href="write_story?idHist=${histoire.id}" class="story">${histoire.titre}</a></td>
 	                </tr>
 	            </c:forEach>
 	        	</table>
@@ -173,7 +173,7 @@
             </tr>
             <c:forEach items="${histoires}" var="histoire">
                 <tr>
-                    <td><a href="read_story?idHist=${histoire.id}&numParag=1">${histoire.titre}</a></td>
+                    <td class="click"><a href="read_story?idHist=${histoire.id}&numParag=1">${histoire.titre}</a></td>
                 </tr>
             </c:forEach>
         </table>
