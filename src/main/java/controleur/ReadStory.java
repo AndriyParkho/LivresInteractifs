@@ -18,6 +18,7 @@ import dao.DAOException;
 import dao.HistoireDAO;
 import modele.Histoire;
 import modele.Paragraphe;
+import modele.Utilisateur;
 
 /**
  * Le contrôleur de la page d'accueil
@@ -61,10 +62,18 @@ public class ReadStory extends HttpServlet {
         HistoireDAO histoireDAO = new HistoireDAO(ds);
         List<Paragraphe> paragsToRead = new ArrayList<Paragraphe>();
         List<Paragraphe> choixParag;
+        HttpSession session = request.getSession();
+        Utilisateur user = (Utilisateur) session.getAttribute("user");
+      
         try {
         	if(numChoix == null) {
         		currentParag = histoireDAO.getHistoireTree(idHist);
         		firstParag = currentParag;
+        		if(user == null) {
+        			
+        		}else {
+        			histoireDAO.setReader(idHist, user.getId());
+        		}
         	}
         	else if(currentParag.getNumParag() != numParag) currentParag = firstParag.findParag(numParag);
         	else currentParag = currentParag.getParagSuiv().get(numChoix);

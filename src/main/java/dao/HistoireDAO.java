@@ -188,4 +188,25 @@ public class HistoireDAO extends AbstractDataBaseDAO {
         return true;        
     }
     
+    public boolean setReader(int idHist, int idUtil) {
+    	try(Connection c = dataSource.getConnection()){
+            PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, 1, ?, 1)");
+            ps.setInt(1, idHist);
+            ps.setInt(2, idUtil);
+    	} catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
+    	return true;
+    }
+    
+    public boolean setReader(int idHist, int numParag, int idUtil) {
+    	try(Connection c = dataSource.getConnection()){
+            PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, 1, ?, 1)");
+            ps.setInt(1, idHist);
+            ps.setInt(2, idUtil);
+    	} catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
+    	return true;
+    }
 }
