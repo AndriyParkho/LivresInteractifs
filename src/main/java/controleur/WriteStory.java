@@ -12,6 +12,8 @@ import javax.sql.DataSource;
 
 import dao.DAOException;
 import dao.HistoireDAO;
+import dao.ParagrapheDAO;
+import java.sql.PreparedStatement;
 import modele.Paragraphe;
 
 /**
@@ -45,7 +47,12 @@ public class WriteStory extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+        
 
         request.setCharacterEncoding("UTF-8");
+        
+        
+        
+    
     }
 }

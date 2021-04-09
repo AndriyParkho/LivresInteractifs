@@ -1,3 +1,4 @@
+DROP SEQUENCE idUtil_seq;
 CREATE SEQUENCE idUtil_seq;
 CREATE TABLE Utilisateur (
        idUtil INT DEFAULT idUtil_seq.nextval PRIMARY KEY,
@@ -6,7 +7,7 @@ CREATE TABLE Utilisateur (
        email varchar(255) NOT NULL UNIQUE,
        password varchar(255) NOT NULL
 );
-
+DROP SEQUENCE idHist_seq;
 CREATE SEQUENCE idHist_seq;
 CREATE TABLE Histoire (
        idHist integer DEFAULT idHist_seq.nextval PRIMARY KEY,

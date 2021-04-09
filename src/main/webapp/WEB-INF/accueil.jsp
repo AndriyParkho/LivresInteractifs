@@ -70,10 +70,16 @@
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
-			  	<table>
+                      <br>
+                      <br>
+                    <table>
 	            <tr>
 	                <th>Titre</th>
 	            </tr>
+                    
+                    <c:if test="${histoireDejaCommence != null}">
+                        Vous avez déja un paragraphe en cours de rédaction : <a href="write_story?idHist=${histoireDejaCommence.id}" class="story">${histoireDejaCommence.titre}</a>
+                    </c:if><br>
 	            <c:forEach items="${histoires}" var="histoire">
 	                <tr>
 	                    <td><a href="write_story?idHist=${histoire.id}" class="story">${histoire.titre}</a></td>
