@@ -100,7 +100,6 @@ public class Accueil extends HttpServlet {
             request.setAttribute("numParag", numParag);
         }
         
-        System.out.println(histoire);
         List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire(user.getId());
         
         request.setAttribute("histoires", histoires);

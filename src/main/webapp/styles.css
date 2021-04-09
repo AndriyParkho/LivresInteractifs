@@ -4,6 +4,7 @@ background-color:black;
 background-image:url(background.jpg);
 background-position:center center;
 background-size: cover;
+font-family: Arial, sans-serif;
 }
 
 ul {
@@ -43,7 +44,7 @@ li a:hover {
 table {
 	border-radius: 25px;
     overflow: hidden;
-	margin : 5%;
+	margin: 5% auto;
 	width: 90%;
 	border-collapse: collapse;
 }
@@ -94,4 +95,56 @@ td.formulaire {
 tr.formulaire{
 	background-color: #1fe0;
 }
-	
+
+div.alreadyWritting{
+	margin: 0 auto;
+	background-color: #4CAF50;
+	width: 40%;
+	border-radius: 25px;
+	padding: 15px;
+	text-align: center;
+  	vertical-align: center;
+}
+
+a.alreadyWritting{
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 150%;
+}
+
+a.alreadyWritting:hover{
+	color: #f2f2f2;;
+	font-weight: bold;
+	text-decoration: underline;
+	font-size: 150%;
+}
+
+form{
+	width : 60%;
+	overflow: hidden;
+	margin: 5% auto;
+	width: 90%;
+	border-collapse: collapse;
+	color: black;
+	background-color: #4CAF50;
+	border: solid #f2f2f2;
+	border-radius: 25px;
+}
+
+input{
+	margin: 10px;
+}
+
+p{
+	margin: 10px;
+}
+#listPersons{
+	margin: 10px;
+	display: none;
+}
+
+TEXTAREA{
+	margin: 10px;
+}
+

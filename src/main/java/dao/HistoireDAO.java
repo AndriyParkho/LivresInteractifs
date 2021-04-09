@@ -154,8 +154,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 while(result_set.next()){
                     numero_histoire = result_set.getInt(1);
                 }
-            }catch(SQLException sqle){
-                System.out.println(sqle.getMessage());
+            }catch(SQLException e){
+            	throw new DAOException("Erreur BD" + e.getMessage(), e);
             } 
             ps_histoire.setInt(1, numero_histoire);
             ps_histoire.setString(2, title);

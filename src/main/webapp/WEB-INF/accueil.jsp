@@ -10,21 +10,13 @@
   <script type="text/javascript">
 
   
-    function activeInvite(){
- 
-        if(document.getElementById('buttonPublic').checked){
- 
-            document.getElementById('listAuthors').disabled = 'disabled';
-            document.getElementById('listAuthors').selectedIndex = -1;
- 
-        }
- 
-        else{
- 
-            document.getElementById('listAuthors').disabled = '';
- 
-        }
- 
+    function displayInvite(){
+    	document.getElementById('listPersons').style.display = 'block';
+    }
+    
+    function hideInvite(){
+    	document.getElementById('listPersons').style.display = 'none';
+    	document.getElementById('listAuthors').selectedIndex = -1;
     }
     
     function EraseSelect(){
@@ -121,22 +113,28 @@
 		    <p>
             <br>
             <br>
-		     Nom d'histoire <input type="text" name="title" id="title"/><br>
-		     Confidentialité de l'histoire : <label><input type="radio" onclick="activeInvite();" name="confident" checked="checked" id="buttonPublic"/>Publique</label>
-			   								 <label><input type="radio" onclick="activeInvite();" name="confident"/>Privée</label> <br>
-			Personnes invitées pour l'écriture
-			<select name="auteurs"  id="listAuthors" multiple disabled="disabled" size=2>
+		     Nom d'histoire :<input type="text" name="title" id="title"/><br>
+		     Confidentialité de l'histoire : <label><input type="radio" onclick="hideInvite();" name="confident" checked="checked" id="buttonPublic"/>Publique</label>
+			   								 <label><input type="radio" onclick="displayInvite();" name="confident"/>Privée</label> <br>
+			<div id='listPersons'>Personnes invitées pour l'écriture : <br><br>
+		
+			<select name="auteurs"  id="listAuthors" size=2 multiple >
 				<c:forEach items="${user}" var="user">
 	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
 	            </c:forEach>
 			</select> 
-			 <input type="button" value="Effacer la sélection" onclick="EraseSelect()"> <br>
-			  Nom du premier paragraphe <input type="text" name="titreParagraphe" id="titreParagraphe"/><br>
-			  Premier paragraphe<TEXTAREA name="story" id="story" rows=4 cols=80 required></TEXTAREA><br>
-                          Nombre de choix <input type="number" id="nbChoix" name="nbChoix" value="0" min="0" max="100" required>
-                          <input type="button" value="Afficher les choix" onclick="changeChoice();">
+			<input type="button" value="Effacer la sélection" onclick="EraseSelect()">
+			 <br>
+			 </div>
+			 <p>
+			  Nom du premier paragraphe :</p><input type="text" name="titreParagraphe" id="titreParagraphe"/>
+			  <br>
+			  <p>Premier paragraphe :</p><TEXTAREA name="story" id="story" rows=4 cols=80 required></TEXTAREA>
+			  <br>
+              <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="0" min="0" max="100" required>
+              <input type="button" value="Afficher les choix" onclick="changeChoice();">
               <br>
-			  </p>
+			  
 			  <table id="choice" class="formulaire"></table>
 			  <br>
 			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
@@ -152,8 +150,8 @@
 	            </tr>
                     
                     <c:if test="${histoireDejaCommence != null}">
-                        Vous avez déja un paragraphe en cours de rédaction : <a href="write_story?idHist=${histoireDejaCommence.id}" class="story">${histoireDejaCommence.titre}</a>
-                    </c:if><br>
+                        <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_story?idHist=${histoireDejaCommence.id}" class='alreadyWritting'>${histoireDejaCommence.titre}</a></div>
+                    </c:if>
 	            <c:forEach items="${histoires}" var="histoire">
 	                <tr>
 	                    <td><a href="write_story?idHist=${histoire.id}" class="story">${histoire.titre}</a></td>

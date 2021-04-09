@@ -33,7 +33,6 @@
 		<p>
 		Nom : <input type="text" name="nom" required/> <br>
 		Prénom : <input type="text" name="prenom" required/> <br>
-		<hr>
 		<p>
 		Email : <input type="text" name="email" required/> <br>
 		Mot de passe : <input type="password" name="password" required/> <br>
