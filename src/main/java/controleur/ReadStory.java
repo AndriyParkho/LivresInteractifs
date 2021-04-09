@@ -64,7 +64,6 @@ public class ReadStory extends HttpServlet {
         List<Paragraphe> choixParag;
         HttpSession session = request.getSession();
         Utilisateur user = (Utilisateur) session.getAttribute("user");
-      
         try {
         	if(numChoix == null) {
         		currentParag = histoireDAO.getHistoireTree(idHist);

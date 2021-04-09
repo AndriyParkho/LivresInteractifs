@@ -84,6 +84,16 @@
      </c:if>
      
      <c:if test="${param.bouton == 'historique'}">
+     <table>
+            <tr>
+                <th>Liste des histoires commencées</th>
+            </tr>
+            <c:forEach items="${histoires}" var="histoire">
+                <tr>
+                    <td class="click"><a href="historique?idHist=${histoire.id}">${histoire.titre}</a></td>
+                </tr>
+            </c:forEach>
+        </table>
 	 </c:if>
 	 
      <c:if test="${empty param.bouton}">

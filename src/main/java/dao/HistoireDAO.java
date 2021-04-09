@@ -193,6 +193,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, 1, ?, 1)");
             ps.setInt(1, idHist);
             ps.setInt(2, idUtil);
+            ps.executeQuery();
     	} catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
@@ -201,10 +202,25 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     
     public boolean setReader(int idHist, int numParag, int idUtil) {
     	try(Connection c = dataSource.getConnection()){
-            PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, 1, ?, 1)");
-            ps.setInt(1, idHist);
-            ps.setInt(2, idUtil);
-    	} catch (SQLException e) {
+    		if(true){//TODO vérifier qu'il n'y a pas d'entrée pour ces valeurs (idHist, numParag, idUtil)
+    			PreparedStatement getMax = c.prepareStatement("SELECT MAX(locationId) FROM hasRead WHERE idHist=? AND idUtil=?");
+    			getMax.setInt(1, idHist);
+                getMax.setInt(2, idUtil);
+                ResultSet rs = getMax.executeQuery();
+                int nextLocation = -1;
+                if(rs.next()) {
+                	nextLocation = rs.getInt("max(locationId)") + 1;
+                } 
+    			PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, ?, ?, ?)");
+                ps.setInt(1, idHist);
+                ps.setInt(2, numParag);
+                ps.setInt(3, idUtil);
+                ps.setInt(4, nextLocation);
+    		}
+    		else {
+    			return true;
+    		}
+        } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
     	return true;
