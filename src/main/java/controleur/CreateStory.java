@@ -1,5 +1,6 @@
 package controleur;
 
+import dao.DAOException;
 import dao.HistoireDAO;
 import dao.UtilisateurDAO;
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +22,31 @@ import modele.Utilisateur;
 @WebServlet(name = "CreateStory", urlPatterns = {"/createStory"})
 public class CreateStory extends HttpServlet {
 	
-	
+	/**
+     * 
+     * Affiche la page d’accueil avec la liste de toutes les histoires. 
+     */
+    
+    private void actionAfficher(HttpServletRequest request, 
+            HttpServletResponse response, 
+            HistoireDAO histoireDAO) throws ServletException, IOException {
+    	
+    	
+        List<Histoire> histoires = histoireDAO.getListeHistoires();
+        
+        request.setAttribute("histoires", histoires);
+        
+        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
+    
+    private void erreurBD(HttpServletRequest request,
+            HttpServletResponse response, DAOException e)
+        throws ServletException, IOException {
+    	e.printStackTrace(); // permet d’avoir le détail de l’erreur dans catalina.out
+    	request.setAttribute("erreurMessage", e.getMessage());
+    	request.getRequestDispatcher("/WEB-INF/bdErreur.jsp").forward(request, response);
+    }
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -36,7 +63,11 @@ public class CreateStory extends HttpServlet {
         
         /* Envoi de la réponse */
         response.setContentType("text/html;charset=UTF-8");
-        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+        try {
+        	actionAfficher(request, response, histoireDAO);
+        } catch (DAOException e) {
+            erreurBD(request, response, e);
+        }
     }
     
     @Resource(name = "jdbc/projetWeb")
