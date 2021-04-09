@@ -80,10 +80,10 @@
     			document.getElementById("formCreate").submit();
     		}
     		else{
-    			document.getElementById("errorMessage").innerHTML = "Appuyez sur le bouton valider pour mettre à jour vos choix";
+    			document.getElementById("errorMessage").innerHTML = "Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.";
     		}
     	}
     	else{
-    		document.getElementById("errorMessage").innerHTML = "Tous les champs doivent être remplis";
+    		document.getElementById("errorMessage").innerHTML = "Tous les champs doivent être remplis.";
     	} 
     } 
