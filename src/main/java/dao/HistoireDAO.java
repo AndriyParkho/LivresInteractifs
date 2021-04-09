@@ -126,11 +126,11 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     public boolean createStory(HttpServletRequest request){
         HttpSession session = request.getSession();
         Utilisateur user = (Utilisateur)session.getAttribute("user");
-        int confidentialité = 0;
+        int confidentialite = 0;
        
         
         try {
-            confidentialité = Integer.parseInt(request.getParameter("confident"));
+            confidentialite = Integer.parseInt(request.getParameter("confident"));
         } catch (Exception e){
         	
         }
@@ -160,7 +160,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             ps_histoire.setInt(1, numero_histoire);
             ps_histoire.setString(2, title);
             ps_histoire.setInt(3, user.getId()); //par défaut utilisateur 1, a changer futurement
-            ps_histoire.setInt(4, confidentialité);
+            ps_histoire.setInt(4, confidentialite);
             
             ps_paragraphe.setInt(1, 1); //on laisse a 1, c'est le premier paragraphe
             ps_paragraphe.setString(2, titreParagraphe);
@@ -171,12 +171,15 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             
             ps_paragraphe.setInt(7, numero_histoire);
             
-            ps_ajoutInvitation.setInt(numero_histoire, user.getId());
             
             
             ps_histoire.executeUpdate();
             ps_paragraphe.executeUpdate();
-            ps_ajoutInvitation.executeUpdate();
+            if(confidentialite == 1){
+                ps_ajoutInvitation.setInt(1, numero_histoire);
+                ps_ajoutInvitation.setInt(2, user.getId());
+                ps_ajoutInvitation.executeUpdate();
+            }
             
         }catch(SQLException sqle){
             System.out.println(sqle.getMessage());
