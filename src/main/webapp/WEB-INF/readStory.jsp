@@ -9,11 +9,13 @@
 <link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
 <body>
+	<div id='paragraphStory'>
 	<c:forEach items="${paragsToRead}" var="paragToRead">
-             <p id='paragraphStory'>
+             <p>
                  ${paragToRead.texte}
              </p>
 	</c:forEach>
+	</div>
 	<c:forEach items="${choixParag}" var="choix" varStatus="vs">
     	<div class="choixSuite"><a class="choixSuite" href="read_story?idHist=${choix.idHist}&choix=${vs.index}&numParag=${choix.numParag}" class="active">${choix.titre}</a></div>
     	<br>

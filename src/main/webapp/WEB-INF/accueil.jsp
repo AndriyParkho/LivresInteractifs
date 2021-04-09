@@ -5,92 +5,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>InteractiveStory</title>
     <link rel="stylesheet" type="text/css" href="styles.css" />
+    <script type="text/javascript" src="script.js"></script>
   </head>
   <body>
-  <script type="text/javascript">
-
-  
-    function displayInvite(){
-    	document.getElementById('listPersons').style.display = 'block';
-    }
-    
-    function hideInvite(){
-    	document.getElementById('listPersons').style.display = 'none';
-    	document.getElementById('listAuthors').selectedIndex = -1;
-    }
-    
-    function EraseSelect(){
-            document.getElementById('listAuthors').selectedIndex = -1;
-    }
-    
-    var nbChoixJs = 0;
-    
-    function changeChoice(){
-    	document.getElementById("errorMessage").innerHTML ="";
-    	var newNbChoice = document.getElementById("nbChoix").value;
-    	var div = document.getElementById("choice");
-        while (newNbChoice > nbChoixJs){
-        	nbChoixJs++;
-        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td></tr>');
-        }
-    	 while (newNbChoice < nbChoixJs){
-    		nbChoixJs--;
- 	        div.deleteRow(nbChoixJs);
- 	      } 
-    }
-    
-    function checkRequired(){
-    	if(document.getElementById("title").value == ""){
-    		return false;
-    	}
-    	if(document.getElementById("titreParagraphe").value == ""){
-    		return false;
-    	}
-    	if(document.getElementById("story").value == ""){
-    		return false;
-    	}
-    	if(document.getElementById("nbChoix").value == ""){
-    		return false;
-    	}
-    	return true;
-    } 
-    
-    function checkChoice(){
-    	var nbChoiceSupposed = document.getElementById("nbChoix").value;
-    	var test = document.getElementById("choix" + nbChoiceSupposed.toString());
-    	if(nbChoiceSupposed == 0){
-    		if(test == null){
-    			return true;
-    		}
-    		else{
-    			return false;
-    		}
-    	}
-    	else{
-    		if(test == null){
-    			return false;
-    		}
-    		else{
-    			return true;
-    		}
-    	}
-    }
-    
-    function submitForm(){
-    	if(checkRequired()){
-    		if(checkChoice()){
-    			document.getElementById("formCreate").submit();
-    		}
-    		else{
-    			document.getElementById("errorMessage").innerHTML = "Appuyez sur le bouton valider pour mettre à jour vos choix";
-    		}
-    	}
-    	else{
-    		document.getElementById("errorMessage").innerHTML = "Tous les champs doivent être remplis";
-    	} 
-    } 
-    
-</script>
 
      <c:if test="${user == null}">
      	<ul class='menu'>
@@ -131,11 +48,14 @@
 			  <br>
 			  <p>Premier paragraphe :</p><TEXTAREA name="story" id="story" rows=4 cols=80 required></TEXTAREA>
 			  <br>
+			  <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" checked="checked"/>Oui</label>
+			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked"/>Non</label> <br>
+			  <div id="listeDesChoix">
               <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="0" min="0" max="100" required>
               <input type="button" value="Afficher les choix" onclick="changeChoice();">
               <br>
-			  
 			  <table id="choice" class="formulaire"></table>
+			  </div>
 			  <br>
 			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
 	          <p id="errorMessage"> </p>
