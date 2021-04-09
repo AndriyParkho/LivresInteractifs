@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,5 +57,21 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	            throw new DAOException("Erreur BD " + e.getMessage(), e);
 			}
 		}
+	}
+	
+	public boolean setWritter(int histId, int paragraphNum, int userId) {
+		try (
+				Connection conn = getConn();
+			    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idWritter=? WHERE idHist=? and numParag=?");
+			) {
+				ps.setInt(1, userId);
+				ps.setInt(2, histId);
+				ps.setInt(3, paragraphNum);
+			 	ps.executeQuery();
+		      }catch (SQLException e) {
+		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+		      }
+		return true;
+		
 	}
 }

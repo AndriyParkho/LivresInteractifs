@@ -140,7 +140,6 @@
 			  <table id="choice" class="formulaire"></table>
 			  <br>
 			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
-	          <!-- <input type="submit" value ="Créer l'histoire" name="Créer l'histoire" /> -->
 	          <p id="errorMessage"> </p>
 		  </form>
 		  </c:if>

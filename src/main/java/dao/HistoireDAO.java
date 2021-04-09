@@ -181,10 +181,9 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 ps_ajoutInvitation.executeUpdate();
             }
             
-        }catch(SQLException sqle){
-            System.out.println(sqle.getMessage());
-            return false;
-        }
+        }catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
         
         return true;        
     }
