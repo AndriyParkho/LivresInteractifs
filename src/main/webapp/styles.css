@@ -43,7 +43,6 @@ li a:hover {
 table {
 	border-radius: 25px;
     overflow: hidden;
-	border-radius : 25px;
 	margin : 5%;
 	width: 90%;
 	border-collapse: collapse;
@@ -83,5 +82,16 @@ tr:hover a {text-decoration: none;
 tr a {text-decoration: none;
 	color: #f2f2f2;
 	}
+	
+table.formulaire {
+	margin : 0%;
+}
 
+td.formulaire {
+  text-align: left;
+}
+
+tr.formulaire{
+	background-color: #1fe0;
+}
 	

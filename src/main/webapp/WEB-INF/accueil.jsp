@@ -8,7 +8,8 @@
   </head>
   <body>
   <script type="text/javascript">
- 
+
+  
     function activeInvite(){
  
         if(document.getElementById('buttonPublic').checked){
@@ -29,7 +30,22 @@
     function EraseSelect(){
             document.getElementById('listAuthors').selectedIndex = -1;
     }
- 
+    
+    var nbChoixJs = 0;
+    
+    function changeChoice(){
+    	var newNbChoice = document.getElementById("nbChoix").value;
+    	var div = document.getElementById("choice");
+        while (newNbChoice > nbChoixJs){
+        	nbChoixJs++;
+        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td></tr>');
+        }
+    	 while (newNbChoice < nbChoixJs){
+    		nbChoixJs--;
+ 	        div.deleteRow(nbChoixJs);
+ 	      } 
+    } 
+    
 </script>
 
      <c:if test="${user == null}">
@@ -38,6 +54,7 @@
 		  <li><a href="accueil?action=bouton&bouton=register">S'enregistrer</a></li>
 		  <li><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
 		</ul> 
+		
      </c:if>
      <c:if test="${user != null}">
      	<ul>
@@ -50,9 +67,9 @@
 		  <c:if test="${param.bouton == 'createStory'}">
 		  <form method="post" action="createStory" accept-charset="UTF-8">
 		    <p>
-                        <br>
-                        <br>
-		     Nom d'histoire <input type="text" name="title"/><br>
+            <br>
+            <br>
+		     Nom d'histoire <input type="text" name="title" required/><br>
 		     Confidentialité de l'histoire : <label><input type="radio" onclick="activeInvite();" name="confident" checked="checked" id="buttonPublic"/>Publique</label>
 			   								 <label><input type="radio" onclick="activeInvite();" name="confident"/>Privée</label> <br>
 			Personnes invitées pour l'écriture
@@ -62,11 +79,15 @@
 	            </c:forEach>
 			</select> 
 			 <input type="button" value="Effacer la sélection" onclick="EraseSelect()"> <br>
-			  Nom du premier paragraphe <input type="text" name="titreParagraphe"/><br>
-			  Premier paragraphe<TEXTAREA name="story" rows=4 cols=80></TEXTAREA><br>
-                          Nombre de choix <input type="number" name="nbChoix" min="0" max="100"><br>
+			  Nom du premier paragraphe <input type="text" name="titreParagraphe" required/><br>
+			  Premier paragraphe<TEXTAREA name="story" rows=4 cols=80 required></TEXTAREA><br>
+                          Nombre de choix <input type="number" id="nbChoix" name="nbChoix" min="0" max="100" valeur=0 required>
+                          <input type="button" value="Afficher les choix" onclick="changeChoice();">
+              <br>
 			  </p>
-			  <input type="submit" name="Créer l'histoire" />
+			  <table id="choice" class="formulaire"></table>
+			  <br>
+	          <input type="submit" value ="Créer l'histoire" name="Créer l'histoire" />
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
