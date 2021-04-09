@@ -34,6 +34,7 @@
     var nbChoixJs = 0;
     
     function changeChoice(){
+    	document.getElementById("errorMessage").innerHTML ="";
     	var newNbChoice = document.getElementById("nbChoix").value;
     	var div = document.getElementById("choice");
         while (newNbChoice > nbChoixJs){
@@ -44,6 +45,57 @@
     		nbChoixJs--;
  	        div.deleteRow(nbChoixJs);
  	      } 
+    }
+    
+    function checkRequired(){
+    	if(document.getElementById("title").value == ""){
+    		return false;
+    	}
+    	if(document.getElementById("titreParagraphe").value == ""){
+    		return false;
+    	}
+    	if(document.getElementById("story").value == ""){
+    		return false;
+    	}
+    	if(document.getElementById("nbChoix").value == ""){
+    		return false;
+    	}
+    	return true;
+    } 
+    
+    function checkChoice(){
+    	var nbChoiceSupposed = document.getElementById("nbChoix").value;
+    	var test = document.getElementById("choix" + nbChoiceSupposed.toString());
+    	if(nbChoiceSupposed == 0){
+    		if(test == null){
+    			return true;
+    		}
+    		else{
+    			return false;
+    		}
+    	}
+    	else{
+    		if(test == null){
+    			return false;
+    		}
+    		else{
+    			return true;
+    		}
+    	}
+    }
+    
+    function submitForm(){
+    	if(checkRequired()){
+    		if(checkChoice()){
+    			document.getElementById("formCreate").submit();
+    		}
+    		else{
+    			document.getElementById("errorMessage").innerHTML = "Appuyez sur le bouton valider pour mettre à jour vos choix";
+    		}
+    	}
+    	else{
+    		document.getElementById("errorMessage").innerHTML = "Tous les champs doivent être remplis";
+    	} 
     } 
     
 </script>
@@ -65,11 +117,11 @@
 		  <li style="float:right"><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
 		  <c:if test="${param.bouton == 'createStory'}">
-		  <form method="post" action="createStory" accept-charset="UTF-8">
+		  <form method="post" id="formCreate" action="createStory" accept-charset="UTF-8">
 		    <p>
             <br>
             <br>
-		     Nom d'histoire <input type="text" name="title" required/><br>
+		     Nom d'histoire <input type="text" name="title" id="title"/><br>
 		     Confidentialité de l'histoire : <label><input type="radio" onclick="activeInvite();" name="confident" checked="checked" id="buttonPublic"/>Publique</label>
 			   								 <label><input type="radio" onclick="activeInvite();" name="confident"/>Privée</label> <br>
 			Personnes invitées pour l'écriture
@@ -79,15 +131,17 @@
 	            </c:forEach>
 			</select> 
 			 <input type="button" value="Effacer la sélection" onclick="EraseSelect()"> <br>
-			  Nom du premier paragraphe <input type="text" name="titreParagraphe" required/><br>
-			  Premier paragraphe<TEXTAREA name="story" rows=4 cols=80 required></TEXTAREA><br>
-                          Nombre de choix <input type="number" id="nbChoix" name="nbChoix" min="0" max="100" valeur=0 required>
+			  Nom du premier paragraphe <input type="text" name="titreParagraphe" id="titreParagraphe"/><br>
+			  Premier paragraphe<TEXTAREA name="story" id="story" rows=4 cols=80 required></TEXTAREA><br>
+                          Nombre de choix <input type="number" id="nbChoix" name="nbChoix" value="0" min="0" max="100" required>
                           <input type="button" value="Afficher les choix" onclick="changeChoice();">
               <br>
 			  </p>
 			  <table id="choice" class="formulaire"></table>
 			  <br>
-	          <input type="submit" value ="Créer l'histoire" name="Créer l'histoire" />
+			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
+	          <!-- <input type="submit" value ="Créer l'histoire" name="Créer l'histoire" /> -->
+	          <p id="errorMessage"> </p>
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
