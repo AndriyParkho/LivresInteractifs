@@ -119,8 +119,6 @@
 		  <c:if test="${param.bouton == 'createStory'}">
 		  <form method="post" id="formCreate" action="createStory" accept-charset="UTF-8">
 		    <p>
-            <br>
-            <br>
 		     Nom d'histoire <input type="text" name="title" id="title"/><br>
 		     Confidentialité de l'histoire : <label><input type="radio" onclick="activeInvite();" name="confident" checked="checked" id="buttonPublic"/>Publique</label>
 			   								 <label><input type="radio" onclick="activeInvite();" name="confident"/>Privée</label> <br>
@@ -144,8 +142,7 @@
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
-                      <br>
-                      <br>
+
                     <table>
 	            <tr>
 	                <th>Titre</th>
