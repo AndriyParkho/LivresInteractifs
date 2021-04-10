@@ -12,6 +12,7 @@ public class Paragraphe {
 	private ArrayList<Paragraphe> paragSuiv = new ArrayList<Paragraphe>();
 	private Integer idWritter;
 	
+	
 	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, Integer nbChoix, Integer idWritter) {
 		super();
 		this.idHist = idHist;

@@ -53,10 +53,23 @@ public class ReadStory extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-
         request.setCharacterEncoding("UTF-8");
         int idHist = Integer.parseInt(request.getParameter("idHist"));
-        int numParagPere = Integer.parseInt(request.getParameter("numParagPere"));
+        String numParagToReset = request.getParameter("goBackTo");
+        int numParagPere;
+        HttpSession session = request.getSession();
+        HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
+        if(numParagToReset != null) {
+        	System.out.println(numParagToReset);
+        	numParagPere = Integer.parseInt(numParagToReset);
+        	List<Paragraphe> listePara = historique.getTree(idHist);
+        	for(int i = listePara.size() - 1; i >= numParagPere; i--) {
+        		listePara.remove(i);
+        	}
+        }
+        else {
+        	numParagPere = Integer.parseInt(request.getParameter("numParagPere"));
+        }
         Integer numChoix;
         if(request.getParameter("choix") == null) numChoix = null;
         else numChoix = Integer.valueOf(request.getParameter("choix"));
@@ -67,9 +80,6 @@ public class ReadStory extends HttpServlet {
         if(this.paragsToRead.isEmpty()) currentParag = null;
         else currentParag = this.paragsToRead.get(paragsToRead.size()-1);
         List<Paragraphe> choixParag;
-        
-        HttpSession session = request.getSession();
-        HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
         try {
         	if(numChoix == null) {
         		currentParag = histoireDAO.getHistoireTree(idHist);
