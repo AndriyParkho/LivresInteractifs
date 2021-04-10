@@ -1,10 +1,7 @@
 package controleur;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -17,9 +14,11 @@ import javax.sql.DataSource;
 
 import dao.DAOException;
 import dao.HistoireDAO;
+import dao.ParagrapheDAO;
 import dao.UtilisateurDAO;
 import modele.Histoire;
 import modele.HistoriqueModele;
+import modele.Paragraphe;
 import modele.Utilisateur;
 
 /**
@@ -98,20 +97,22 @@ public class Accueil extends HttpServlet {
             HttpServletResponse response) throws ServletException, IOException {
     	
     	HistoireDAO histoireDAO = new HistoireDAO(ds);
+    	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
     	
     	HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
-        Histoire histoire = histoireDAO.getHistoireEnCours(user.getId(), request);
-        int numParag;
-        if(histoire!= null){
-            numParag = (int)sess.getAttribute("numParag");
-            request.setAttribute("numParag", numParag);
-        }
-        
+//        Histoire histoire = histoireDAO.getHistoireEnCours(user.getId(), request);
+//        int numParag;
+//        if(histoire!= null){
+//            numParag = (int)sess.getAttribute("numParag");
+//            request.setAttribute("numParag", numParag);
+//        }
+        Paragraphe paragraphe =  paragrapheDAO.getPragEnCours(user.getId());
+    	
         List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire(user.getId());
         
         request.setAttribute("histoires", histoires);
-        request.setAttribute("histoireDejaCommence", histoire);
+        request.setAttribute("paragEnCours", paragraphe);
         
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }

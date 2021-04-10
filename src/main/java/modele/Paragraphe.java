@@ -8,11 +8,11 @@ public class Paragraphe {
 	private String titre;
 	private String texte;
 	private boolean valide;
-	private int nbChoix;
+	private Integer nbChoix;
 	private ArrayList<Paragraphe> paragSuiv = new ArrayList<Paragraphe>();
-	private int idWritter;
+	private Integer idWritter;
 	
-	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, int nbChoix, int idWritter) {
+	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, Integer nbChoix, Integer idWritter) {
 		super();
 		this.idHist = idHist;
 		this.numParag = numParag;
@@ -23,7 +23,7 @@ public class Paragraphe {
 		this.idWritter = idWritter;
 	}
 	
-	public Paragraphe(int idHist, int numParag, String titre, String texte, int nbChoix) {
+	public Paragraphe(int idHist, int numParag, String titre, String texte, Integer nbChoix) {
 		super();
 		this.idHist = idHist;
 		this.numParag = numParag;
@@ -44,13 +44,13 @@ public class Paragraphe {
 	public boolean isValide() {
 		return valide;
 	}
-	public int getNbChoix() {
+	public Integer getNbChoix() {
 		return nbChoix;
 	}
 	public ArrayList<Paragraphe> getParagSuiv() {
 		return paragSuiv;
 	}
-	public int getIdWritter() {
+	public Integer getIdWritter() {
 		return idWritter;
 	}
 	

@@ -98,43 +98,43 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     	return firstParag;
     }
     
-    public Histoire getHistoireEnCours(int idUser, HttpServletRequest request){
-        Histoire histoire = null;
-        
-        try(Connection c = dataSource.getConnection()){
-            PreparedStatement ps_story = c.prepareStatement("SELECT H.idHist, H.titre, H.prive, H.datePubli, H.idAuteur, P.numParag FROM Paragraphe P, Histoire H WHERE P.idHist = H.idHist AND P.idWritter = ? AND P.valide = 0");
-            ps_story.setInt(1, idUser);
-            ResultSet rs = ps_story.executeQuery();
-            int idHist;
-            String titre;
-            int prive;
-            Date datePubli;
-            int idAuteur;
-            int numParag;
-            
-            if(rs == null){
-                return null;
-            }
-            while(rs.next()){
-                idHist = rs.getInt("idHist");
-                titre = rs.getString("titre");
-                prive = rs.getInt("prive");
-                datePubli = rs.getDate("datePubli");
-                idAuteur = rs.getInt("idAuteur");
-                numParag = rs.getInt("numParag");
-                
-            histoire = new Histoire(idHist, titre, datePubli, idAuteur);
-            HttpSession sess = request.getSession(false);
-            sess.setAttribute("numParag", numParag);
-            return histoire;
-            }
-        return histoire;    
-        }catch(SQLException sqle){
-            throw new DAOException("Erreur BD "+ sqle.getMessage(),sqle);
-            
-        }
-        
-    }
+//    public Histoire getHistoireEnCours(int idUser, HttpServletRequest request){
+//        Histoire histoire = null;
+//        
+//        try(Connection c = dataSource.getConnection()){
+//            PreparedStatement ps_story = c.prepareStatement("SELECT H.idHist, H.titre, H.prive, H.datePubli, H.idAuteur, P.numParag FROM Paragraphe P, Histoire H WHERE P.idHist = H.idHist AND P.idWritter = ? AND P.valide = 0");
+//            ps_story.setInt(1, idUser);
+//            ResultSet rs = ps_story.executeQuery();
+//            int idHist;
+//            String titre;
+//            int prive;
+//            Date datePubli;
+//            int idAuteur;
+//            int numParag;
+//            
+//            if(rs == null){
+//                return null;
+//            }
+//            while(rs.next()){
+//                idHist = rs.getInt("idHist");
+//                titre = rs.getString("titre");
+//                prive = rs.getInt("prive");
+//                datePubli = rs.getDate("datePubli");
+//                idAuteur = rs.getInt("idAuteur");
+//                numParag = rs.getInt("numParag");
+//                
+//            histoire = new Histoire(idHist, titre, datePubli, idAuteur);
+//            HttpSession sess = request.getSession(false);
+//            sess.setAttribute("numParag", numParag);
+//            return histoire;
+//            }
+//        return histoire;    
+//        }catch(SQLException sqle){
+//            throw new DAOException("Erreur BD "+ sqle.getMessage(),sqle);
+//            
+//        }
+//        
+//    }
     
     public boolean createStory(HttpServletRequest request){
         HttpSession session = request.getSession();
