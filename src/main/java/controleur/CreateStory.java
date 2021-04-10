@@ -58,8 +58,12 @@ public class CreateStory extends HttpServlet {
         
         /* Mise à jour de la base de données*/
         HistoireDAO histoireDAO = new HistoireDAO(ds);
-        histoireDAO.createStory(request);
-        //traiteDonnees(request);
+        try {
+        	histoireDAO.createStory(request);
+        } catch (DAOException e) {
+            erreurBD(request, response, e);
+        }
+   
         
         /* Envoi de la réponse */
         response.setContentType("text/html;charset=UTF-8");

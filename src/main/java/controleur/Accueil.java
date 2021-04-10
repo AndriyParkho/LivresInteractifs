@@ -100,7 +100,6 @@ public class Accueil extends HttpServlet {
             request.setAttribute("numParag", numParag);
         }
         
-        System.out.println(histoire);
         List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire(user.getId());
         
         request.setAttribute("histoires", histoires);
@@ -152,7 +151,7 @@ public class Accueil extends HttpServlet {
     		actionAfficherListeUtilisateur(request, response);
     		break;
     	case "historique":
-            System.err.println("Action non encore implémentée");
+    		request.getRequestDispatcher("historique").forward(request, response);
     		break;
     	case "logout":
     		HttpSession session = request.getSession();

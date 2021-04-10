@@ -154,8 +154,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 while(result_set.next()){
                     numero_histoire = result_set.getInt(1);
                 }
-            }catch(SQLException sqle){
-                System.out.println(sqle.getMessage());
+            }catch(SQLException e){
+            	throw new DAOException("Erreur BD" + e.getMessage(), e);
             } 
             ps_histoire.setInt(1, numero_histoire);
             ps_histoire.setString(2, title);
@@ -188,4 +188,41 @@ public class HistoireDAO extends AbstractDataBaseDAO {
         return true;        
     }
     
+    public boolean setReader(int idHist, int idUtil) {
+    	try(Connection c = dataSource.getConnection()){
+            PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, 1, ?, 1)");
+            ps.setInt(1, idHist);
+            ps.setInt(2, idUtil);
+            ps.executeQuery();
+    	} catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
+    	return true;
+    }
+    
+    public boolean setReader(int idHist, int numParag, int idUtil) {
+    	try(Connection c = dataSource.getConnection()){
+    		if(true){//TODO vérifier qu'il n'y a pas d'entrée pour ces valeurs (idHist, numParag, idUtil)
+    			PreparedStatement getMax = c.prepareStatement("SELECT MAX(locationId) FROM hasRead WHERE idHist=? AND idUtil=?");
+    			getMax.setInt(1, idHist);
+                getMax.setInt(2, idUtil);
+                ResultSet rs = getMax.executeQuery();
+                int nextLocation = -1;
+                if(rs.next()) {
+                	nextLocation = rs.getInt("max(locationId)") + 1;
+                } 
+    			PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, ?, ?, ?)");
+                ps.setInt(1, idHist);
+                ps.setInt(2, numParag);
+                ps.setInt(3, idUtil);
+                ps.setInt(4, nextLocation);
+    		}
+    		else {
+    			return true;
+    		}
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
+    	return true;
+    }
 }

@@ -38,6 +38,8 @@ CREATE TABLE HasRead (
        idHist integer NOT NULL,
        numParag integer NOT NULL,
        idUtil integer NOT NULL REFERENCES Utilisateur(idUtil),
+       locationId integer NOT NULL,
+       CHECK(locationId >= 1),
        CONSTRAINT fkHasRead FOREIGN KEY (idHist, numParag) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
        CONSTRAINT pkHasRead PRIMARY KEY (idHist, numParag, idUtil)
 );
@@ -50,5 +52,5 @@ CREATE TABLE IsFollowing (
        numParagFils integer NOT NULL,
        CONSTRAINT fkFollowingPere FOREIGN KEY (idHistPere, numParagPere) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
        CONSTRAINT fkFollowingFils FOREIGN KEY (idHistFils, numParagFils) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
-       CONSTRAINT pkIsFollowing PRIMARY KEY (idHistPere, numParagPere, numChoix, idHistFils, numParagFils)
+       CONSTRAINT pkIsFollowing PRIMARY KEY (idHistPere, numParagPere, idHistFils, numParagFils)
 );

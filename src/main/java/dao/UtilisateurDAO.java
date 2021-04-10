@@ -1,9 +1,11 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +69,6 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
                 "SELECT idUtil, nom, prenom, email, password FROM Utilisateur WHERE idUtil != ?"
             );
             s.setInt(1, userId);
-            
             ResultSet r = s.executeQuery();
             while (r.next()) {
             	Utilisateur user = new Utilisateur(r.getInt("idUtil"), r.getString("nom"), r.getString("prenom"), r.getString("email"), r.getString("password"));
@@ -77,6 +78,34 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
         	throw new DAOException("Erreur BD" + e.getMessage(), e);
         }
 		return result;
+	}
+	
+	public List<Histoire> getStoryRead(int userId){
+		List<Histoire> result = new ArrayList<Histoire>();
+		try (Connection conn = dataSource.getConnection()){
+            PreparedStatement s = conn.prepareStatement(
+                "SELECT DISTINCT idHist FROM hasRead WHERE idUtil=?"
+            );
+            s.setInt(1, userId);
+            ResultSet r = s.executeQuery();
+            Statement st = conn.createStatement();
+            ResultSet rs = null;
+            int idHist = -1;
+            while (r.next()) {
+            	idHist = r.getInt("idHist");
+            	rs = st.executeQuery("SELECT idHist, titre, datePubli, idAuteur FROM histoire WHERE idHist = " + Integer.toString(idHist));
+            	if(rs.next()) {
+            		Histoire story = new Histoire(idHist, rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
+            		result.add(story);
+            	} else {
+            		throw new DAOException("Une histoire a été cherchée mais n'est pas contenu dans la bdd");
+            	}
+            }
+        } catch (SQLException e) {
+        	throw new DAOException("Erreur BD" + e.getMessage(), e);
+        }
+		return result;
+		
 	}
 	
 
