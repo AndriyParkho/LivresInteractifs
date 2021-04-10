@@ -58,11 +58,12 @@ public class Historique extends HttpServlet {
 		    HttpSession session = request.getSession();
 		    HistoriqueModele historique = (HistoriqueModele) session.getAttribute("historique");
 		    List<Integer> idStories = historique.getStories();
-		    System.out.println(idStories.get(0));
 		    request.setAttribute("histoires", histDAO.getHistoires(idStories));
 		    request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
         } else {
-        	//TODO charger l'arbre
+        	/*TODO Mettre en place un attribut qui permet de savoir si l'on vient de l'historique + mettre en place
+        	les attributs pour que le controleur ReadStory comprennent qu'on veut charger la fin de l'histoire*/
+        	request.getRequestDispatcher("/WEB-INF/read_story").forward(request, response);
         }
        
     }

@@ -75,11 +75,11 @@ public class ReadStory extends HttpServlet {
         		currentParag = histoireDAO.getHistoireTree(idHist);
         		this.paragsToRead = new ArrayList<Paragraphe>();
         		while(currentParag.getParagSuiv().size() == 1) {
-        			historique.addParagraph(idHist, currentParag.getNumParag());
+        			historique.addParagraph(idHist, currentParag);
 	        		paragsToRead.add(currentParag);
 	        		currentParag = currentParag.getParagSuiv().get(0);
 	        	}
-        		historique.addParagraph(idHist, currentParag.getNumParag());
+        		historique.addParagraph(idHist, currentParag);
         		paragsToRead.add(currentParag);
         	}
         	else if(currentParag.getNumParag() != numParagPere) {
@@ -89,11 +89,11 @@ public class ReadStory extends HttpServlet {
         		this.paragsToRead = new ArrayList<Paragraphe>();
         		currentParag = currentParag.getParagSuiv().get(numChoix);
 	        	while(currentParag.getParagSuiv().size() == 1) {
-	        		historique.addParagraph(idHist, currentParag.getNumParag());
+	        		historique.addParagraph(idHist, currentParag);
 	        		paragsToRead.add(currentParag);
 	        		currentParag = currentParag.getParagSuiv().get(0);
 	        	}
-	        	historique.addParagraph(idHist, currentParag.getNumParag());
+	        	historique.addParagraph(idHist, currentParag);
 	        	paragsToRead.add(currentParag);
         	}
         	choixParag = currentParag.getParagSuiv();
