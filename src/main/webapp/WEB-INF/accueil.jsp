@@ -65,22 +65,23 @@
 		  <c:if test="${param.bouton == 'storyToWrite'}">
                       <br>
                       <br>
-                    <table>
-	            <tr>
-	                <th>Titre</th>
-	            </tr>
                     
                     <c:if test="${paragEnCours != null}">
                         <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
                     </c:if>
 	                <c:if test="${paragEnCours == null}">
-			            <c:forEach items="${histoires}" var="histoire">
-			                <tr>
-			                    <td class="click"><a href="write_story?idHist=${histoire.id}&numParagPere=1" class="story">${histoire.titre}</a></td>
-			                </tr>
-			            </c:forEach>
+	                 	<table>
+	            			<tr>
+	                			<th>Titre</th>
+	            			</tr>
+			           		 <c:forEach items="${histoires}" var="histoire">
+			                	<tr>
+			                    	<td class="click"><a href="write_story?idHist=${histoire.id}&numParagPere=1" class="story">${histoire.titre}</a></td>
+			                	</tr>
+			            	</c:forEach>
+			            </table>
 		            </c:if>
-	        	</table>
+	        	
 
 	 	  </c:if>
 		  
