@@ -6,19 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 public class HistoriqueModele {
-	private Map<Integer, ArrayList<Integer>> historique;
+	private Map<Integer, ArrayList<Paragraphe>> historique;
 	
 	public HistoriqueModele() {
-		historique = new HashMap<Integer, ArrayList<Integer>> ();
+		historique = new HashMap<Integer, ArrayList<Paragraphe>> ();
 	}
 	
-	public void addParagraph(int histId, int paragraphId) {
-		ArrayList<Integer> listParagraph = historique.get(histId);
+	public void addParagraph(int histId, Paragraphe paragraph) {
+		ArrayList<Paragraphe> listParagraph = historique.get(histId);
 		if(listParagraph  == null) {
-			listParagraph = new ArrayList<Integer>();
+			listParagraph = new ArrayList<Paragraphe>();
 			historique.put(histId, listParagraph);
 		}
-		listParagraph.add(paragraphId);
+		listParagraph.add(paragraph);
 	}
 	
 	public List<Integer> getStories(){
