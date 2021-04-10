@@ -122,7 +122,7 @@ public class Accueil extends HttpServlet {
      * Fonction qui renvoie la liste des utilisateurs
      */
     private void actionAfficherListeUtilisateur(HttpServletRequest request, 
-            HttpServletResponse response) throws ServletException, IOException {
+    		HttpServletResponse response) throws ServletException, IOException {
     	
     	UtilisateurDAO userDAO = new UtilisateurDAO(ds);
     	
@@ -132,10 +132,25 @@ public class Accueil extends HttpServlet {
     	try {
     		users = userDAO.getUserExceptMe(user.getId());
     	} catch (DAOException e) {
-    	erreurBD(request, response, e);
+    		erreurBD(request, response, e);
     	}
-        request.setAttribute("user", users);
-        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    	request.setAttribute("user", users);
+    	request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
+    
+    
+    /**
+     * Fonction pour afficher les histoires déjà lues
+     */
+    private void actionHistorique(HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {
+    	String idHist = request.getParameter("idHist");
+        HistoireDAO histDAO = new HistoireDAO(ds);
+	    HttpSession session = request.getSession();
+	    HistoriqueModele historique = (HistoriqueModele) session.getAttribute("historique");
+	    List<Integer> idStories = historique.getStories();
+	    request.setAttribute("histoires", histDAO.getHistoires(idStories));
+	    request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
     
     
@@ -160,7 +175,7 @@ public class Accueil extends HttpServlet {
     		actionAfficherListeUtilisateur(request, response);
     		break;
     	case "historique":
-    		request.getRequestDispatcher("historique").forward(request, response);
+    		actionHistorique(request, response);
     		break;
     	case "logout":
     		HttpSession session = request.getSession();
