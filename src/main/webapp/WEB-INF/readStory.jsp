@@ -17,7 +17,7 @@
 	</c:forEach>
 	</div>
 	<c:forEach items="${choixParag}" var="choix" varStatus="vs">
-    	<div class="choixSuite"><a class="choixSuite" href="read_story?idHist=${choix.idHist}&choix=${vs.index}&numParag=${choix.numParag}" class="active">${choix.titre}</a></div>
+    	<div class="choixSuite"><a class="choixSuite" href="read_story?idHist=${choix.idHist}&choix=${vs.index}&numParagPere=${current.numParag}" class="active">${choix.titre}</a></div>
     	<br>
 	</c:forEach>
 </body>

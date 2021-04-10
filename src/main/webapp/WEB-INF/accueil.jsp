@@ -103,7 +103,7 @@
             </tr>
             <c:forEach items="${histoires}" var="histoire">
                 <tr>
-                    <td class="click"><a href="read_story?idHist=${histoire.id}&numParag=1">${histoire.titre}</a></td>
+                    <td class="click"><a href="read_story?idHist=${histoire.id}&numParagPere=1">${histoire.titre}</a></td>
                 </tr>
             </c:forEach>
         </table>
