@@ -16,6 +16,11 @@
              </p>
 	</c:forEach>
 	</div>
+	<c:if test="${warning}">
+	<script>window.onload=function() {
+		window.alert("Pour changer vos choix, utilisez l'historique.");
+	};</script>
+     </c:if>
 	<c:forEach items="${choixParag}" var="choix" varStatus="vs">
     	<div class="choixSuite"><a class="choixSuite" href="read_story?idHist=${choix.idHist}&choix=${vs.index}&numParagPere=${current.numParag}" class="active">${choix.titre}</a></div>
     	<br>

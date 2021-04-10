@@ -17,6 +17,7 @@ import dao.DAOException;
 import dao.HistoireDAO;
 import dao.UtilisateurDAO;
 import modele.Histoire;
+import modele.HistoriqueModele;
 import modele.Paragraphe;
 import modele.Utilisateur;
 
@@ -52,19 +53,14 @@ public class Historique extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         String idHist = request.getParameter("idHist");
+        HistoireDAO histDAO = new HistoireDAO(ds);
         if(idHist == null) {
 		    HttpSession session = request.getSession();
-		    Utilisateur user = (Utilisateur) session.getAttribute("user");
-		    if(user != null) {
-		    	UtilisateurDAO userDAO = new UtilisateurDAO(ds);
-		        try {
-		        	List<Histoire> storyRead = userDAO.getStoryRead(user.getId());
-		        	request.setAttribute("histoires", storyRead);
-		        	request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
-		        } catch (DAOException e) {
-		        	erreurBD(request, response, e);
-		        }
-		    }
+		    HistoriqueModele historique = (HistoriqueModele) session.getAttribute("historique");
+		    List<Integer> idStories = historique.getStories();
+		    System.out.println(idStories.get(0));
+		    request.setAttribute("histoires", histDAO.getHistoires(idStories));
+		    request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
         } else {
         	//TODO charger l'arbre
         }

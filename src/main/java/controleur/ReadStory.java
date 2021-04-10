@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 import dao.DAOException;
 import dao.HistoireDAO;
 import modele.Histoire;
+import modele.HistoriqueModele;
 import modele.Paragraphe;
 import modele.Utilisateur;
 
@@ -68,28 +69,31 @@ public class ReadStory extends HttpServlet {
         List<Paragraphe> choixParag;
         
         HttpSession session = request.getSession();
-        Utilisateur user = (Utilisateur) session.getAttribute("user");
-        
+        HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
         try {
         	if(numChoix == null) {
         		currentParag = histoireDAO.getHistoireTree(idHist);
         		this.paragsToRead = new ArrayList<Paragraphe>();
         		while(currentParag.getParagSuiv().size() == 1) {
+        			historique.addParagraph(idHist, currentParag.getNumParag());
 	        		paragsToRead.add(currentParag);
 	        		currentParag = currentParag.getParagSuiv().get(0);
 	        	}
+        		historique.addParagraph(idHist, currentParag.getNumParag());
         		paragsToRead.add(currentParag);
         	}
         	else if(currentParag.getNumParag() != numParagPere) {
-        		// Ajouter l'attribut pour mettre la pop-up
+        		request.setAttribute("warning", true);
         	}
         	else { 
         		this.paragsToRead = new ArrayList<Paragraphe>();
         		currentParag = currentParag.getParagSuiv().get(numChoix);
 	        	while(currentParag.getParagSuiv().size() == 1) {
+	        		historique.addParagraph(idHist, currentParag.getNumParag());
 	        		paragsToRead.add(currentParag);
 	        		currentParag = currentParag.getParagSuiv().get(0);
 	        	}
+	        	historique.addParagraph(idHist, currentParag.getNumParag());
 	        	paragsToRead.add(currentParag);
         	}
         	choixParag = currentParag.getParagSuiv();
@@ -100,5 +104,6 @@ public class ReadStory extends HttpServlet {
         } catch (DAOException e) {
             erreurBD(request, response, e);
         }
+        
     }
 }
