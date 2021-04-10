@@ -49,5 +49,5 @@ CREATE TABLE IsFollowing (
        numParagFils integer NOT NULL,
        CONSTRAINT fkFollowingPere FOREIGN KEY (idHistPere, numParagPere) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
        CONSTRAINT fkFollowingFils FOREIGN KEY (idHistFils, numParagFils) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
-       CONSTRAINT pkIsFollowing PRIMARY KEY (idHistPere, numParagPere, numChoix, idHistFils, numParagFils)
+       CONSTRAINT pkIsFollowing PRIMARY KEY (idHistPere, numParagPere, idHistFils, numParagFils)
 );
