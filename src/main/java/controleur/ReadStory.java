@@ -100,6 +100,9 @@ public class ReadStory extends HttpServlet {
         	request.setAttribute("current", currentParag);
         	request.setAttribute("paragsToRead", paragsToRead);
         	request.setAttribute("choixParag", choixParag);
+        	List<Paragraphe> treeParagraph = historique.getTree(idHist);
+        	request.setAttribute("historique", treeParagraph);
+        	request.setAttribute("StoryFirst", true);
         	request.getRequestDispatcher("/WEB-INF/readStory.jsp").forward(request, response);
         } catch (DAOException e) {
             erreurBD(request, response, e);

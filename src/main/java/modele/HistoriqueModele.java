@@ -29,4 +29,8 @@ public class HistoriqueModele {
 		return listStories;
 	}
 	
+	public List<Paragraphe> getTree(int histId){
+		return historique.get(histId);
+	}
+	
 }
