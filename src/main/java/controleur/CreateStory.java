@@ -1,40 +1,93 @@
 package controleur;
 
+import dao.DAOException;
+import dao.HistoireDAO;
+import dao.UtilisateurDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
+import modele.Histoire;
+import modele.Utilisateur;
 
 @WebServlet(name = "CreateStory", urlPatterns = {"/createStory"})
 public class CreateStory extends HttpServlet {
 	
-	
+	/**
+     * 
+     * Affiche la page d’accueil avec la liste de toutes les histoires. 
+     */
+    
+    private void actionAfficher(HttpServletRequest request, 
+            HttpServletResponse response, 
+            HistoireDAO histoireDAO) throws ServletException, IOException {
+    	
+    	
+        List<Histoire> histoires = histoireDAO.getListeHistoires();
+        
+        request.setAttribute("histoires", histoires);
+        
+        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
+    
+    private void erreurBD(HttpServletRequest request,
+            HttpServletResponse response, DAOException e)
+        throws ServletException, IOException {
+    	e.printStackTrace(); // permet d’avoir le détail de l’erreur dans catalina.out
+    	request.setAttribute("erreurMessage", e.getMessage());
+    	request.getRequestDispatcher("/WEB-INF/bdErreur.jsp").forward(request, response);
+    }
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        
+        
+        
         /* Récupération des données de formulaire */
         request.setCharacterEncoding("UTF-8");
-        String titre = request.getParameter("title");
-        int confidentialité = 0;
+        
+        /* Mise à jour de la base de données*/
+        HistoireDAO histoireDAO = new HistoireDAO(ds);
         try {
-        	confidentialité = Integer.parseInt(request.getParameter("confident"));
-        } catch (Exception e){
-        	
+        	histoireDAO.createStory(request);
+        } catch (DAOException e) {
+            erreurBD(request, response, e);
         }
-        String[] auteurs = request.getParameterValues("auteurs");
-        String titreParagraphe = request.getParameter("paragraphe");
-        String paragraphe = request.getParameter("story");
+   
         
         /* Envoi de la réponse */
         response.setContentType("text/html;charset=UTF-8");
-        response.sendRedirect("homeConnected.html"); 
+        try {
+        	actionAfficher(request, response, histoireDAO);
+        } catch (DAOException e) {
+            erreurBD(request, response, e);
+        }
     }
     
-}
+    @Resource(name = "jdbc/projetWeb")
+    private DataSource ds;
+    
+    
+    
+    /*
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+            
+            HttpSession session = request.getSession();
+            if(session == null){
+                response.sendRedirect("index.html");
+            }
+        }
+    */
+        
+    }

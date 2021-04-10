@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 import dao.DAOException;
 import dao.HistoireDAO;
+import dao.UtilisateurDAO;
 import modele.Histoire;
 import modele.Utilisateur;
 
@@ -41,7 +42,7 @@ public class Accueil extends HttpServlet {
     }
   
     /**
-     * Actions possibles en GET : afficher (correspond à l’absence du param).
+     * Actions possibles en GET : afficher (correspond à l’absence du param), getHistoire.
      */
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
@@ -81,6 +82,10 @@ public class Accueil extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
     
+    /**
+     * 
+     * Fonction qui renvoie la liste des histoires qu'il est possible d'écrire pour l'utilisateur
+     */
     private void actionAfficherHistoireAEcrire(HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
     	
@@ -88,12 +93,43 @@ public class Accueil extends HttpServlet {
     	
     	HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+        Histoire histoire = histoireDAO.getHistoireEnCours(user.getId(), request);
+        int numParag;
+        if(histoire!= null){
+            numParag = (int)sess.getAttribute("numParag");
+            request.setAttribute("numParag", numParag);
+        }
+        
         List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire(user.getId());
         
         request.setAttribute("histoires", histoires);
+        request.setAttribute("histoireDejaCommence", histoire);
         
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
+    
+    /**
+     * 
+     * Fonction qui renvoie la liste des utilisateurs
+     */
+    private void actionAfficherListeUtilisateur(HttpServletRequest request, 
+            HttpServletResponse response) throws ServletException, IOException {
+    	
+    	UtilisateurDAO userDAO = new UtilisateurDAO(ds);
+    	
+    	HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+    	List<Utilisateur> users = null;
+    	try {
+    		users = userDAO.getUserExceptMe(user.getId());
+    	} catch (DAOException e) {
+    	erreurBD(request, response, e);
+    	}
+        request.setAttribute("user", users);
+        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
+    
+    
     /**
      * 
      */
@@ -112,10 +148,10 @@ public class Accueil extends HttpServlet {
     		actionAfficherHistoireAEcrire(request, response);
     		break;
     	case "createStory":
-    		request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    		actionAfficherListeUtilisateur(request, response);
     		break;
     	case "historique":
-            System.err.println("Action non encore implémentée");
+    		request.getRequestDispatcher("historique").forward(request, response);
     		break;
     	case "logout":
     		HttpSession session = request.getSession();

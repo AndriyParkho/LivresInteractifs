@@ -1,6 +1,12 @@
 INSERT INTO Utilisateur (nom, prenom, email, password) VALUES
 	('Parkhomenko', 'Andriy', 'andriy.parkhomenko@grenoble-inp.org', 'code');
 
+INSERT INTO Utilisateur (nom, prenom, email, password) VALUES
+	('Jézéquel-Royer', 'Louis', 'louis.jezequel-royer@grenoble-inp.org', 'code');
+	
+INSERT INTO Utilisateur (nom, prenom, email, password) VALUES
+	('Ousset', 'Mickaël', 'mickael.ousset@grenoble-inp.org', 'code');
+	
 INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
 	('Random latin', 1, TO_DATE('03/04/2020', 'MM/DD/YYYY'));
 INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist, valide) VALUES
@@ -82,3 +88,46 @@ INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist) VALUE
 								ad vesperum est a patribus conscriptis, populo Romano, sociis et Latinis, pridie quam excessit 
 								e vita, ut ex tam alto dignitatis gradu ad superos videatur deos potius quam ad inferos pervenisse.',
 								1, 1, 3);
+								
+INSERT INTO Histoire (titre, idauteur) VALUES
+	('La vie de Andriy', 1);
+	
+INSERT INTO Histoire (titre, idauteur) VALUES
+	('La vie de Louis', 2);
+
+INSERT INTO Histoire (titre, idauteur) VALUES
+	('La vie de Mickaël', 3);
+	
+INSERT INTO Histoire (titre, idauteur, prive) VALUES
+	('La vie privée de Andriy', 1, 1);
+
+INSERT INTO IsInvited (idHist, idUtil) VALUES 
+	(7, 2);
+
+INSERT INTO IsInvited (idHist, idUtil) VALUES 
+	(7, 3);
+
+INSERT INTO Histoire (titre, idauteur, prive) VALUES
+	('La vie privée de Louis', 2, 1);
+
+INSERT INTO IsInvited (idHist, idUtil) VALUES 
+	(8, 1);
+
+INSERT INTO IsInvited (idHist, idUtil) VALUES 
+	(8, 3);
+	
+INSERT INTO Histoire (titre, idauteur, prive) VALUES
+	('La vie privée de Mickaël', 3, 1);
+	
+INSERT INTO IsInvited (idHist, idUtil) VALUES 
+	(9, 1);
+
+INSERT INTO IsInvited (idHist, idUtil) VALUES 
+	(9, 2);
+	
+	
+	
+	
+	
+	
+	

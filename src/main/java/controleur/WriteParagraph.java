@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import dao.DAOException;
@@ -15,14 +16,13 @@ import dao.HistoireDAO;
 import dao.ParagrapheDAO;
 import java.sql.PreparedStatement;
 import modele.Paragraphe;
+import modele.Utilisateur;
 
 /**
  * Le contrôleur pour accéder à l'écriture d'une histoire
  */
-@WebServlet(name = "WriteStory", urlPatterns = {"/write_story"})
-public class WriteStory extends HttpServlet {
-
-	private Paragraphe currentParag;  
+@WebServlet(name = "WriteParagraph", urlPatterns = {"/write_paragraph"})
+public class WriteParagraph extends HttpServlet { 
 	
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
@@ -48,8 +48,18 @@ public class WriteStory extends HttpServlet {
             HttpServletResponse response)
             throws IOException, ServletException {
         
-
+    	HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+    	ParagrapheDAO paragraph = new ParagrapheDAO(ds);
+    	int idHist = Integer.parseInt(request.getParameter("idHist"));
+    	int numParag = Integer.parseInt(request.getParameter("numParag"));
+    	try {
+    		paragraph.setWritter(idHist, numParag, user.getId());
+    	} catch (DAOException e) {
+            erreurBD(request, response, e);
+        }
         request.setCharacterEncoding("UTF-8");
+        request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
         
         
         
