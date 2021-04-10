@@ -60,19 +60,7 @@ public class Historique extends HttpServlet {
 		    List<Integer> idStories = historique.getStories();
 		    System.out.println(idStories.get(0));
 		    request.setAttribute("histoires", histDAO.getHistoires(idStories));
-		    
 		    request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
-//		    Utilisateur user = (Utilisateur) session.getAttribute("user");
-//		    if(user != null) {
-//		    	UtilisateurDAO userDAO = new UtilisateurDAO(ds);
-//		        try {
-//		        	List<Histoire> storyRead = userDAO.getStoryRead(user.getId());
-//		        	request.setAttribute("histoires", storyRead);
-//		        	request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
-//		        } catch (DAOException e) {
-//		        	erreurBD(request, response, e);
-//		        }
-//		    }
         } else {
         	//TODO charger l'arbre
         }

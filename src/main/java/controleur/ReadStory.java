@@ -83,7 +83,7 @@ public class ReadStory extends HttpServlet {
         		paragsToRead.add(currentParag);
         	}
         	else if(currentParag.getNumParag() != numParagPere) {
-        		// Ajouter l'attribut pour mettre la pop-up
+        		request.setAttribute("warning", true);
         	}
         	else { 
         		this.paragsToRead = new ArrayList<Paragraphe>();

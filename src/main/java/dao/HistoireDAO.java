@@ -188,7 +188,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
         return true;        
     }
     
-    public boolean setReader(int idHist, int idUtil) {
+/*    public boolean setReader(int idHist, int idUtil) {
     	try(Connection c = dataSource.getConnection()){
             PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, 1, ?, 1)");
             ps.setInt(1, idHist);
@@ -225,7 +225,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
     	return true;
-    }
+    } */
     
     public List<Histoire> getHistoires(List<Integer> idStories){
     	List<Histoire> listStories = new ArrayList<Histoire>();
