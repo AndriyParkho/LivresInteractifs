@@ -1,7 +1,10 @@
 package controleur;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -16,6 +19,7 @@ import dao.DAOException;
 import dao.HistoireDAO;
 import dao.UtilisateurDAO;
 import modele.Histoire;
+import modele.HistoriqueModele;
 import modele.Utilisateur;
 
 /**
@@ -51,7 +55,11 @@ public class Accueil extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         HistoireDAO histoireDAO = new HistoireDAO(ds);
-
+        HttpSession session = request.getSession();
+        if(session.getAttribute("historique") == null) {
+        	HistoriqueModele historique = new HistoriqueModele();
+        	session.setAttribute("historique", historique);
+        }
         try {
             if (action == null) {
                 actionAfficher(request, response, histoireDAO);

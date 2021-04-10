@@ -11,6 +11,7 @@
 
      <c:if test="${user == null}">
      	<ul class='menu'>
+     	  <li class='menu'><a href="accueil" <c:if test="${empty param.bouton}"> class="active" </c:if>>Histoire à lire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=login">Se connecter</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=register">S'enregistrer</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>

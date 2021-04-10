@@ -216,6 +216,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 ps.setInt(2, numParag);
                 ps.setInt(3, idUtil);
                 ps.setInt(4, nextLocation);
+                ps.executeQuery();
     		}
     		else {
     			return true;
@@ -224,5 +225,28 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
     	return true;
+    }
+    
+    public List<Histoire> getHistoires(List<Integer> idStories){
+    	List<Histoire> listStories = new ArrayList<Histoire>();
+    	for(int id : idStories) {
+    		listStories.add(getHistoire(id));
+    	}
+    	return listStories;
+    }
+    
+    public Histoire getHistoire(int histId) {
+    	Histoire hist = null;
+    	try(Connection c = dataSource.getConnection()){
+    		PreparedStatement story = c.prepareStatement("SELECT titre, datePubli, idAuteur FROM Histoire WHERE idHist=?");
+    		story.setInt(1, histId);
+    		ResultSet rs = story.executeQuery();
+    		if(rs.next()) {
+    			hist = new Histoire(histId, rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
+    		}
+    	} catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
+    	return hist;
     }
 }
