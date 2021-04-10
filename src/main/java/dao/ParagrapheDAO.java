@@ -40,22 +40,39 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 			return true;
 		} else {
 			try (
-		     Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-		     ) {
-	            ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe JOIN "
-	            		+ "isfollowing ON idhistfils = idhist AND numparagfils = numparag WHERE idhistpere = " + parag.getIdHist() + 
-	            		" AND numparagpere = " + parag.getNumParag()  + "AND texte IS NOT NULL AND valide = 1");
-	            if(!rs.next()) return false;
-	            rs.beforeFirst();
-	            while (rs.next()) {
-	                Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), rs.getString("texte"), rs.getInt("nbchoix"));
-	                if(this.setFollowingParag(childParag, conn)) parag.addParagSuiv(childParag);
-	            }
-	            if(parag.getParagSuiv().isEmpty()) return false;
-	            else return true;
-	        } catch (SQLException e) {
-	            throw new DAOException("Erreur BD " + e.getMessage(), e);
+					Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+					) {
+				ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe JOIN "
+						+ "isfollowing ON idhistfils = idhist AND numparagfils = numparag WHERE idhistpere = " + parag.getIdHist() + 
+						" AND numparagpere = " + parag.getNumParag()  + "AND texte IS NOT NULL AND valide = 1");
+				if(!rs.next()) return false;
+				rs.beforeFirst();
+				while (rs.next()) {
+					Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), rs.getString("texte"), rs.getInt("nbchoix"));
+					if(this.setFollowingParag(childParag, conn)) parag.addParagSuiv(childParag);
+				}
+				if(parag.getParagSuiv().isEmpty()) return false;
+				else return true;
+			} catch (SQLException e) {
+				throw new DAOException("Erreur BD " + e.getMessage(), e);
 			}
+		}
+	}
+	
+	public void setAllFollowingParag(Paragraphe parag, Connection conn) {
+		try (
+	     Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+	     ) {
+            ResultSet rs = st.executeQuery("SELECT * FROM paragraphe JOIN isfollowing ON idhistfils = idhist AND "
+            		+ "numparagfils = numparag WHERE idhistpere = " + parag.getIdHist() + 
+            		" AND numparagpere = " + parag.getNumParag());
+            while (rs.next()) {
+                Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), rs.getString("texte"), rs.getInt("nbchoix"));
+                this.setFollowingParag(childParag, conn); 
+                parag.addParagSuiv(childParag);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
 	}
 	

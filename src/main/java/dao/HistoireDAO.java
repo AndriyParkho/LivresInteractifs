@@ -54,13 +54,13 @@ public class HistoireDAO extends AbstractDataBaseDAO {
 	     Connection conn = getConn();
 	     Statement st = conn.createStatement();
 	     ) {
-            ResultSet rs = st.executeQuery("SELECT * FROM histoire WHERE datePubli IS NULL AND prive = 0");
+            ResultSet rs = st.executeQuery("SELECT * FROM histoire h WHERE prive = 0 AND (SELECT COUNT(*) FROM paragraphe p WHERE p.idhist = h.idhist AND idwritter IS NULL) <> 0");
             while (rs.next()) {
                 Histoire histoire =
                     new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
                 result.add(histoire);
             }
-            rs = st.executeQuery("SELECT * FROM histoire JOIN isInvited ON histoire.idHist = isInvited.idHist WHERE histoire.datePubli IS NULL AND isInvited.idUtil = " + Integer.toString(idUtil));
+            rs = st.executeQuery("SELECT * FROM histoire h JOIN isInvited isI ON h.idHist = isI.idHist WHERE isI.idUtil = " + Integer.toString(idUtil) + " AND (SELECT COUNT(*) FROM paragraphe p WHERE p.idhist = h.idhist AND idwritter IS NULL) <> 0");
             while (rs.next()) {
                 Histoire histoire =
                     new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
@@ -76,9 +76,22 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(super.dataSource);
     	Paragraphe firstParag = paragrapheDAO.getParagraphe(idHist, 1);
     	try (
+    			Connection conn = getConn();
+    			) {
+    		paragrapheDAO.setFollowingParag(firstParag, conn);    	
+    	} catch (SQLException e) {
+    		throw new DAOException("Erreur BD " + e.getMessage(), e);
+    	}
+    	return firstParag;
+    }
+    
+    public Paragraphe getAllHistoireTree(int idHist) {
+    	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(super.dataSource);
+    	Paragraphe firstParag = paragrapheDAO.getParagraphe(idHist, 1);
+    	try (
 		     Connection conn = getConn();
 		     ) {
-    			paragrapheDAO.setFollowingParag(firstParag, conn);    	
+    			paragrapheDAO.setAllFollowingParag(firstParag, conn);    	
 	        } catch (SQLException e) {
 	            throw new DAOException("Erreur BD " + e.getMessage(), e);
 			}
