@@ -35,7 +35,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		return result;
 	}
 	
-	public boolean setFollowingParag(Paragraphe parag, Connection conn) {
+	public boolean setFollowingParagToRead(Paragraphe parag, Connection conn) {
 		if(parag.getNbChoix() == 0) {
 			return true;
 		} else {
@@ -51,7 +51,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	            	Integer nbchoix = rs.getInt("nbchoix");
 	            	if(rs.wasNull()) nbchoix = null;
 					Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), rs.getString("texte"), nbchoix);
-					if(this.setFollowingParag(childParag, conn)) parag.addParagSuiv(childParag);
+					if(this.setFollowingParagToRead(childParag, conn)) parag.addParagSuiv(childParag);
 				}
 				if(parag.getParagSuiv().isEmpty()) return false;
 				else return true;
@@ -61,7 +61,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		}
 	}
 	
-	public void setAllFollowingParag(Paragraphe parag, Connection conn) {
+	public void setFollowingParagToWrite(Paragraphe parag, Connection conn) {
 		try (
 	     Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 	     ) {
@@ -75,7 +75,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
             	if(rs.wasNull()) idWritter = null;
                 Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), 
                 		rs.getString("texte"), rs.getBoolean("valide"), nbchoix, idWritter);
-                this.setAllFollowingParag(childParag, conn); 
+                this.setFollowingParagToWrite(childParag, conn); 
                 parag.addParagSuiv(childParag);
             }
         } catch (SQLException e) {

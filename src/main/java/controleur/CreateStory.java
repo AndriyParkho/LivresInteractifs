@@ -22,6 +22,9 @@ import modele.Utilisateur;
 @WebServlet(name = "CreateStory", urlPatterns = {"/createStory"})
 public class CreateStory extends HttpServlet {
 	
+    @Resource(name = "jdbc/projetWeb")
+    private DataSource ds;
+	
 	/**
      * 
      * Affiche la page d’accueil avec la liste de toutes les histoires. 
@@ -32,7 +35,7 @@ public class CreateStory extends HttpServlet {
             HistoireDAO histoireDAO) throws ServletException, IOException {
     	
     	
-        List<Histoire> histoires = histoireDAO.getListeHistoires();
+        List<Histoire> histoires = histoireDAO.getListeHistoiresPublie();
         
         request.setAttribute("histoires", histoires);
         
@@ -72,11 +75,7 @@ public class CreateStory extends HttpServlet {
         } catch (DAOException e) {
             erreurBD(request, response, e);
         }
-    }
-    
-    @Resource(name = "jdbc/projetWeb")
-    private DataSource ds;
-    
+    }    
     
     
     /*
