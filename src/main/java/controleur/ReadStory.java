@@ -53,7 +53,6 @@ public class ReadStory extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-    	//TODO Set l'historique s'il est co
         request.setCharacterEncoding("UTF-8");
         /* On récupère les différents paramètres */
         int idHist = Integer.parseInt(request.getParameter("idHist"));
@@ -82,7 +81,7 @@ public class ReadStory extends HttpServlet {
 		List<ArrayList<Paragraphe>> listePara = historique.getTree(idHist);
         try {
         	/*Si numChoix est null c'est qu'on arrive sur l'histoire de l'accueil et donc cette dernière n'a pas été initialisée */
-        	if(numChoix == null) {
+        	if(numChoix == null && numParagToReset == null) {
         		/*S'il n'y a pas d'historique on récupère tout l'arbre de l'histoire à partir de la bdd */
         		if(listePara == null) {        			
         			currentParag = histoireDAO.getHistoireTreeToRead(idHist);
@@ -106,18 +105,13 @@ public class ReadStory extends HttpServlet {
         		}
         	} else if(numParagToReset != null) {
         		/*Sinon si on vient de l'historique on récupère le paragraphe demandé à partir de l'historique */
-        		currentParag = listePara.get(numParagToReset).get(0);
+        		currentParag = listePara.get(numParagToReset).get(listePara.get(numParagToReset).size() - 1);
         		/*On supprime dans l'historique tout les paragraphes qui suivent */
-        		for(int i = listePara.size() - 1; i >= numParagPere; i--) {
+        		for(int i = listePara.size() - 1; i > numParagToReset; i--) {
             		listePara.remove(i);
             	}
         		/*Il n'y a pas besoin de compléter l'historique dans ce cas là étant donné qu'on a pas avancé dans l'histoire*/
-        		this.paragsToRead = new ArrayList<Paragraphe>();
-    			while(currentParag.getParagSuiv().size() == 1) {
-    				paragsToRead.add(currentParag);
-    				currentParag = currentParag.getParagSuiv().get(0);
-    			}
-    			paragsToRead.add(currentParag);
+        		this.paragsToRead = listePara.get(numParagToReset);
         	} else if(currentParag.getNumParag() != numParagPere) {
         		/*Sinon si l'utilisateur a fait un retour navigateur pour changer de choix on l'avertit*/
         		request.setAttribute("warning", true);
