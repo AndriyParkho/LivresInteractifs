@@ -60,7 +60,6 @@ public class ReadStory extends HttpServlet {
         HttpSession session = request.getSession();
         HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
         if(numParagToReset != null) {
-        	System.out.println(numParagToReset);
         	numParagPere = Integer.parseInt(numParagToReset);
         	List<ArrayList<Paragraphe>> listePara = historique.getTree(idHist);
         	for(int i = listePara.size() - 1; i >= numParagPere; i--) {
