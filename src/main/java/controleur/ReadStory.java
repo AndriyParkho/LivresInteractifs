@@ -62,7 +62,7 @@ public class ReadStory extends HttpServlet {
         if(numParagToReset != null) {
         	System.out.println(numParagToReset);
         	numParagPere = Integer.parseInt(numParagToReset);
-        	List<Paragraphe> listePara = historique.getTree(idHist);
+        	List<ArrayList<Paragraphe>> listePara = historique.getTree(idHist);
         	for(int i = listePara.size() - 1; i >= numParagPere; i--) {
         		listePara.remove(i);
         	}
@@ -80,16 +80,18 @@ public class ReadStory extends HttpServlet {
         if(this.paragsToRead.isEmpty()) currentParag = null;
         else currentParag = this.paragsToRead.get(paragsToRead.size()-1);
         List<Paragraphe> choixParag;
+        ArrayList<Paragraphe> listHisto= new ArrayList<Paragraphe>();
         try {
         	if(numChoix == null) {
         		currentParag = histoireDAO.getHistoireTree(idHist);
         		this.paragsToRead = new ArrayList<Paragraphe>();
         		while(currentParag.getParagSuiv().size() == 1) {
-        			historique.addParagraph(idHist, currentParag);
+        			listHisto.add(currentParag);
 	        		paragsToRead.add(currentParag);
 	        		currentParag = currentParag.getParagSuiv().get(0);
 	        	}
-        		historique.addParagraph(idHist, currentParag);
+        		listHisto.add(currentParag);
+        		historique.addParagraph(idHist, listHisto);
         		paragsToRead.add(currentParag);
         	}
         	else if(currentParag.getNumParag() != numParagPere) {
@@ -99,18 +101,19 @@ public class ReadStory extends HttpServlet {
         		this.paragsToRead = new ArrayList<Paragraphe>();
         		currentParag = currentParag.getParagSuiv().get(numChoix);
 	        	while(currentParag.getParagSuiv().size() == 1) {
-	        		historique.addParagraph(idHist, currentParag);
+	        		listHisto.add(currentParag);
 	        		paragsToRead.add(currentParag);
 	        		currentParag = currentParag.getParagSuiv().get(0);
 	        	}
-	        	historique.addParagraph(idHist, currentParag);
+	        	listHisto.add(currentParag);
+	        	historique.addParagraph(idHist, listHisto);
 	        	paragsToRead.add(currentParag);
         	}
         	choixParag = currentParag.getParagSuiv();
         	request.setAttribute("current", currentParag);
         	request.setAttribute("paragsToRead", paragsToRead);
         	request.setAttribute("choixParag", choixParag);
-        	List<Paragraphe> treeParagraph = historique.getTree(idHist);
+        	List<ArrayList<Paragraphe>> treeParagraph = historique.getTree(idHist);
         	request.setAttribute("historique", treeParagraph);
         	request.setAttribute("StoryFirst", true);
         	request.getRequestDispatcher("/WEB-INF/readStory.jsp").forward(request, response);
