@@ -98,7 +98,7 @@
                 </tr>
             </c:forEach>
         </table>
-        <c:if test="${user != null}">
+        <c:if test="${(user != null) and isModified}">
 			<a href="accueil?action=save" id="boutonSauvegarde">Sauvegarder et revenir à l'accueil</a>
 		</c:if>
 	 </c:if>

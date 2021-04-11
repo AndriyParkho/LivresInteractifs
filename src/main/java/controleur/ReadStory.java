@@ -137,6 +137,7 @@ public class ReadStory extends HttpServlet {
         	List<ArrayList<Paragraphe>> treeParagraph = historique.getTree(idHist); /* ??? */
         	request.setAttribute("historique", treeParagraph);
         	request.setAttribute("StoryFirst", true);
+        	request.setAttribute("isModified", historique.isModified());
         	request.getRequestDispatcher("/WEB-INF/readStory.jsp").forward(request, response);
         } catch (DAOException e) {
             erreurBD(request, response, e);

@@ -67,7 +67,9 @@ public class Accueil extends HttpServlet {
                 actionBouton(request, response);
             } else if (action.equals("save")){
             	try {
-            		userDAO.saveHistorique(((Utilisateur) session.getAttribute("user")).getId(), (HistoriqueModele) session.getAttribute("historique"));
+            		HistoriqueModele historique = (HistoriqueModele) session.getAttribute("historique");
+            		userDAO.saveHistorique(((Utilisateur) session.getAttribute("user")).getId(), historique);
+            		historique.setModified(false);
                 	actionAfficher(request, response, histoireDAO);
             	} catch (DAOException e) {
             		erreurBD(request, response, e);
@@ -159,6 +161,7 @@ public class Accueil extends HttpServlet {
 	    HistoriqueModele historique = (HistoriqueModele) session.getAttribute("historique");
 	    List<Integer> idStories = historique.getStories();
 	    request.setAttribute("histoires", histDAO.getHistoires(idStories));
+	    request.setAttribute("isModified", historique.isModified());
 	    request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
     

@@ -8,8 +8,11 @@ import java.util.Map;
 public class HistoriqueModele {
 	private Map<Integer, ArrayList<ArrayList<Paragraphe>>> historique;
 	
+	private boolean isModified;
+	
 	public HistoriqueModele() {
 		historique = new HashMap<Integer, ArrayList<ArrayList<Paragraphe>>> ();
+		isModified = false;
 	}
 	
 	public void addParagraph(int histId, ArrayList<Paragraphe> paragraph) {
@@ -19,6 +22,7 @@ public class HistoriqueModele {
 			historique.put(histId, listParagraph);
 		}
 		listParagraph.add(paragraph);
+		setModified(true);
 	}
 	
 	public List<Integer> getStories(){
@@ -36,5 +40,14 @@ public class HistoriqueModele {
 	public void addStory(int histId, ArrayList<ArrayList<Paragraphe>> treeOfStory) {
 		historique.put(histId, treeOfStory);
 	}
+
+	public boolean isModified() {
+		return isModified;
+	}
+
+	public void setModified(boolean isModified) {
+		this.isModified = isModified;
+	}
+	
 	
 }
