@@ -262,4 +262,22 @@ public class HistoireDAO extends AbstractDataBaseDAO {
 		}
     	return hist;
     }
+    
+    public List<Histoire> getHistoiresAPublier(int idUtilisateur){
+        List<Histoire> listStories = new ArrayList<Histoire>();
+        try(Connection c = dataSource.getConnection()){
+            PreparedStatement storiesToPublish = c.prepareStatement("SELECT H.idHist FROM Histoire H JOIN Paragraphe P ON H.idHist = P.idHist WHERE P.nbChoix = 0 AND H.DatePubli = NULL AND H.idAuteur = "+idUtilisateur);
+            ResultSet rs = storiesToPublish.executeQuery();
+            while(rs.next()){
+                int idHist = rs.getInt("idHist");
+                listStories.add(getHistoire(idHist));
+            }
+            for(Histoire hist : listStories){
+                System.out.println(hist.getId());
+            }
+            return listStories;
+        } catch (SQLException sqle){
+            throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
+        }  
+    }
 }

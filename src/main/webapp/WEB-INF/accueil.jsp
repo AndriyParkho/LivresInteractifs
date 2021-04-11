@@ -24,7 +24,8 @@
 		  <li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" <c:if test="${param.bouton == 'storyToWrite'}"> class="active" </c:if>>Histoire à écrire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}"> class="active" </c:if>>Créer une histoire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
-		  <li style="float:right" class='menu'><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'histoireAPublier'}"> class="active" </c:if>>Histoires à publier</a></li>
+                  <li style="float:right" class='menu'><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
 		  <c:if test="${param.bouton == 'createStory'}">
 		  <form method="post" id="formCreate" action="createStory" accept-charset="UTF-8">
@@ -116,5 +117,20 @@
             </c:forEach>
         </table>
 	 </c:if>
+                        
+    <c:if test="${param.bouton == 'histoireAPublier'}">
+     	<table>
+            <tr>
+                <th>Histoire à publier</th>
+            </tr>
+            <c:forEach items="${histoires}" var="histoire">
+                <tr>
+                    <td class="click"><a href="read_story?idHist=${histoire.id}&numParagPere=1">${histoire.titre}</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+	 </c:if>
+                        
+     
   </body>
 </html>
