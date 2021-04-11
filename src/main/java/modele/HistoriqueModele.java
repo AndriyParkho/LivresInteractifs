@@ -33,4 +33,8 @@ public class HistoriqueModele {
 		return historique.get(histId);
 	}
 	
+	public void addStory(int histId, ArrayList<ArrayList<Paragraphe>> treeOfStory) {
+		historique.put(histId, treeOfStory);
+	}
+	
 }

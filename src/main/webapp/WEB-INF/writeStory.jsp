@@ -21,7 +21,7 @@
 	</c:forEach>
 	<h1>Choix à rédiger :</h1>
 	<c:forEach items="${choixParagAEcrire}" var="choix" varStatus="vs">
-    	<div class="choixSuite"><a class="choixSuite" href="write_paragraph?idHist=${choix.idHist}&numParag=${choix.numParag}" class="active">${choix.titre}</a></div>
+    	<div class="choixSuite"><a class="choixSuite" href="write_paragraph?&idHist=${choix.idHist}&numParag=${choix.numParag}&titreParag=${choix.titre}" class="active">${choix.titre}</a></div>
     	<br>
 	</c:forEach>
 </body>

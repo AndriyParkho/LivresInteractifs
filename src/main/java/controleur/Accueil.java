@@ -54,6 +54,7 @@ public class Accueil extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         HistoireDAO histoireDAO = new HistoireDAO(ds);
+        UtilisateurDAO userDAO = new UtilisateurDAO(ds);
         HttpSession session = request.getSession();
         if(session.getAttribute("historique") == null) {
         	HistoriqueModele historique = new HistoriqueModele();
@@ -64,7 +65,15 @@ public class Accueil extends HttpServlet {
                 actionAfficher(request, response, histoireDAO);
             } else if (action.equals("bouton")){
                 actionBouton(request, response);
-            } else {
+            } else if (action.equals("save")){
+            	try {
+            		userDAO.saveHistorique(((Utilisateur) session.getAttribute("user")).getId(), (HistoriqueModele) session.getAttribute("historique"));
+                	actionAfficher(request, response, histoireDAO);
+            	} catch (DAOException e) {
+            		erreurBD(request, response, e);
+            	}
+            }
+            else {
                 invalidParameters(request, response);
             }
         } catch (DAOException e) {

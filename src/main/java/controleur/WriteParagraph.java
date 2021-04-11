@@ -53,6 +53,8 @@ public class WriteParagraph extends HttpServlet {
     	ParagrapheDAO paragraph = new ParagrapheDAO(ds);
     	int idHist = Integer.parseInt(request.getParameter("idHist"));
     	int numParag = Integer.parseInt(request.getParameter("numParag"));
+    	String titreParag = request.getParameter("titreParag");
+    	request.setAttribute("titreParag", titreParag);
     	try {
     		paragraph.setWritter(idHist, numParag, user.getId());
     	} catch (DAOException e) {

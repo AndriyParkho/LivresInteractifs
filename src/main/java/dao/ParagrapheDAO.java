@@ -11,6 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import modele.Histoire;
+import modele.HistoriqueModele;
 import modele.Paragraphe;
 
 public class ParagrapheDAO extends AbstractDataBaseDAO {
@@ -119,5 +120,41 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		      }
 		return true;
 		
+	}
+	
+	public HistoriqueModele getHistorique(int userId) {
+		HistoriqueModele historique = new HistoriqueModele();
+		try(
+				Connection conn = getConn();	
+		){
+			Statement s = conn.createStatement();
+			Statement ss = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT DISTINCT idHist FROM hasRead WHERE idUtil=" + Integer.toString(userId));
+			int idHist;
+			int numParag;
+			ResultSet rs;
+			Paragraphe parag;
+			ArrayList<Paragraphe> blocPara;
+			ArrayList<ArrayList<Paragraphe>> treeOfStory;
+			while(r.next()) {
+				idHist = r.getInt("idHist");
+				treeOfStory = new ArrayList<ArrayList<Paragraphe>>();
+				blocPara = new ArrayList<Paragraphe>();
+				rs = ss.executeQuery("SELECT numParag FROM hasRead WHERE idUtil=" + Integer.toString(userId) + "AND idHist = " + Integer.toString(idHist));
+				while(rs.next()) {
+					numParag = rs.getInt("numParag");
+					parag = getParagraphe(idHist, numParag);
+					blocPara.add(parag);
+					if(parag.getParagSuiv().size() != 1) {
+						treeOfStory.add(blocPara);
+						blocPara = new ArrayList<Paragraphe>();
+					}
+				}
+				historique.addStory(idHist, treeOfStory);
+			}	
+		} catch (SQLException e) {
+			throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
+		return historique;
 	}
 }

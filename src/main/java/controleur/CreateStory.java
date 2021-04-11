@@ -77,16 +77,6 @@ public class CreateStory extends HttpServlet {
         }
     }    
     
-    
-    /*
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            
-            HttpSession session = request.getSession();
-            if(session == null){
-                response.sendRedirect("index.html");
-            }
-        }
-    */
+ 
         
     }

@@ -53,6 +53,7 @@ public class ReadStory extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+    	//TODO Set l'historique s'il est co
         request.setCharacterEncoding("UTF-8");
         /* On récupère les différents paramètres */
         int idHist = Integer.parseInt(request.getParameter("idHist"));
@@ -69,17 +70,6 @@ public class ReadStory extends HttpServlet {
         
         HttpSession session = request.getSession();
         HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
-        
-//        if(numParagToReset != null) {
-//        	numParagPere = Integer.parseInt(numParagToReset);
-//        	List<ArrayList<Paragraphe>> listePara = historique.getTree(idHist);
-//        	for(int i = listePara.size() - 1; i >= numParagPere; i--) {
-//        		listePara.remove(i);
-//        	}
-//        }
-//        else {
-//        }
-        
         HistoireDAO histoireDAO = new HistoireDAO(ds);
         /*On récupère le dernier paragraphe affiché si y en a un à partir de la liste des paragraphes affichées sur la vue */
         Paragraphe currentParag;
