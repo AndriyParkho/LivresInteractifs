@@ -86,4 +86,13 @@
     	else{
     		document.getElementById("errorMessage").innerHTML = "Tous les champs doivent être remplis.";
     	} 
-    } 
+    }
+    
+    function showStoryFirst(){
+    	document.getElementById('HistoricBox').style.display = 'none';
+    }  
+    
+    
+    
+    
+     

@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 import dao.DAOException;
 import dao.HistoireDAO;
 import modele.Histoire;
+import modele.HistoriqueModele;
 import modele.Paragraphe;
 import modele.Utilisateur;
 
@@ -26,8 +27,8 @@ import modele.Utilisateur;
 @WebServlet(name = "ReadStory", urlPatterns = {"/read_story"})
 public class ReadStory extends HttpServlet {
 
-	private Paragraphe firstParag;
-	private Paragraphe currentParag;  
+	List<Paragraphe> paragsToRead = new ArrayList<Paragraphe>();
+	
 	
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
@@ -52,41 +53,70 @@ public class ReadStory extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-
         request.setCharacterEncoding("UTF-8");
         int idHist = Integer.parseInt(request.getParameter("idHist"));
-        int numParag = Integer.parseInt(request.getParameter("numParag"));
+        String numParagToReset = request.getParameter("goBackTo");
+        int numParagPere;
+        HttpSession session = request.getSession();
+        HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
+        if(numParagToReset != null) {
+        	System.out.println(numParagToReset);
+        	numParagPere = Integer.parseInt(numParagToReset);
+        	List<Paragraphe> listePara = historique.getTree(idHist);
+        	for(int i = listePara.size() - 1; i >= numParagPere; i--) {
+        		listePara.remove(i);
+        	}
+        }
+        else {
+        	numParagPere = Integer.parseInt(request.getParameter("numParagPere"));
+        }
         Integer numChoix;
         if(request.getParameter("choix") == null) numChoix = null;
         else numChoix = Integer.valueOf(request.getParameter("choix"));
+        
         HistoireDAO histoireDAO = new HistoireDAO(ds);
-        List<Paragraphe> paragsToRead = new ArrayList<Paragraphe>();
+        
+        Paragraphe currentParag;
+        if(this.paragsToRead.isEmpty()) currentParag = null;
+        else currentParag = this.paragsToRead.get(paragsToRead.size()-1);
         List<Paragraphe> choixParag;
-        HttpSession session = request.getSession();
-        Utilisateur user = (Utilisateur) session.getAttribute("user");
         try {
         	if(numChoix == null) {
         		currentParag = histoireDAO.getHistoireTree(idHist);
-        		firstParag = currentParag;
-        		if(user == null) {
-        			
-        		}else {
-        			histoireDAO.setReader(idHist, user.getId());
-        		}
-        	}
-        	else if(currentParag.getNumParag() != numParag) currentParag = firstParag.findParag(numParag);
-        	else currentParag = currentParag.getParagSuiv().get(numChoix);
-        	while(currentParag.getParagSuiv().size() == 1) {
+        		this.paragsToRead = new ArrayList<Paragraphe>();
+        		while(currentParag.getParagSuiv().size() == 1) {
+        			historique.addParagraph(idHist, currentParag);
+	        		paragsToRead.add(currentParag);
+	        		currentParag = currentParag.getParagSuiv().get(0);
+	        	}
+        		historique.addParagraph(idHist, currentParag);
         		paragsToRead.add(currentParag);
-        		currentParag = currentParag.getParagSuiv().get(0);
         	}
-        	paragsToRead.add(currentParag);
+        	else if(currentParag.getNumParag() != numParagPere) {
+        		request.setAttribute("warning", true);
+        	}
+        	else { 
+        		this.paragsToRead = new ArrayList<Paragraphe>();
+        		currentParag = currentParag.getParagSuiv().get(numChoix);
+	        	while(currentParag.getParagSuiv().size() == 1) {
+	        		historique.addParagraph(idHist, currentParag);
+	        		paragsToRead.add(currentParag);
+	        		currentParag = currentParag.getParagSuiv().get(0);
+	        	}
+	        	historique.addParagraph(idHist, currentParag);
+	        	paragsToRead.add(currentParag);
+        	}
         	choixParag = currentParag.getParagSuiv();
+        	request.setAttribute("current", currentParag);
         	request.setAttribute("paragsToRead", paragsToRead);
         	request.setAttribute("choixParag", choixParag);
+        	List<Paragraphe> treeParagraph = historique.getTree(idHist);
+        	request.setAttribute("historique", treeParagraph);
+        	request.setAttribute("StoryFirst", true);
         	request.getRequestDispatcher("/WEB-INF/readStory.jsp").forward(request, response);
         } catch (DAOException e) {
             erreurBD(request, response, e);
         }
+        
     }
 }

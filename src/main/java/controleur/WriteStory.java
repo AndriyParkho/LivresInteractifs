@@ -1,6 +1,8 @@
 package controleur;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -12,8 +14,6 @@ import javax.sql.DataSource;
 
 import dao.DAOException;
 import dao.HistoireDAO;
-import dao.ParagrapheDAO;
-import java.sql.PreparedStatement;
 import modele.Paragraphe;
 
 /**
@@ -22,7 +22,8 @@ import modele.Paragraphe;
 @WebServlet(name = "WriteStory", urlPatterns = {"/write_story"})
 public class WriteStory extends HttpServlet {
 
-	private Paragraphe currentParag;  
+	private Paragraphe currentParag;
+	private Paragraphe firstParag;
 	
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
@@ -47,12 +48,43 @@ public class WriteStory extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-        
-
         request.setCharacterEncoding("UTF-8");
         
+        int idHist = Integer.parseInt(request.getParameter("idHist"));
+        int numParagPere = Integer.parseInt(request.getParameter("numParagPere"));
+        Integer numChoix;
+        if(request.getParameter("choix") == null) numChoix = null;
+        else numChoix = Integer.valueOf(request.getParameter("choix"));
         
+        HistoireDAO histoireDAO = new HistoireDAO(ds);
         
-    
+        List<Paragraphe> choixParagSuite = new ArrayList<Paragraphe>();
+        List<Paragraphe> choixParagAEcrire = new ArrayList<Paragraphe>();
+        
+        try {
+        	if(numChoix == null) {
+        		currentParag = histoireDAO.getAllHistoireTree(idHist);
+        		firstParag = currentParag;
+        	}
+        	else if(currentParag.getNumParag() != numParagPere) {
+        		currentParag = firstParag.findParag(numParagPere).getParagSuiv().get(numChoix);
+        	}
+        	else {
+        		currentParag = currentParag.getParagSuiv().get(numChoix);
+        	}
+        	for(Paragraphe parag: currentParag.getParagSuiv()) {
+        		if(parag.getIdWritter() == null) {
+        			choixParagAEcrire.add(parag);
+        		} else {
+        			choixParagSuite.add(parag);
+        		}
+        	}
+        	request.setAttribute("currentParag", currentParag);
+        	request.setAttribute("choixParagAEcrire", choixParagAEcrire);
+        	request.setAttribute("choixParagSuite", choixParagSuite);
+        	request.getRequestDispatcher("/WEB-INF/writeStory.jsp").forward(request, response);
+        } catch (DAOException e) {
+            erreurBD(request, response, e);
+        }    
     }
 }

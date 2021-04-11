@@ -13,7 +13,7 @@
 		    <p>
             <br>
             <br>
-		     Nom du paragraphe :<input type="text" name="title" value="${param.title} disabled"/><br>
+		     Nom du paragraphe :<input type="text" name="title" value="${param.title}" disabled/><br>
 			 Paragraphe :<TEXTAREA name="story" id="story" rows=4 cols=80 <c:if test="${not empty param.texte}"> value="param.texte" </c:if> required></TEXTAREA><br>
              <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" checked="checked"/>Oui</label>
 			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked"/>Non</label> <br>

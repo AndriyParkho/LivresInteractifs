@@ -70,6 +70,8 @@ public class LoginRegister extends HttpServlet {
                 Utilisateur user = userDao.getUser(email, pass);
                 if (user != null) {
                 	HttpSession session = request.getSession();
+                	session.invalidate();
+                	session = request.getSession();
                     session.setAttribute("user", user);
                     response.sendRedirect("accueil");
                 }
