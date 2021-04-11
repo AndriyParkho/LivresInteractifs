@@ -60,10 +60,14 @@
 	</div>
 	<div id='HistoricBox'>
 	<c:set var="haveSuite" value="true" scope="page" />
-	<c:forEach items="${historique}" var="choix" varStatus="varstat">
+	<c:forEach items="${historique}" var="block" varStatus="varstat">
     	<div class="choixHistorique">
-    	<a class="TitreHistorique" href="read_story?idHist=${choix.idHist}&goBackTo=${varstat.index}" class="active">${choix.titre}</a>
+    	<c:forEach items="${block}" var="choix" varStatus="varstat2">
+    	<c:if test="${varstat2.index == 0}">
+    		<a class="TitreHistorique" href="read_story?idHist=${choix.idHist}&goBackTo=${varstat.index}" class="active">${choix.titre}</a>
+    	</c:if>
     	<p>${choix.texte}</p>
+    	</c:forEach>
     	</div>
     	<br>
 	</c:forEach>
