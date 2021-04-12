@@ -1,21 +1,18 @@
 package controleur;
 
-import dao.DAOException;
-import dao.HistoireDAO;
-import dao.UtilisateurDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.*;
-import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
+import dao.DAOException;
+import dao.HistoireDAO;
 import modele.Histoire;
 import modele.Paragraphe;
 import modele.Utilisateur;
@@ -25,23 +22,6 @@ public class CreateStory extends HttpServlet {
 	
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
-	
-	/**
-     * 
-     * Affiche la page d’accueil avec la liste de toutes les histoires. 
-     */
-    
-    private void actionAfficher(HttpServletRequest request, 
-            HttpServletResponse response, 
-            HistoireDAO histoireDAO) throws ServletException, IOException {
-    	
-    	
-        List<Histoire> histoires = histoireDAO.getListeHistoiresPublie();
-        
-        request.setAttribute("histoires", histoires);
-        
-        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
-    }
     
     private void erreurBD(HttpServletRequest request,
             HttpServletResponse response, DAOException e)
@@ -57,12 +37,7 @@ public class CreateStory extends HttpServlet {
         Utilisateur user = (Utilisateur)session.getAttribute("user");
         int confidentialite = 0;
        
-        
-        try {
-            confidentialite = Integer.parseInt(request.getParameter("confident"));
-        } catch (Exception e){
-        	
-        }
+        if(request.getParameter("confident") != null) confidentialite = Integer.parseInt(request.getParameter("confident"));
             
         String[] auteurs = request.getParameterValues("auteurs");
         
@@ -85,9 +60,6 @@ public class CreateStory extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        
-        
-        
         /* Récupération des données de formulaire */
         request.setCharacterEncoding("UTF-8");
         
@@ -99,14 +71,7 @@ public class CreateStory extends HttpServlet {
             erreurBD(request, response, e);
         }
    
-        
-        /* Envoi de la réponse */
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-        	actionAfficher(request, response, histoireDAO);
-        } catch (DAOException e) {
-            erreurBD(request, response, e);
-        }
+        response.sendRedirect("accueil");
     }    
     
  

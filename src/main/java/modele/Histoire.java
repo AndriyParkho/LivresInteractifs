@@ -8,7 +8,7 @@ public class Histoire {
 	private Date datePubli;
 	private int idAuteur;
 	private Paragraphe firstParag; // Ou un arbre de paragraphe qui constitue toute l'histoire ?
-        private String[] auteurs; 
+    private String[] auteurs; 
 	
 	public Histoire(int id, String titre, Date datePubli, int idAuteur) {
 		super();

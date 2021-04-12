@@ -79,6 +79,15 @@ public class Paragraphe {
 		}
 	}
 	
+	public Paragraphe getParagSuiv(int numParag) {
+		for(Paragraphe para : paragSuiv) {
+			if(para.getNumParag() == numParag) {
+				return para;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public String toString() {
 		return Integer.toString(numParag);

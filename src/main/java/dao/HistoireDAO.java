@@ -1,21 +1,17 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import modele.Histoire;
 import modele.Paragraphe;
-import modele.Utilisateur;
 
 public class HistoireDAO extends AbstractDataBaseDAO {
 
@@ -98,44 +94,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     	return firstParag;
     }
     
-//    public Histoire getHistoireEnCours(int idUser, HttpServletRequest request){
-//        Histoire histoire = null;
-//        
-//        try(Connection c = dataSource.getConnection()){
-//            PreparedStatement ps_story = c.prepareStatement("SELECT H.idHist, H.titre, H.prive, H.datePubli, H.idAuteur, P.numParag FROM Paragraphe P, Histoire H WHERE P.idHist = H.idHist AND P.idWritter = ? AND P.valide = 0");
-//            ps_story.setInt(1, idUser);
-//            ResultSet rs = ps_story.executeQuery();
-//            int idHist;
-//            String titre;
-//            int prive;
-//            Date datePubli;
-//            int idAuteur;
-//            int numParag;
-//            
-//            if(rs == null){
-//                return null;
-//            }
-//            while(rs.next()){
-//                idHist = rs.getInt("idHist");
-//                titre = rs.getString("titre");
-//                prive = rs.getInt("prive");
-//                datePubli = rs.getDate("datePubli");
-//                idAuteur = rs.getInt("idAuteur");
-//                numParag = rs.getInt("numParag");
-//                
-//            histoire = new Histoire(idHist, titre, datePubli, idAuteur);
-//            HttpSession sess = request.getSession(false);
-//            sess.setAttribute("numParag", numParag);
-//            return histoire;
-//            }
-//        return histoire;    
-//        }catch(SQLException sqle){
-//            throw new DAOException("Erreur BD "+ sqle.getMessage(),sqle);
-//            
-//        }
-//        
-//    }
-    
     public Histoire createNewStoryObjet(String title, int userId){
         try(Connection c = dataSource.getConnection()){
             PreparedStatement ps_numero_histoire = c.prepareStatement("SELECT idHist_seq.nextval FROM DUAL");
@@ -157,8 +115,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     }
     
     public boolean createStory(Histoire histoire, int confidentialite){
-        
-        
         try(Connection c = dataSource.getConnection()){
             
             PreparedStatement ps_histoire = c.prepareStatement("INSERT INTO Histoire (idHist, titre, datePubli, idAuteur, prive) VALUES ( ?, ?, NULL, ?, ?)");
@@ -166,8 +122,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             
             PreparedStatement ps_ajoutInvitation = c.prepareStatement("INSERT INTO isInvited (idHist, idUtil) VALUES (?, ?)");
             
-            
-             
             ps_histoire.setInt(1, histoire.getId());
             ps_histoire.setString(2, histoire.getTitre());
             ps_histoire.setInt(3, histoire.getIdAuteur()); //par défaut utilisateur 1, a changer futurement
@@ -181,8 +135,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             ps_paragraphe.setInt(6, histoire.getIdAuteur());
             
             ps_paragraphe.setInt(7, histoire.getId());
-            
-            
             
             ps_histoire.executeUpdate();
             ps_paragraphe.executeUpdate();
@@ -198,45 +150,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
         
         return true;        
     }
-    
-/*    public boolean setReader(int idHist, int idUtil) {
-    	try(Connection c = dataSource.getConnection()){
-            PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, 1, ?, 1)");
-            ps.setInt(1, idHist);
-            ps.setInt(2, idUtil);
-            ps.executeQuery();
-    	} catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-		}
-    	return true;
-    }
-    
-    public boolean setReader(int idHist, int numParag, int idUtil) {
-    	try(Connection c = dataSource.getConnection()){
-    		if(true){//TODO vérifier qu'il n'y a pas d'entrée pour ces valeurs (idHist, numParag, idUtil)
-    			PreparedStatement getMax = c.prepareStatement("SELECT MAX(locationId) FROM hasRead WHERE idHist=? AND idUtil=?");
-    			getMax.setInt(1, idHist);
-                getMax.setInt(2, idUtil);
-                ResultSet rs = getMax.executeQuery();
-                int nextLocation = -1;
-                if(rs.next()) {
-                	nextLocation = rs.getInt("max(locationId)") + 1;
-                } 
-    			PreparedStatement ps = c.prepareStatement("INSERT INTO hasRead (idHist, numParag, idUtil, LocationId) VALUES (?, ?, ?, ?)");
-                ps.setInt(1, idHist);
-                ps.setInt(2, numParag);
-                ps.setInt(3, idUtil);
-                ps.setInt(4, nextLocation);
-                ps.executeQuery();
-    		}
-    		else {
-    			return true;
-    		}
-        } catch (SQLException e) {
-            throw new DAOException("Erreur BD " + e.getMessage(), e);
-		}
-    	return true;
-    } */
     
     public List<Histoire> getHistoires(List<Integer> idStories){
     	List<Histoire> listStories = new ArrayList<Histoire>();
@@ -269,9 +182,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             while(rs.next()){
                 int idHist = rs.getInt("idHist");
                 listStories.add(getHistoire(idHist));
-            }
-            for(Histoire hist : listStories){
-                System.out.println(hist.getId());
             }
             return listStories;
         } catch (SQLException sqle){
