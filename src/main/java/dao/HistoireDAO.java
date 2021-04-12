@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -74,7 +75,9 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     	try (
     			Connection conn = getConn();
     			) {
-    		paragrapheDAO.setFollowingParagToRead(firstParag, conn);    	
+    		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+			dicoParag.put(1, firstParag);
+    		paragrapheDAO.setFollowingParagToRead(dicoParag, firstParag, conn);    	
     	} catch (SQLException e) {
     		throw new DAOException("Erreur BD " + e.getMessage(), e);
     	}

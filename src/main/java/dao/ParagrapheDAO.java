@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.sql.DataSource;
 
@@ -35,27 +36,43 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		}
 		return result;
 	}
-	
-	public boolean setFollowingParagToRead(Paragraphe parag, Connection conn) {
+	/*
+	 * @param dicoParag : stock les paragraphes qu'on a déjà vu
+	 * @param parag : paragraphe sur le quel on est dans notre parcours de l'arbre
+	 */
+	public boolean setFollowingParagToRead(HashMap<Integer, Paragraphe> dicoParag ,Paragraphe parag, Connection conn) {
+		/*Si le paragraphe est un paragraphe de conclusion ses pères peuvent l'ajouter à leur liste de ParagSuiv*/
 		if(parag.getNbChoix() == 0) {
 			return true;
-		} else {
+		} else { /*Sinon on récupère les fils du paragraphe qui ont du texte et qui sont validé*/
 			try (
 					Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 					) {
 				ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe JOIN "
 						+ "isfollowing ON idhistfils = idhist AND numparagfils = numparag WHERE idhistpere = " + parag.getIdHist() + 
 						" AND numparagpere = " + parag.getNumParag()  + "AND texte IS NOT NULL AND valide = 1");
+				/*Si il n'a pas de fils avec du texte et qui sont validé alors il dit à ses pères qu'il ne menne pas à une conclusion*/
 				if(!rs.next()) return false;
-				rs.beforeFirst();
-				while (rs.next()) {
-	            	Integer nbchoix = rs.getInt("nbchoix");
-	            	if(rs.wasNull()) nbchoix = null;
-					Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), rs.getString("texte"), nbchoix);
-					if(this.setFollowingParagToRead(childParag, conn)) parag.addParagSuiv(childParag);
+				rs.beforeFirst(); /*On se replace au début dans le cas où le if précédent était false*/
+				while (rs.next()) { /*On parcours les fils qui semble bon*/
+					Integer numParag = rs.getInt("numParag");
+					Paragraphe childParag = dicoParag.get(numParag); /*On vérifie si on est déjà passé par le paragraphe*/ 
+					if(childParag == null) {/*Si ce n'est pas le cas on créer le paragraphe fils*/						
+						Integer nbchoix = rs.getInt("nbchoix");
+						if(rs.wasNull()) nbchoix = null;
+						childParag = new Paragraphe(rs.getInt("idhist"), numParag, rs.getString("titre"), rs.getString("texte"), nbchoix);
+						dicoParag.put(numParag, childParag); /*On le rajoute à la liste des paragraphes déjà vu*/
+						/*On rajoute le fils que s'il nous dit qu'on peut (en relancant la fonction sur lui)*/
+						if(this.setFollowingParagToRead(dicoParag, childParag, conn)) parag.addParagSuiv(childParag);
+					} else { /*Si c'est le cas on rajoute ce paragraphe fils*/
+						parag.addParagSuiv(childParag);
+						return true; /*Et on dit au père qu'il peut nous ajouter comme fils (Ce qui n'est pas vraiment 
+										vrai car il ne mène pas forcément à une conclu*/
+					}
 				}
-				if(parag.getParagSuiv().isEmpty()) return false;
-				else return true;
+				if(parag.getParagSuiv().isEmpty()) return false; /*Si aucun fils n'a été ajouté à la liste car aucun ne menait à une 
+																	conclusion, on dit aux pères qu'on ne mène pas à une conclu*/
+				else return true; /*Sinon on dit qu'on mène à une conclusion*/
 			} catch (SQLException e) {
 				throw new DAOException("Erreur BD " + e.getMessage(), e);
 			}
@@ -146,7 +163,9 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 					numParag = rs.getInt("numParag");
 					if(numParag == 1) {
 						currentParagraphe = getParagraphe(idHist, numParag);
-						setFollowingParagToRead(currentParagraphe, conn);
+						HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+						dicoParag.put(numParag, currentParagraphe);
+						setFollowingParagToRead(dicoParag ,currentParagraphe, conn);
 						blocPara.add(currentParagraphe);
 					}
 					else {
