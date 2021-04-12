@@ -136,61 +136,59 @@ public class HistoireDAO extends AbstractDataBaseDAO {
 //        
 //    }
     
-    public boolean createStory(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        Utilisateur user = (Utilisateur)session.getAttribute("user");
-        int confidentialite = 0;
-       
+    public Histoire createNewStoryObjet(String title, int userId){
+        try(Connection c = dataSource.getConnection()){
+            PreparedStatement ps_numero_histoire = c.prepareStatement("SELECT idHist_seq.nextval FROM DUAL");
+            int numero_histoire = 1;
+            try{
+                ResultSet result_set = ps_numero_histoire.executeQuery();
+                while(result_set.next()){
+                    numero_histoire = result_set.getInt(1);
+                    
+                }
+                return new Histoire(numero_histoire, title, null, userId);
+            }catch(SQLException e){
+            	throw new DAOException("Erreur BD" + e.getMessage(), e);
+            }
+        }catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
         
-        try {
-            confidentialite = Integer.parseInt(request.getParameter("confident"));
-        } catch (Exception e){
-        	
-        }
-            
-        String[] auteurs = request.getParameterValues("auteurs");
-        String title = request.getParameter("title");
-        String titreParagraphe = request.getParameter("titreParagraphe");
-        String paragraphe = request.getParameter("story");
-        int nb_choix = Integer.parseInt(request.getParameter("nbChoix"));
+    }
+    
+    public boolean createStory(Histoire histoire, int confidentialite){
+        
         
         try(Connection c = dataSource.getConnection()){
             
             PreparedStatement ps_histoire = c.prepareStatement("INSERT INTO Histoire (idHist, titre, datePubli, idAuteur, prive) VALUES ( ?, ?, NULL, ?, ?)");
             PreparedStatement ps_paragraphe = c.prepareStatement("INSERT INTO Paragraphe (numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            PreparedStatement ps_numero_histoire = c.prepareStatement("SELECT idHist_seq.nextval FROM DUAL");
+            
             PreparedStatement ps_ajoutInvitation = c.prepareStatement("INSERT INTO isInvited (idHist, idUtil) VALUES (?, ?)");
-            int numero_histoire = 1;
             
-            try{
-                ResultSet result_set = ps_numero_histoire.executeQuery();
-                while(result_set.next()){
-                    numero_histoire = result_set.getInt(1);
-                }
-            }catch(SQLException e){
-            	throw new DAOException("Erreur BD" + e.getMessage(), e);
-            } 
-            ps_histoire.setInt(1, numero_histoire);
-            ps_histoire.setString(2, title);
-            ps_histoire.setInt(3, user.getId()); //par défaut utilisateur 1, a changer futurement
+            
+             
+            ps_histoire.setInt(1, histoire.getId());
+            ps_histoire.setString(2, histoire.getTitre());
+            ps_histoire.setInt(3, histoire.getIdAuteur()); //par défaut utilisateur 1, a changer futurement
             ps_histoire.setInt(4, confidentialite);
+            Paragraphe paragraphe = histoire.getFirstParag();
+            ps_paragraphe.setInt(1, paragraphe.getNumParag()); //on laisse a 1, c'est le premier paragraphe
+            ps_paragraphe.setString(2, paragraphe.getTitre());
+            ps_paragraphe.setString(3, paragraphe.getTexte());
+            ps_paragraphe.setInt(4, 1); //pas valide au début
+            ps_paragraphe.setInt(5, paragraphe.getNbChoix());
+            ps_paragraphe.setInt(6, histoire.getIdAuteur());
             
-            ps_paragraphe.setInt(1, 1); //on laisse a 1, c'est le premier paragraphe
-            ps_paragraphe.setString(2, titreParagraphe);
-            ps_paragraphe.setString(3, paragraphe);
-            ps_paragraphe.setInt(4, 0); //pas valide au début
-            ps_paragraphe.setInt(5, nb_choix);
-            ps_paragraphe.setInt(6, user.getId());
-            
-            ps_paragraphe.setInt(7, numero_histoire);
+            ps_paragraphe.setInt(7, histoire.getId());
             
             
             
             ps_histoire.executeUpdate();
             ps_paragraphe.executeUpdate();
             if(confidentialite == 1){
-                ps_ajoutInvitation.setInt(1, numero_histoire);
-                ps_ajoutInvitation.setInt(2, user.getId());
+                ps_ajoutInvitation.setInt(1, histoire.getId());
+                ps_ajoutInvitation.setInt(2, histoire.getIdAuteur());
                 ps_ajoutInvitation.executeUpdate();
             }
             
@@ -266,7 +264,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     public List<Histoire> getHistoiresAPublier(int idUtilisateur){
         List<Histoire> listStories = new ArrayList<Histoire>();
         try(Connection c = dataSource.getConnection()){
-            PreparedStatement storiesToPublish = c.prepareStatement("SELECT H.idHist FROM Histoire H JOIN Paragraphe P ON H.idHist = P.idHist WHERE P.nbChoix = 0 AND H.DatePubli = NULL AND H.idAuteur = "+idUtilisateur);
+            PreparedStatement storiesToPublish = c.prepareStatement("SELECT H.idHist FROM Histoire H JOIN Paragraphe P ON H.idHist = P.idHist WHERE P.nbChoix = 0 AND H.DatePubli IS NULL AND H.idAuteur = "+idUtilisateur);
             ResultSet rs = storiesToPublish.executeQuery();
             while(rs.next()){
                 int idHist = rs.getInt("idHist");
@@ -279,5 +277,15 @@ public class HistoireDAO extends AbstractDataBaseDAO {
         } catch (SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
         }  
+    }
+    
+    public void publierHistoire(Histoire histoire){
+        try{
+            Connection c = dataSource.getConnection();
+            PreparedStatement ps_publication = c.prepareStatement("UPDATE Histoire SET DatePubli = SYSDATE WHERE idHist = "+histoire.getIdAuteur());
+            ps_publication.executeUpdate();
+        }catch(SQLException sqle){
+            throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
+        }
     }
 }

@@ -215,4 +215,8 @@ a.TitreHistorique{
 	text-align: center;
 }
 
+input[value=publierHistoire]{
+    text-align: center;
+}
+
 

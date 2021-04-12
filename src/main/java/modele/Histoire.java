@@ -8,6 +8,7 @@ public class Histoire {
 	private Date datePubli;
 	private int idAuteur;
 	private Paragraphe firstParag; // Ou un arbre de paragraphe qui constitue toute l'histoire ?
+        private String[] auteurs; 
 	
 	public Histoire(int id, String titre, Date datePubli, int idAuteur) {
 		super();
@@ -45,6 +46,14 @@ public class Histoire {
 	public void setFirstParag(Paragraphe firstParag) {
 		this.firstParag = firstParag;
 	}
+        
+        public String[] getAuteurs(){
+            return auteurs;
+        }
+        
+        public void setAuteurs(String[] auteurs){
+            this.auteurs = auteurs;
+        }
 	
 	
 }

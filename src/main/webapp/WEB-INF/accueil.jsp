@@ -24,7 +24,7 @@
 		  <li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" <c:if test="${param.bouton == 'storyToWrite'}"> class="active" </c:if>>Histoire à écrire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}"> class="active" </c:if>>Créer une histoire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
-		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'histoireAPublier'}"> class="active" </c:if>>Histoires à publier</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireAPublier" <c:if test="${param.bouton == 'histoireAPublier'}"> class="active" </c:if>>Histoires à publier</a></li>
                   <li style="float:right" class='menu'><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
 		  <c:if test="${param.bouton == 'createStory'}">
@@ -36,7 +36,7 @@
 			   								 <label><input type="radio" onclick="displayInvite();" name="confident"/>Privée</label> <br>
 			<div id='listPersons'>Personnes invitées pour l'écriture : <br><br>
 		
-			<select name="auteurs"  id="listAuthors" size=2 multiple >
+			<select name="auteurs"  id="auteurs" size=2 multiple >
 
 				<c:forEach items="${user}" var="user">
 	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
@@ -121,13 +121,16 @@
     <c:if test="${param.bouton == 'histoireAPublier'}">
      	<table>
             <tr>
-                <th>Histoire à publier</th>
+                <th>Histoires à publier</th>
             </tr>
-            <c:forEach items="${histoires}" var="histoire">
-                <tr>
-                    <td class="click"><a href="read_story?idHist=${histoire.id}&numParagPere=1">${histoire.titre}</a></td>
-                </tr>
-            </c:forEach>
+            <form method="post" id="formPublication" action="publication">
+                <c:forEach items="${histoiresAPublier}" var="histoire">
+                    <tr>
+                        <td class="click"><a href="read_story?idHist=${histoire.id}&numParagPere=1">${histoire.titre}</a> <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></td>
+                    </tr>
+                </c:forEach>
+                    <input type="submit" value="publierHistoires"> 
+            </form>
         </table>
 	 </c:if>
                         

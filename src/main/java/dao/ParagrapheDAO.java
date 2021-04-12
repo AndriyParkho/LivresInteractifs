@@ -18,6 +18,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	public ParagrapheDAO(DataSource ds) {
 		super(ds);
 	}
+        
+        
 	
 	public Paragraphe getParagraphe(int idHist, int numParag) {
 		Paragraphe result = null;
