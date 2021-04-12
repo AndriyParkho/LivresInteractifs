@@ -78,4 +78,9 @@ public class Paragraphe {
 			return result;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return Integer.toString(numParag);
+	}
 }

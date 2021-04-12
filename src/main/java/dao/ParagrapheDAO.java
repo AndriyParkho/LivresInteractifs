@@ -28,7 +28,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	     ) {
             ResultSet rs = st.executeQuery("SELECT * FROM paragraphe WHERE idHist =" + idHist + "AND numParag = " + numParag);
             if (rs.next()) {
-                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getInt("nbchoix"));
+                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getInt("nbChoix"));
             }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -156,5 +156,18 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 			throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
 		return historique;
+	}
+	
+	public void deleteWritter(int idHist, int numParag) {
+		try (
+				Connection conn = getConn();
+			    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idWritter=NULL WHERE idHist=? and numParag=?");
+			) {
+				ps.setInt(1, idHist);
+				ps.setInt(2, numParag);
+			 	ps.executeQuery();
+		      }catch (SQLException e) {
+		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+		      }
 	}
 }

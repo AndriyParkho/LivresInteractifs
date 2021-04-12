@@ -226,3 +226,15 @@ a.TitreHistorique{
 	background-color: white;
 	text-align: center;
 }
+
+#boutonErase{
+	text-decoration: none;
+	color: black;
+	display:block;
+	padding:2%;
+	width: 10%;
+	border: solid #4CAF50;
+	border-radius: 10px;
+	background-color: white;
+	text-align: center;
+}

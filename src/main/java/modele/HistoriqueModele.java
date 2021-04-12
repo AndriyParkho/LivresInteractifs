@@ -49,5 +49,10 @@ public class HistoriqueModele {
 		this.isModified = isModified;
 	}
 	
+	@Override
+	public String toString() {
+		return historique.toString();
+	}
+	
 	
 }

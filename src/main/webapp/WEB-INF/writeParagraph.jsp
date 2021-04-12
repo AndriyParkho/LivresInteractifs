@@ -9,7 +9,7 @@
   </head>
   <body>
 	<c:if test="${user != null}">
-		<form method="post" id="formCreate" action="createStory" accept-charset="UTF-8">
+		<form method="post" id="formCreate" action="write_paragraph" accept-charset="UTF-8">
 		    <p>
             <br>
             <br>
@@ -26,5 +26,6 @@
 			 <input type="button" value="Valider le paragraphe" onclick="submitForm();">
 	         <p id="errorMessage"> </p>
 		</form>
+		<a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}" id="boutonErase">Annuler la rédaction du paragraphe</a>
 	</c:if>
   </body>
