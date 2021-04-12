@@ -18,7 +18,8 @@
              <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" checked="checked"/>Oui</label>
 			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked"/>Non</label> <br>
 			  <div id="listeDesChoix">
-              <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
+	
+              <p>Nombre de choix (Attention : la partie suivante ne sera pas enregistrée si vous sauvegardez votre progression, elle n'est à remplir que lorsque vous validez le paragraphe) :</p><br><input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
               <input type="button" value="Afficher les choix" onclick="changeChoice();">
               <br>
               <select name="choixRemplis"  id="choixRemplis" size=1 disabled>
