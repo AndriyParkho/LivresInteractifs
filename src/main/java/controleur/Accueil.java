@@ -112,12 +112,6 @@ public class Accueil extends HttpServlet {
     	
     	HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
-//        Histoire histoire = histoireDAO.getHistoireEnCours(user.getId(), request);
-//        int numParag;
-//        if(histoire!= null){
-//            numParag = (int)sess.getAttribute("numParag");
-//            request.setAttribute("numParag", numParag);
-//        }
         Paragraphe paragraphe =  paragrapheDAO.getPragEnCours(user.getId());
     	
         List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire(user.getId());
