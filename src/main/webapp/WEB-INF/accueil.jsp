@@ -24,19 +24,20 @@
 		  <li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" <c:if test="${param.bouton == 'storyToWrite'}"> class="active" </c:if>>Histoire à écrire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}"> class="active" </c:if>>Créer une histoire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
-		  <li style="float:right" class='menu'><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireAPublier" <c:if test="${param.bouton == 'histoireAPublier'}"> class="active" </c:if>>Histoires à publier</a></li>
+                  <li style="float:right" class='menu'><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
 		  <c:if test="${param.bouton == 'createStory'}">
 		  <form method="post" id="formCreate" action="createStory" accept-charset="UTF-8">
 		    <p>
-            <br>
-            <br>
+
 		     Nom d'histoire :<input type="text" name="title" id="title"/><br>
 		     Confidentialité de l'histoire : <label><input type="radio" onclick="hideInvite();" name="confident" checked="checked" id="buttonPublic"/>Publique</label>
 			   								 <label><input type="radio" onclick="displayInvite();" name="confident"/>Privée</label> <br>
 			<div id='listPersons'>Personnes invitées pour l'écriture : <br><br>
 		
-			<select name="auteurs"  id="listAuthors" size=2 multiple >
+			<select name="auteurs"  id="auteurs" size=2 multiple >
+
 				<c:forEach items="${user}" var="user">
 	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
 	            </c:forEach>
@@ -63,8 +64,12 @@
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
-                      <br>
-                      <br>
+
+                    <table>
+	            <tr>
+	                <th>Titre</th>
+	            </tr>
+
                     
                     <c:if test="${paragEnCours != null}">
                         <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}&titreParag=${paragEnCours.titre}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
@@ -115,5 +120,23 @@
             </c:forEach>
         </table>
 	 </c:if>
+                        
+    <c:if test="${param.bouton == 'histoireAPublier'}">
+     	<table>
+            <tr>
+                <th>Histoires à publier</th>
+            </tr>
+            <form method="post" id="formPublication" action="publication">
+                <c:forEach items="${histoiresAPublier}" var="histoire">
+                    <tr>
+                        <td class="click"><a href="read_story?idHist=${histoire.id}&numParagPere=1">${histoire.titre}</a> <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></td>
+                    </tr>
+                </c:forEach>
+                    <input type="submit" value="publierHistoires"> 
+            </form>
+        </table>
+	 </c:if>
+                        
+     
   </body>
 </html>

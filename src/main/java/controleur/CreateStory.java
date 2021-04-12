@@ -17,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import modele.Histoire;
+import modele.Paragraphe;
 import modele.Utilisateur;
 
 @WebServlet(name = "CreateStory", urlPatterns = {"/createStory"})
@@ -50,6 +51,37 @@ public class CreateStory extends HttpServlet {
     	request.getRequestDispatcher("/WEB-INF/bdErreur.jsp").forward(request, response);
     }
     
+    private void createStory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        HistoireDAO histoireDao = new HistoireDAO(ds);
+        HttpSession session = request.getSession();
+        Utilisateur user = (Utilisateur)session.getAttribute("user");
+        int confidentialite = 0;
+       
+        
+        try {
+            confidentialite = Integer.parseInt(request.getParameter("confident"));
+        } catch (Exception e){
+        	
+        }
+            
+        String[] auteurs = request.getParameterValues("auteurs");
+        for(String auteur : auteurs){
+            System.out.println(auteur);
+        }
+        String title = request.getParameter("title");
+        String titreParagraphe = request.getParameter("titreParagraphe");
+        String paragraphe = request.getParameter("story");
+        int nb_choix = Integer.parseInt(request.getParameter("nbChoix"));
+        Histoire histoire = histoireDao.createNewStoryObjet(title, user.getId());
+        Paragraphe paragrahe = new Paragraphe(histoire.getId(), 1, titreParagraphe, paragraphe, true, nb_choix, user.getId());
+        if(confidentialite == 1){
+            histoire.setAuteurs(auteurs);
+        }
+        histoire.setFirstParag(paragrahe);
+        histoireDao.createStory(histoire, confidentialite);
+        
+    }
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -62,7 +94,7 @@ public class CreateStory extends HttpServlet {
         /* Mise à jour de la base de données*/
         HistoireDAO histoireDAO = new HistoireDAO(ds);
         try {
-        	histoireDAO.createStory(request);
+        	createStory(request, response);
         } catch (DAOException e) {
             erreurBD(request, response, e);
         }
