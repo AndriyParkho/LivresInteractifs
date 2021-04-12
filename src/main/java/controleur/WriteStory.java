@@ -63,7 +63,7 @@ public class WriteStory extends HttpServlet {
         
         try {
         	if(numChoix == null) {
-        		currentParag = histoireDAO.getAllHistoireTree(idHist);
+        		currentParag = histoireDAO.getHistoireTreeToWrite(idHist);
         		firstParag = currentParag;
         	}
         	else if(currentParag.getNumParag() != numParagPere) {
@@ -75,7 +75,7 @@ public class WriteStory extends HttpServlet {
         	for(Paragraphe parag: currentParag.getParagSuiv()) {
         		if(parag.getIdWritter() == null) {
         			choixParagAEcrire.add(parag);
-        		} else {
+        		} else if(parag.isValide()){
         			choixParagSuite.add(parag);
         		}
         	}

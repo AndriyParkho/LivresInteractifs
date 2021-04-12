@@ -39,7 +39,7 @@ CREATE TABLE HasRead (
        numParag integer NOT NULL,
        idUtil integer NOT NULL REFERENCES Utilisateur(idUtil),
        locationId integer NOT NULL,
-       CHECK(locationId >= 1),
+       CHECK(locationId >= 0),
        CONSTRAINT fkHasRead FOREIGN KEY (idHist, numParag) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
        CONSTRAINT pkHasRead PRIMARY KEY (idHist, numParag, idUtil)
 );

@@ -13,7 +13,9 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import dao.DAOException;
+import dao.ParagrapheDAO;
 import dao.UtilisateurDAO;
+import modele.HistoriqueModele;
 import modele.Utilisateur;
 
 /**
@@ -63,15 +65,19 @@ public class LoginRegister extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         UtilisateurDAO userDao = new UtilisateurDAO(ds);
+        ParagrapheDAO paragDao = new ParagrapheDAO(ds);
 		if(request.getRequestURI().equals("/projetWeb/login")) {
 			String email = request.getParameter("email");
 	        String pass = request.getParameter("password");
 	        try {
                 Utilisateur user = userDao.getUser(email, pass);
                 if (user != null) {
+                	HistoriqueModele historique = paragDao.getHistorique(user.getId());
+                	System.out.println(historique.toString());
                 	HttpSession session = request.getSession();
                 	session.invalidate();
                 	session = request.getSession();
+                	session.setAttribute("historique", historique);
                     session.setAttribute("user", user);
                     response.sendRedirect("accueil");
                 }

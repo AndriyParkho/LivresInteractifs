@@ -14,6 +14,8 @@ import javax.sql.DataSource;
 
 import modele.Histoire;
 import modele.Utilisateur;
+import modele.HistoriqueModele;
+import modele.Paragraphe;
 
 public class UtilisateurDAO extends AbstractDataBaseDAO {
 	
@@ -106,6 +108,35 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
         }
 		return result;
 		
+	}
+	
+	public void saveHistorique(int userId, HistoriqueModele historique){
+		List<Integer> listeHistoire = historique.getStories();
+		List<ArrayList<Paragraphe>> listeParagraphe;
+		for(int idHist: listeHistoire) {
+			listeParagraphe = historique.getTree(idHist);
+			if(listeParagraphe != null) {
+				try (
+						Connection conn = getConn();	
+						Statement st = conn.createStatement();
+				){
+						String idHistory = Integer.toString(idHist);
+						String idUtil = Integer.toString(userId);
+					    st.executeQuery("DELETE FROM hasRead WHERE idHist = " + idHistory + "AND idUtil =" + idUtil);
+					    String numParag;
+					    int compteur = 0;
+					    for(ArrayList<Paragraphe> bloc : listeParagraphe) {
+					    	for(Paragraphe parag : bloc) {
+					    		numParag = Integer.toString(parag.getNumParag());
+					    		st.executeQuery("INSERT INTO hasRead (idHist, numParag, idUtil, locationID) VALUES (" + idHistory + ", " + numParag + ", " + idUtil + ", " + Integer.toString(compteur)+ ")");
+					    		compteur++;
+					    	}
+					    }
+				} catch (SQLException e) {
+					throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+			}
+		}
 	}
 	
 

@@ -54,6 +54,7 @@ public class Accueil extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         HistoireDAO histoireDAO = new HistoireDAO(ds);
+        UtilisateurDAO userDAO = new UtilisateurDAO(ds);
         HttpSession session = request.getSession();
         if(session.getAttribute("historique") == null) {
         	HistoriqueModele historique = new HistoriqueModele();
@@ -64,7 +65,17 @@ public class Accueil extends HttpServlet {
                 actionAfficher(request, response, histoireDAO);
             } else if (action.equals("bouton")){
                 actionBouton(request, response);
-            } else {
+            } else if (action.equals("save")){
+            	try {
+            		HistoriqueModele historique = (HistoriqueModele) session.getAttribute("historique");
+            		userDAO.saveHistorique(((Utilisateur) session.getAttribute("user")).getId(), historique);
+            		historique.setModified(false);
+                	actionAfficher(request, response, histoireDAO);
+            	} catch (DAOException e) {
+            		erreurBD(request, response, e);
+            	}
+            }
+            else {
                 invalidParameters(request, response);
             }
         } catch (DAOException e) {
@@ -82,7 +93,7 @@ public class Accueil extends HttpServlet {
             HistoireDAO histoireDAO) throws ServletException, IOException {
     	
     	
-        List<Histoire> histoires = histoireDAO.getListeHistoires();
+        List<Histoire> histoires = histoireDAO.getListeHistoiresPublie();
         
         request.setAttribute("histoires", histoires);
         
@@ -150,6 +161,7 @@ public class Accueil extends HttpServlet {
 	    HistoriqueModele historique = (HistoriqueModele) session.getAttribute("historique");
 	    List<Integer> idStories = historique.getStories();
 	    request.setAttribute("histoires", histDAO.getHistoires(idStories));
+	    request.setAttribute("isModified", historique.isModified());
 	    request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
     

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import modele.Histoire;
+import modele.HistoriqueModele;
 import modele.Paragraphe;
 
 public class ParagrapheDAO extends AbstractDataBaseDAO {
@@ -29,7 +30,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	     ) {
             ResultSet rs = st.executeQuery("SELECT * FROM paragraphe WHERE idHist =" + idHist + "AND numParag = " + numParag);
             if (rs.next()) {
-                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getInt("nbchoix"));
+                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getInt("nbChoix"));
             }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -37,7 +38,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		return result;
 	}
 	
-	public boolean setFollowingParag(Paragraphe parag, Connection conn) {
+	public boolean setFollowingParagToRead(Paragraphe parag, Connection conn) {
 		if(parag.getNbChoix() == 0) {
 			return true;
 		} else {
@@ -53,7 +54,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	            	Integer nbchoix = rs.getInt("nbchoix");
 	            	if(rs.wasNull()) nbchoix = null;
 					Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), rs.getString("texte"), nbchoix);
-					if(this.setFollowingParag(childParag, conn)) parag.addParagSuiv(childParag);
+					if(this.setFollowingParagToRead(childParag, conn)) parag.addParagSuiv(childParag);
 				}
 				if(parag.getParagSuiv().isEmpty()) return false;
 				else return true;
@@ -63,7 +64,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		}
 	}
 	
-	public void setAllFollowingParag(Paragraphe parag, Connection conn) {
+	public void setFollowingParagToWrite(Paragraphe parag, Connection conn) {
 		try (
 	     Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 	     ) {
@@ -77,7 +78,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
             	if(rs.wasNull()) idWritter = null;
                 Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), 
                 		rs.getString("texte"), rs.getBoolean("valide"), nbchoix, idWritter);
-                this.setAllFollowingParag(childParag, conn); 
+                this.setFollowingParagToWrite(childParag, conn); 
                 parag.addParagSuiv(childParag);
             }
         } catch (SQLException e) {
@@ -121,5 +122,58 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		      }
 		return true;
 		
+	}
+	
+	public HistoriqueModele getHistorique(int userId) {
+		HistoriqueModele historique = new HistoriqueModele();
+		try(
+				Connection conn = getConn();	
+		){
+			Statement s = conn.createStatement();
+			Statement ss = conn.createStatement();
+			ResultSet r = s.executeQuery("SELECT DISTINCT idHist FROM hasRead WHERE idUtil=" + Integer.toString(userId));
+			int idHist;
+			int numParag;
+			ResultSet rs;
+			Paragraphe parag;
+			ArrayList<Paragraphe> blocPara;
+			ArrayList<ArrayList<Paragraphe>> treeOfStory;
+			while(r.next()) {
+				idHist = r.getInt("idHist");
+				treeOfStory = new ArrayList<ArrayList<Paragraphe>>();
+				blocPara = new ArrayList<Paragraphe>();
+				rs = ss.executeQuery("SELECT numParag FROM hasRead WHERE idUtil=" + Integer.toString(userId) + "AND idHist = " + Integer.toString(idHist));
+				while(rs.next()) {
+					numParag = rs.getInt("numParag");
+					parag = getParagraphe(idHist, numParag);
+					blocPara.add(parag);
+					/*TODO parag.getParagSuiv().size() renvoie toujours zéro car l'arbre de l'histoire en mode lecture n'a pas été construit,
+					 * à la connexion dans la console l'historique s'affiche, actuellement c'est {1=[[1], [2], [4], [7]]} mais le résultat
+					 * que l'on doit avoir est {1=[[1, 2], [4, 7]]} ce qui devrait être le cas si on construit bien l'arbre.
+					 */
+					if(parag.getParagSuiv().size() != 1) {
+						treeOfStory.add(blocPara);
+						blocPara = new ArrayList<Paragraphe>();
+					}
+				}
+				historique.addStory(idHist, treeOfStory);
+			}	
+		} catch (SQLException e) {
+			throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
+		return historique;
+	}
+	
+	public void deleteWritter(int idHist, int numParag) {
+		try (
+				Connection conn = getConn();
+			    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idWritter=NULL WHERE idHist=? and numParag=?");
+			) {
+				ps.setInt(1, idHist);
+				ps.setInt(2, numParag);
+			 	ps.executeQuery();
+		      }catch (SQLException e) {
+		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+		      }
 	}
 }

@@ -37,7 +37,7 @@ public class Publication extends HttpServlet {
             HistoireDAO histoireDAO) throws ServletException, IOException {
     	
     	
-        List<Histoire> histoires = histoireDAO.getListeHistoires();
+        List<Histoire> histoires = histoireDAO.getListeHistoiresPublie();
         
         request.setAttribute("histoires", histoires);
         

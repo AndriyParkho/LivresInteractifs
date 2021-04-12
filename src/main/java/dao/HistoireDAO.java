@@ -27,7 +27,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
 	/**
      * Renvoie la liste des histoires publiée.
      */
-    public List<Histoire> getListeHistoires() {
+    public List<Histoire> getListeHistoiresPublie() {
         List<Histoire> result = new ArrayList<Histoire>();
         try (
 	     Connection conn = getConn();
@@ -72,26 +72,26 @@ public class HistoireDAO extends AbstractDataBaseDAO {
 		return result;
 	}
     
-    public Paragraphe getHistoireTree(int idHist) {
+    public Paragraphe getHistoireTreeToRead(int idHist) {
     	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(super.dataSource);
     	Paragraphe firstParag = paragrapheDAO.getParagraphe(idHist, 1);
     	try (
     			Connection conn = getConn();
     			) {
-    		paragrapheDAO.setFollowingParag(firstParag, conn);    	
+    		paragrapheDAO.setFollowingParagToRead(firstParag, conn);    	
     	} catch (SQLException e) {
     		throw new DAOException("Erreur BD " + e.getMessage(), e);
     	}
     	return firstParag;
     }
     
-    public Paragraphe getAllHistoireTree(int idHist) {
+    public Paragraphe getHistoireTreeToWrite(int idHist) {
     	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(super.dataSource);
     	Paragraphe firstParag = paragrapheDAO.getParagraphe(idHist, 1);
     	try (
 		     Connection conn = getConn();
 		     ) {
-    			paragrapheDAO.setAllFollowingParag(firstParag, conn);    	
+    			paragrapheDAO.setFollowingParagToWrite(firstParag, conn);    	
 	        } catch (SQLException e) {
 	            throw new DAOException("Erreur BD " + e.getMessage(), e);
 			}

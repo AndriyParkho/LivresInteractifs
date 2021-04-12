@@ -14,7 +14,11 @@ import javax.sql.DataSource;
 import dao.DAOException;
 import dao.HistoireDAO;
 import dao.ParagrapheDAO;
+import dao.UtilisateurDAO;
+
 import java.sql.PreparedStatement;
+
+import modele.HistoriqueModele;
 import modele.Paragraphe;
 import modele.Utilisateur;
 
@@ -47,22 +51,36 @@ public class WriteParagraph extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
-        
-    	HttpSession sess = request.getSession(false);
-    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
-    	ParagrapheDAO paragraph = new ParagrapheDAO(ds);
     	int idHist = Integer.parseInt(request.getParameter("idHist"));
     	int numParag = Integer.parseInt(request.getParameter("numParag"));
-    	try {
-    		paragraph.setWritter(idHist, numParag, user.getId());
-    	} catch (DAOException e) {
-            erreurBD(request, response, e);
+    	String action = (String) request.getParameter("action");
+    	if(action == null) {
+    		HttpSession sess = request.getSession(false);
+        	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+        	ParagrapheDAO paragraph = new ParagrapheDAO(ds);
+        	String titreParag = request.getParameter("titreParag");
+        	request.setAttribute("titreParag", titreParag);
+        	request.setAttribute("idHist", idHist);
+        	request.setAttribute("numParag", numParag);
+        	try {
+        		paragraph.setWritter(idHist, numParag, user.getId());
+        	} catch (DAOException e) {
+                erreurBD(request, response, e);
+            }
+            request.setCharacterEncoding("UTF-8");
+            request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
+    	}
+    	else if(action.equals("erase")) {
+        	ParagrapheDAO paragraph = new ParagrapheDAO(ds);
+            try {
+            	paragraph.deleteWritter(idHist, numParag);
+            } catch (DAOException e) {
+            	erreurBD(request, response, e);
+            }
+            response.sendRedirect("accueil");  //.getRequestDispatcher("accueil").forward(request, response);
+        } else {
+            invalidParameters(request, response);
         }
-        request.setCharacterEncoding("UTF-8");
-        request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
-        
-        
-        
-    
     }
+    
 }

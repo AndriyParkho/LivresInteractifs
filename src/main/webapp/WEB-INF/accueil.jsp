@@ -53,7 +53,7 @@
 			  <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" checked="checked"/>Oui</label>
 			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked"/>Non</label> <br>
 			  <div id="listeDesChoix">
-              <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="0" min="0" max="100" required>
+              <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
               <input type="button" value="Afficher les choix" onclick="changeChoice();">
               <br>
 			  <table id="choice" class="formulaire"></table>
@@ -72,7 +72,7 @@
 
                     
                     <c:if test="${paragEnCours != null}">
-                        <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
+                        <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}&titreParag=${paragEnCours.titre}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
                     </c:if>
 	                <c:if test="${paragEnCours == null}">
 	                 	<table>
@@ -103,6 +103,9 @@
                 </tr>
             </c:forEach>
         </table>
+        <c:if test="${(user != null) and isModified}">
+			<a href="accueil?action=save" id="boutonSauvegarde">Sauvegarder et revenir à l'accueil</a>
+		</c:if>
 	 </c:if>
 	 
      <c:if test="${empty param.bouton}">
