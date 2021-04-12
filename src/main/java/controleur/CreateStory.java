@@ -65,20 +65,20 @@ public class CreateStory extends HttpServlet {
         }
             
         String[] auteurs = request.getParameterValues("auteurs");
-        for(String auteur : auteurs){
-            System.out.println(auteur);
-        }
+        
         String title = request.getParameter("title");
         String titreParagraphe = request.getParameter("titreParagraphe");
         String paragraphe = request.getParameter("story");
         int nb_choix = Integer.parseInt(request.getParameter("nbChoix"));
         Histoire histoire = histoireDao.createNewStoryObjet(title, user.getId());
         Paragraphe paragrahe = new Paragraphe(histoire.getId(), 1, titreParagraphe, paragraphe, true, nb_choix, user.getId());
-        if(confidentialite == 1){
-            histoire.setAuteurs(auteurs);
-        }
+        
         histoire.setFirstParag(paragrahe);
         histoireDao.createStory(histoire, confidentialite);
+        if(confidentialite == 1){
+            histoire.setAuteurs(auteurs);
+            histoireDao.inviteUsers(histoire);
+        }
         
     }
     

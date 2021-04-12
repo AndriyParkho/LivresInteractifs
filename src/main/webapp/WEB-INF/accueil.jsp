@@ -32,14 +32,14 @@
 		    <p>
 
 		     Nom d'histoire :<input type="text" name="title" id="title"/><br>
-		     Confidentialité de l'histoire : <label><input type="radio" onclick="hideInvite();" name="confident" checked="checked" id="buttonPublic"/>Publique</label>
-			   								 <label><input type="radio" onclick="displayInvite();" name="confident"/>Privée</label> <br>
+                     Confidentialité de l'histoire : <label><input type="radio" onclick="hideInvite();" name="confident" checked="checked" id="buttonPublic" value="0"/>Publique</label>
+			   								 <label><input type="radio" onclick="displayInvite();" name="confident" value="1"/>Privée</label> <br>
 			<div id='listPersons'>Personnes invitées pour l'écriture : <br><br>
 		
 			<select name="auteurs"  id="auteurs" size=2 multiple >
 
 				<c:forEach items="${user}" var="user">
-	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
+	            	<option name="auteurs" value="${user.id}">${user.nom} ${user.prenom}</option>
 	            </c:forEach>
 			</select> 
 			<input type="button" value="Effacer la sélection" onclick="EraseSelect()">
