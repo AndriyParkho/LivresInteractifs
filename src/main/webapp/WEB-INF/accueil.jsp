@@ -60,17 +60,9 @@
 			  </div>
 			  <br>
 			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
-	          <p id="errorMessage"> </p>
 		  </form>
 		  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
-
-                    <table>
-	            <tr>
-	                <th>Titre</th>
-	            </tr>
-
-                    
                     <c:if test="${paragEnCours != null}">
                         <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}&titreParag=${paragEnCours.titre}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
                     </c:if>

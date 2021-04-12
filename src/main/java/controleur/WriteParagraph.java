@@ -1,6 +1,8 @@
 package controleur;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import javax.sql.DataSource;
 import dao.DAOException;
 import dao.ParagrapheDAO;
 import modele.Utilisateur;
+import modele.Paragraphe;
 
 /**
  * Le contrôleur pour accéder à l'écriture d'une histoire
@@ -55,7 +58,10 @@ public class WriteParagraph extends HttpServlet {
         	request.setAttribute("titreParag", titreParag);
         	request.setAttribute("idHist", idHist);
         	request.setAttribute("numParag", numParag);
+        	
         	try {
+        		List<Paragraphe> choixRedige = paragraph.getParagrapheFromHist(idHist);
+        		request.setAttribute("paragrapheRedige", choixRedige);
         		paragraph.setWritter(idHist, numParag, user.getId());
         	} catch (DAOException e) {
                 erreurBD(request, response, e);

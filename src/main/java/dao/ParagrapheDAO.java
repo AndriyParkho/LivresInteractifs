@@ -187,4 +187,23 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
 		      }
 	}
+	
+	public ArrayList<Paragraphe> getParagrapheFromHist(int histId){
+		ArrayList<Paragraphe> paragrapheRedige = new ArrayList<Paragraphe>();
+		try (
+				Connection conn = getConn();
+			    PreparedStatement ps = conn.prepareStatement("SELECT numParag, titre, texte, nbChoix FROM paragraphe WHERE idHist = ?");
+			) {
+				ps.setInt(1, histId);
+				ResultSet rs = ps.executeQuery();
+				Paragraphe parag;
+				while(rs.next()) {
+					parag = new Paragraphe(histId, rs.getInt("numParag"), rs.getString("titre"),rs.getString("texte"), rs.getInt("nbChoix"));
+					paragrapheRedige.add(parag);
+				}
+		      }catch (SQLException e) {
+		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+		      }
+		return paragrapheRedige;
+	}
 }
