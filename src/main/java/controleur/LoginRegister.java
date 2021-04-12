@@ -71,8 +71,12 @@ public class LoginRegister extends HttpServlet {
 	        try {
                 Utilisateur user = userDao.getUser(email, pass);
                 if (user != null) {
-                	HistoriqueModele historique = paragDao.getHistorique(user.getId());
-                	System.out.println(historique.toString());
+                	HistoriqueModele historique = null;
+                	try {
+                		historique = paragDao.getHistorique(user.getId());
+                	} catch(IllegalArgumentException e) {
+                		invalidParameters(request, response);
+                	}
                 	HttpSession session = request.getSession();
                 	session.invalidate();
                 	session = request.getSession();
