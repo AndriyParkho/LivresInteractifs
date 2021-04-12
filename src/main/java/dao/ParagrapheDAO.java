@@ -145,6 +145,10 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 					numParag = rs.getInt("numParag");
 					parag = getParagraphe(idHist, numParag);
 					blocPara.add(parag);
+					/*TODO parag.getParagSuiv().size() renvoie toujours zéro car l'arbre de l'histoire en mode lecture n'a pas été construit,
+					 * à la connexion dans la console l'historique s'affiche, actuellement c'est {1=[[1], [2], [4], [7]]} mais le résultat
+					 * que l'on doit avoir est {1=[[1, 2], [4, 7]]} ce qui devrait être le cas si on construit bien l'arbre.
+					 */
 					if(parag.getParagSuiv().size() != 1) {
 						treeOfStory.add(blocPara);
 						blocPara = new ArrayList<Paragraphe>();
