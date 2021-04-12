@@ -141,18 +141,31 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				treeOfStory = new ArrayList<ArrayList<Paragraphe>>();
 				blocPara = new ArrayList<Paragraphe>();
 				rs = ss.executeQuery("SELECT numParag FROM hasRead WHERE idUtil=" + Integer.toString(userId) + "AND idHist = " + Integer.toString(idHist));
+				Paragraphe currentParagraphe = null;
 				while(rs.next()) {
 					numParag = rs.getInt("numParag");
-					parag = getParagraphe(idHist, numParag);
-					blocPara.add(parag);
-					/*TODO parag.getParagSuiv().size() renvoie toujours zéro car l'arbre de l'histoire en mode lecture n'a pas été construit,
-					 * à la connexion dans la console l'historique s'affiche, actuellement c'est {1=[[1], [2], [4], [7]]} mais le résultat
-					 * que l'on doit avoir est {1=[[1, 2], [4, 7]]} ce qui devrait être le cas si on construit bien l'arbre.
-					 */
-					if(parag.getParagSuiv().size() != 1) {
-						treeOfStory.add(blocPara);
-						blocPara = new ArrayList<Paragraphe>();
+					if(numParag == 1) {
+						currentParagraphe = getParagraphe(idHist, numParag);
+						setFollowingParagToRead(currentParagraphe, conn);
+						blocPara.add(currentParagraphe);
 					}
+					else {
+						if(currentParagraphe.getParagSuiv().size() == 1) {
+							currentParagraphe = currentParagraphe.getParagSuiv().get(0);
+							blocPara.add(currentParagraphe);
+						} else {
+							treeOfStory.add(blocPara);
+							blocPara = new ArrayList<Paragraphe>();
+							currentParagraphe = currentParagraphe.getParagSuiv(numParag);
+							if(currentParagraphe == null) {
+								throw new IllegalArgumentException("");
+							}
+							blocPara.add(currentParagraphe);
+						}
+					}
+				}
+				if(!blocPara.isEmpty()) {
+					treeOfStory.add(blocPara);
 				}
 				historique.addStory(idHist, treeOfStory);
 			}	
