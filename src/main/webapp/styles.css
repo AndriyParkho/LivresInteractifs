@@ -101,7 +101,7 @@ tr.formulaire{
 }
 
 div.alreadyWritting{
-	margin: 0 auto;
+	margin: 3% auto;
 	background-color: #4CAF50;
 	width: 40%;
 	border-radius: 25px;
@@ -239,3 +239,9 @@ a.TitreHistorique{
 	background-color: white;
 	text-align: center;
 }
+
+#choixRemplis{
+	margin: 1%;
+}
+
+

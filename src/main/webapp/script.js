@@ -8,6 +8,8 @@
     }
     
     function displayChoice(){
+    	document.getElementById('nbChoix').value = 1;
+        changeChoice();
     	document.getElementById('listeDesChoix').style.display = 'block';
     }
     
@@ -24,12 +26,16 @@
     var nbChoixJs = 0;
     
     function changeChoice(){
-    	document.getElementById("errorMessage").innerHTML ="";
     	var newNbChoice = document.getElementById("nbChoix").value;
     	var div = document.getElementById("choice");
         while (newNbChoice > nbChoixJs){
         	nbChoixJs++;
-        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td></tr>');
+        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td>\
+        	<td>\
+        	<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ');" name="choixRedige' + nbChoixJs.toString() +'"/>Oui</label>\
+			<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ')" name="choixRedige' + nbChoixJs.toString() +'" checked="checked"/>Non</label>\
+        	</td>\
+        	</tr>');
         }
     	 while (newNbChoice < nbChoixJs){
     		nbChoixJs--;
@@ -80,18 +86,17 @@
     			document.getElementById("formCreate").submit();
     		}
     		else{
-    			document.getElementById("errorMessage").innerHTML = "Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.";
+    			alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
     		}
     	}
     	else{
-    		document.getElementById("errorMessage").innerHTML = "Tous les champs doivent être remplis.";
+    		alert("Tous les champs doivent être remplis.");
     	} 
     }
     
     function showStoryFirst(){
     	document.getElementById('HistoricBox').style.display = 'none';
     }  
-    
     
     
     
