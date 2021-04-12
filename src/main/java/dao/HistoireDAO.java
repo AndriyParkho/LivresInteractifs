@@ -191,9 +191,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 int idHist = rs.getInt("idHist");
                 listStories.add(getHistoire(idHist));
             }
-            for(Histoire hist : listStories){
-                System.out.println(hist.getId());
-            }
             return listStories;
         } catch (SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
