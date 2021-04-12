@@ -51,11 +51,17 @@ public class ReadStory extends HttpServlet {
             HttpServletResponse response)
             throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession();
+        HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
+        HistoireDAO histoireDAO = new HistoireDAO(ds);
         /* On récupère les différents paramètres */
         int idHist = Integer.parseInt(request.getParameter("idHist"));
         /* goBackTo est présent que si on vient de l'historique */
         Integer numParagToReset = null;
-        if(request.getParameter("goBackTo")!= null) numParagToReset = Integer.parseInt(request.getParameter("goBackTo"));
+        if(request.getParameter("goBackTo")!= null) {
+        	numParagToReset = Integer.parseInt(request.getParameter("goBackTo"));
+        	historique.setModified(true);
+        }
         /* numParagPere est présent que si on parcourt normalement l'histoire */
         Integer numParagPere = null;
         if(request.getParameter("numParagPere") != null) 
@@ -63,10 +69,6 @@ public class ReadStory extends HttpServlet {
         /* numChoix est présent que si on parcourt normalement l'histoire */
         Integer numChoix = null;
         if(request.getParameter("choix") != null) numChoix = Integer.valueOf(request.getParameter("choix"));
-        
-        HttpSession session = request.getSession();
-        HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
-        HistoireDAO histoireDAO = new HistoireDAO(ds);
         /*On récupère le dernier paragraphe affiché si y en a un à partir de la liste des paragraphes affichées sur la vue */
         Paragraphe currentParag;
         if(this.paragsToRead.isEmpty()) currentParag = null;

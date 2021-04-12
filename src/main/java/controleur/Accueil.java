@@ -160,7 +160,6 @@ public class Accueil extends HttpServlet {
     }
     
     private void actionAfficherListePublication(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        System.out.println("Checkpoint action");
         HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
     	
