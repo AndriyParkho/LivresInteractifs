@@ -5,15 +5,9 @@
  */
 package controleur;
 
-import dao.DAOException;
-import dao.HistoireDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
+import dao.DAOException;
+import dao.HistoireDAO;
 import modele.Histoire;
 
 /**
@@ -32,18 +29,6 @@ import modele.Histoire;
 public class Publication extends HttpServlet {
 
     
-      private void actionAfficher(HttpServletRequest request, 
-            HttpServletResponse response, 
-            HistoireDAO histoireDAO) throws ServletException, IOException {
-    	
-    	
-        List<Histoire> histoires = histoireDAO.getListeHistoiresPublie();
-        
-        request.setAttribute("histoires", histoires);
-        
-        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
-    }
-      
       private void erreurBD(HttpServletRequest request,
             HttpServletResponse response, DAOException e)
         throws ServletException, IOException {
@@ -96,24 +81,8 @@ public class Publication extends HttpServlet {
         
         publicationStories(request, response);
         
-        /* Envoi de la réponse */
-        response.setContentType("text/html;charset=UTF-8");
-        try {
-        	actionAfficher(request, response, histoireDAO);
-        } catch (DAOException e) {
-            erreurBD(request, response, e);
-        }
+        response.sendRedirect("accueil");
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
     
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.imageio.stream.FileCacheImageInputStream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,10 +15,8 @@ import javax.sql.DataSource;
 
 import dao.DAOException;
 import dao.HistoireDAO;
-import modele.Histoire;
 import modele.HistoriqueModele;
 import modele.Paragraphe;
-import modele.Utilisateur;
 
 /**
  * Le contrôleur de la page d'accueil

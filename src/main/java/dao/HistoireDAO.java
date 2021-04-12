@@ -1,21 +1,17 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import modele.Histoire;
 import modele.Paragraphe;
-import modele.Utilisateur;
 
 public class HistoireDAO extends AbstractDataBaseDAO {
 
@@ -166,8 +162,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             
             PreparedStatement ps_ajoutInvitation = c.prepareStatement("INSERT INTO isInvited (idHist, idUtil) VALUES (?, ?)");
             
-            
-             
             ps_histoire.setInt(1, histoire.getId());
             ps_histoire.setString(2, histoire.getTitre());
             ps_histoire.setInt(3, histoire.getIdAuteur()); //par défaut utilisateur 1, a changer futurement
@@ -181,8 +175,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             ps_paragraphe.setInt(6, histoire.getIdAuteur());
             
             ps_paragraphe.setInt(7, histoire.getId());
-            
-            
             
             ps_histoire.executeUpdate();
             ps_paragraphe.executeUpdate();

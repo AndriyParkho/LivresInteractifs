@@ -12,14 +12,7 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import dao.DAOException;
-import dao.HistoireDAO;
 import dao.ParagrapheDAO;
-import dao.UtilisateurDAO;
-
-import java.sql.PreparedStatement;
-
-import modele.HistoriqueModele;
-import modele.Paragraphe;
 import modele.Utilisateur;
 
 /**
