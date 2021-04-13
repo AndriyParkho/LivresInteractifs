@@ -49,6 +49,16 @@ public class HistoriqueModele {
 		this.isModified = isModified;
 	}
 	
+	public boolean isInHistorique(int idHist, int numParag) {
+		List<ArrayList<Paragraphe>> listePara = this.getTree(idHist);
+		for(ArrayList<Paragraphe> list : listePara) {
+			for(Paragraphe para : list) {
+				if(para.getNumParag() == numParag) return true;
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	public String toString() {
 		return historique.toString();

@@ -17,14 +17,16 @@ CREATE TABLE Histoire (
 );
 
 CREATE TABLE Paragraphe (
+       idHist integer NOT NULL REFERENCES Histoire (idHist) ON DELETE CASCADE,
        numParag integer NOT NULL,   
        titre varchar2(1000),
        texte varchar2(4000),
        valide NUMBER(1,0) DEFAULT 0,
        nbChoix integer,
        idWritter integer REFERENCES Utilisateur(idUtil),
-       idHist integer NOT NULL REFERENCES Histoire (idHist) ON DELETE CASCADE,
-       constraint pkParag PRIMARY KEY (numParag, idHist)  
+       conditionParag integer NULL,
+       constraint pkParag PRIMARY KEY (numParag, idHist),
+       CONSTRAINT fkCondParag FOREIGN KEY(idhist, conditionParag) REFERENCES paragraphe(idhist, numParag);
 );
 
 CREATE TABLE IsInvited (

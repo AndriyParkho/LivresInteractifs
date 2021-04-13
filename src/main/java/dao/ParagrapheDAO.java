@@ -50,7 +50,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				try (
 					Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 					) {
-					ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe JOIN "
+					ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist, conditionParag FROM paragraphe JOIN "
 								+ "isfollowing ON idhistparag = idhist AND numparagpere = numparag WHERE idhistparag = " + parag.getIdHist() + 
 								" AND numparagfils = " + parag.getNumParag()  + "AND texte IS NOT NULL AND valide = 1");
 					ArrayList<Paragraphe> newParagsPere = new ArrayList<Paragraphe>();
@@ -60,7 +60,9 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 						if(pereParag == null) {/*Si ce n'est pas le cas on créer le paragraphe pere*/						
 							Integer nbchoix = rs.getInt("nbchoix");
 							if(rs.wasNull()) nbchoix = null;
-							pereParag = new Paragraphe(rs.getInt("idhist"), numParag, rs.getString("titre"), rs.getString("texte"), nbchoix);
+							Integer conditionParag = rs.getInt("conditionParag");
+							if(rs.wasNull()) conditionParag = null;
+							pereParag = new Paragraphe(rs.getInt("idhist"), numParag, rs.getString("titre"), rs.getString("texte"), nbchoix, conditionParag);
 							dicoParag.put(numParag, pereParag); /*On le rajoute à la liste des paragraphes déjà vu*/
 							newParagsPere.add(pereParag);
 						} else { /*Si c'est le cas on rajoute ce paragraphe pere*/
@@ -109,14 +111,16 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
     			Connection conn = getConn();
     			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
     			) {
-    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe WHERE idhist = " + idHist + 
+    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist, conditionParag FROM paragraphe WHERE idhist = " + idHist + 
 					" AND nbchoix = 0 AND texte IS NOT NULL AND valide = 1");
     		ArrayList<Paragraphe> paragsConclu = new ArrayList<Paragraphe>();
     		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
     		while(rs.next()) {
     			Integer numParag = rs.getInt("numParag");
 				if(rs.wasNull()) numParag = null;
-    			Paragraphe concluParag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0);
+				Integer conditionParag = rs.getInt("conditionParag");
+				if(rs.wasNull()) conditionParag = null;
+    			Paragraphe concluParag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0, conditionParag);
     			paragsConclu.add(concluParag);
     			dicoParag.put(numParag, concluParag);
     		}

@@ -11,7 +11,17 @@ public class Paragraphe {
 	private Integer nbChoix;
 	private ArrayList<Paragraphe> paragSuiv = new ArrayList<Paragraphe>();
 	private Integer idWritter;
+	private Integer conditionParag;
 	
+	public Paragraphe(int idHist, int numParag, String titre, String texte, Integer nbChoix, Integer conditionParag) {
+		super();
+		this.idHist = idHist;
+		this.numParag = numParag;
+		this.titre = titre;
+		this.texte = texte;
+		this.nbChoix = nbChoix;
+		this.conditionParag = conditionParag;
+	}
 	
 	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, Integer nbChoix, Integer idWritter) {
 		super();
@@ -101,6 +111,10 @@ public class Paragraphe {
 		return null;
 	}
 	
+	public Integer getConditionParag() {
+		return conditionParag;
+	}
+
 	@Override
 	public String toString() {
 		return Integer.toString(numParag);

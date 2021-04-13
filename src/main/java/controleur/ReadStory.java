@@ -74,7 +74,7 @@ public class ReadStory extends HttpServlet {
         if(this.paragsToRead.isEmpty()) currentParag = null;
         else currentParag = this.paragsToRead.get(paragsToRead.size()-1);
         
-        List<Paragraphe> choixParag;
+        List<Paragraphe> choixParag = new ArrayList<Paragraphe>();
         ArrayList<Paragraphe> listHisto= new ArrayList<Paragraphe>(); /* ??? */
         /*On récupère l'historique de l'histoire si y en a un */ 
 		List<ArrayList<Paragraphe>> listePara = historique.getTree(idHist);
@@ -129,7 +129,11 @@ public class ReadStory extends HttpServlet {
 	        	paragsToRead.add(currentParag);
         	}
         	/*On place les paragraphes suivants comme choix pour l'utilisateur*/
-        	choixParag = currentParag.getParagSuiv();
+        	for(Paragraphe parag : currentParag.getParagSuiv()) {
+        		if(parag.getConditionParag() == null || historique.isInHistorique(idHist, parag.getConditionParag())) {
+        			choixParag.add(parag);
+        		}
+        	}
         	request.setAttribute("current", currentParag);
         	request.setAttribute("paragsToRead", paragsToRead);
         	request.setAttribute("choixParag", choixParag);
