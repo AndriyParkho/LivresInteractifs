@@ -9,17 +9,18 @@
   </head>
   <body>
 	<c:if test="${user != null}">
-		<form method="post" id="formCreate" action="write_paragraph" accept-charset="UTF-8">
+		<form method="post" id="formCreate" action="write_paragraph?idHist=${idHist}&numParag=${numParag}&titre=${titreParag}" accept-charset="UTF-8">
 		    <p>
             <br>
             <br>
-		     Nom du paragraphe :<input type="text" name="title" id="titreParagraphe" value="${titreParag}" disabled/><br>
+		     Nom du paragraphe :<input type="text" name="title" id="titreParagraphe"  value="${titreParag}" disabled/><br>
 			 Paragraphe :<TEXTAREA name="story" id="story" rows=4 cols=80 <c:if test="${not empty param.texte}"> value="param.texte" </c:if> required></TEXTAREA><br>
-             <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" checked="checked"/>Oui</label>
-			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked"/>Non</label> <br>
+             <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" value='1'/>Oui</label>
+			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked"  value='0'/>Non</label> <br>
 			  <div id="listeDesChoix">
 	
-              <p>Nombre de choix (Attention : la partie suivante ne sera pas enregistrée si vous sauvegardez votre progression, elle n'est à remplir que lorsque vous validez le paragraphe) :</p><br><input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
+              <p>Nombre de choix (Attention : la partie suivante ne sera pas enregistrée si vous sauvegardez votre progression, elle n'est à remplir que lorsque vous validez le paragraphe) :</p><br>
+              <input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
               <input type="button" value="Afficher les choix" onclick="changeChoice();">
               <br>
               <select name="choixRemplis"  id="choixRemplis" size=1 disabled>
@@ -31,6 +32,7 @@
 			  </div>
 			 <input type="button" value="Valider le paragraphe" onclick="submitForm();">
 		</form>
-		<a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}" id="boutonErase">Annuler la rédaction du paragraphe</a>
+		<a href="write_paragraph?action=save&idHist=${idHist}&numParag=${numParag}" class="bouton">Sauvegarder la rédaction du paragraphe</a>
+		<a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}" class="bouton" id="boutonErase">Annuler la rédaction du paragraphe</a>
 	</c:if>
   </body>

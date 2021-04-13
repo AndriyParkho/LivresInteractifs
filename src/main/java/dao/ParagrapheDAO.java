@@ -263,12 +263,65 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		      }
 		return paragrapheRedige;
 	}
-
-
-
-//	public void setDicoParagRead(HashMap<Integer, Paragraphe> dicoParagRead) {
-//		this.dicoParagRead = dicoParagRead;
-//	}
 	
+	public int getMaxNbParag(int idHist) {
+		try (
+				Connection conn = getConn();
+			    PreparedStatement ps = conn.prepareStatement("SELECT MAX(numParag) FROM paragraphe WHERE idHist = ?");
+			) {
+				ps.setInt(1, idHist);
+				ResultSet rs = ps.executeQuery();
+				int max = 1;
+				if(rs.next()) {
+					max = rs.getInt("max(numParag)");
+				}
+				return max;
+		      }catch (SQLException e) {
+		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+		      }
+	}
 	
+	public void setParagraphe(Paragraphe parag) {
+		try (
+	     Connection conn = getConn();
+				PreparedStatement ps = conn.prepareStatement("INSERT INTO Paragraphe (numParag, titre, idHist) VALUES (?, ?, ?)");
+	     ) {
+            ps.setInt(1, parag.getNumParag());
+            ps.setString(2, parag.getTitre());
+            ps.setInt(3, parag.getIdHist());
+            ps.executeQuery();
+        } catch (SQLException e) {
+            throw new DAOException("Erreur BD " + e.getMessage(), e);
+		}
+	}
+	
+	public void valideParagraph(Paragraphe parag) {
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET valide=1, texte=?, nbChoix=? WHERE idHist=? and numParag=?");
+			     ) {
+		            ps.setString(1, parag.getTexte());
+		            ps.setInt(2, parag.getNbChoix());
+		            ps.setInt(3, parag.getIdHist());
+		            ps.setInt(4, parag.getNumParag());
+		            ps.executeQuery();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+	}
+	
+	public void setFollowing(Paragraphe parag1, Paragraphe parag2) {
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("INSERT INTO isFollowing (idHistPere, numParagPere, idHistFils, numParagFils) VALUES (?, ?, ?, ?)");
+			     ) {
+					ps.setInt(1, parag1.getIdHist());
+		            ps.setInt(2, parag1.getNumParag());
+		            ps.setInt(2, parag1.getIdHist());
+		            ps.setInt(2, parag2.getNumParag());
+		            ps.executeQuery();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+	}
 }

@@ -50,8 +50,8 @@
 			  <br>
 			  <p>Premier paragraphe :</p><TEXTAREA name="story" id="story" rows=4 cols=80 required></TEXTAREA>
 			  <br>
-			  <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" checked="checked"/>Oui</label>
-			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked"/>Non</label> <br>
+			  <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" value='1'/>Oui</label>
+			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked" value='0'/>Non</label> <br>
 			  <div id="listeDesChoix">
               <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
               <input type="button" value="Afficher les choix" onclick="changeChoice();">

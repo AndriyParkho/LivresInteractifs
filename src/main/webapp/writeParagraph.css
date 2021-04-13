@@ -52,7 +52,7 @@ TEXTAREA{
 }
 
 
-#boutonErase{
+a.bouton{
 	text-decoration: none;
 	color: black;
 	display:block;
@@ -67,4 +67,3 @@ TEXTAREA{
 #choixRemplis{
 	margin: 1%;
 }
-
