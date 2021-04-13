@@ -313,12 +313,11 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	public void setFollowing(Paragraphe parag1, Paragraphe parag2) {
 		try (
 			     Connection conn = getConn();
-						PreparedStatement ps = conn.prepareStatement("INSERT INTO isFollowing (idHistPere, numParagPere, idHistFils, numParagFils) VALUES (?, ?, ?, ?)");
+						PreparedStatement ps = conn.prepareStatement("INSERT INTO isFollowing (idHistParag, numParagPere, numParagFils) VALUES (?, ?, ?)");
 			     ) {
 					ps.setInt(1, parag1.getIdHist());
 		            ps.setInt(2, parag1.getNumParag());
-		            ps.setInt(2, parag1.getIdHist());
-		            ps.setInt(2, parag2.getNumParag());
+		            ps.setInt(3, parag2.getNumParag());
 		            ps.executeQuery();
 		        } catch (SQLException e) {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
