@@ -14,7 +14,7 @@ import modele.HistoriqueModele;
 import modele.Paragraphe;
 
 public class ParagrapheDAO extends AbstractDataBaseDAO {
-
+	
 	public ParagrapheDAO(DataSource ds) {
 		super(ds);
 	}
@@ -36,70 +36,111 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		}
 		return result;
 	}
+	
 	/*
 	 * @param dicoParag : stock les paragraphes qu'on a déjà vu
 	 * @param parag : paragraphe sur le quel on est dans notre parcours de l'arbre
 	 */
-	public boolean setFollowingParagToRead(HashMap<Integer, Paragraphe> dicoParag ,Paragraphe parag, Connection conn) {
-		/*Si le paragraphe est un paragraphe de conclusion ses pères peuvent l'ajouter à leur liste de ParagSuiv*/
-		if(parag.getNbChoix() == 0) {
-			return true;
-		} else { /*Sinon on récupère les fils du paragraphe qui ont du texte et qui sont validé*/
-			try (
+	public void getBrancheConclusion(HashMap<Integer, Paragraphe> dicoParag, ArrayList<Paragraphe> paragsPere, Paragraphe paragToadd, Connection conn) {
+		if(paragsPere.isEmpty() && paragToadd.getNumParag() == 1) {
+			return;
+		} else {
+			for(Paragraphe parag: paragsPere) {
+				if(paragToadd != null) parag.addParagSuiv(paragToadd);
+				try (
 					Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 					) {
-				ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe JOIN "
-						+ "isfollowing ON idhistfils = idhist AND numparagfils = numparag WHERE idhistpere = " + parag.getIdHist() + 
-						" AND numparagpere = " + parag.getNumParag()  + "AND texte IS NOT NULL AND valide = 1");
-				/*Si il n'a pas de fils avec du texte et qui sont validé alors il dit à ses pères qu'il ne menne pas à une conclusion*/
-				if(!rs.next()) return false;
-				rs.beforeFirst(); /*On se replace au début dans le cas où le if précédent était false*/
-				while (rs.next()) { /*On parcours les fils qui semble bon*/
-					Integer numParag = rs.getInt("numParag");
-					Paragraphe childParag = dicoParag.get(numParag); /*On vérifie si on est déjà passé par le paragraphe*/ 
-					if(childParag == null) {/*Si ce n'est pas le cas on créer le paragraphe fils*/						
-						Integer nbchoix = rs.getInt("nbchoix");
-						if(rs.wasNull()) nbchoix = null;
-						childParag = new Paragraphe(rs.getInt("idhist"), numParag, rs.getString("titre"), rs.getString("texte"), nbchoix);
-						dicoParag.put(numParag, childParag); /*On le rajoute à la liste des paragraphes déjà vu*/
-						/*On rajoute le fils que s'il nous dit qu'on peut (en relancant la fonction sur lui)*/
-						if(this.setFollowingParagToRead(dicoParag, childParag, conn)) parag.addParagSuiv(childParag);
-					} else { /*Si c'est le cas on rajoute ce paragraphe fils*/
-						parag.addParagSuiv(childParag);
-						return true; /*Et on dit au père qu'il peut nous ajouter comme fils (Ce qui n'est pas vraiment 
-										vrai car il ne mène pas forcément à une conclu*/
+					ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe JOIN "
+								+ "isfollowing ON idhistparag = idhist AND numparagpere = numparag WHERE idhistparag = " + parag.getIdHist() + 
+								" AND numparagfils = " + parag.getNumParag()  + "AND texte IS NOT NULL AND valide = 1");
+					ArrayList<Paragraphe> newParagsPere = new ArrayList<Paragraphe>();
+					while (rs.next()) {
+						Integer numParag = rs.getInt("numParag");
+						Paragraphe pereParag = dicoParag.get(numParag); /*On vérifie si on est déjà passé par le paragraphe*/ 
+						if(pereParag == null) {/*Si ce n'est pas le cas on créer le paragraphe pere*/						
+							Integer nbchoix = rs.getInt("nbchoix");
+							if(rs.wasNull()) nbchoix = null;
+							pereParag = new Paragraphe(rs.getInt("idhist"), numParag, rs.getString("titre"), rs.getString("texte"), nbchoix);
+							dicoParag.put(numParag, pereParag); /*On le rajoute à la liste des paragraphes déjà vu*/
+							newParagsPere.add(pereParag);
+						} else { /*Si c'est le cas on rajoute ce paragraphe pere*/
+							pereParag.addParagSuiv(parag);
+						}
 					}
-				}
-				if(parag.getParagSuiv().isEmpty()) return false; /*Si aucun fils n'a été ajouté à la liste car aucun ne menait à une 
-																	conclusion, on dit aux pères qu'on ne mène pas à une conclu*/
-				else return true; /*Sinon on dit qu'on mène à une conclusion*/
-			} catch (SQLException e) {
-				throw new DAOException("Erreur BD " + e.getMessage(), e);
+					getBrancheConclusion(dicoParag, newParagsPere, parag, conn);
+					} catch (SQLException e) {
+						throw new DAOException("Erreur BD " + e.getMessage(), e);
+					}
 			}
 		}
 	}
 	
-	public void setFollowingParagToWrite(Paragraphe parag, Connection conn) {
+	public void setFollowingParagToWrite(HashMap<Integer, Paragraphe> dicoParag, Paragraphe parag, Connection conn) {
 		try (
 	     Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 	     ) {
-            ResultSet rs = st.executeQuery("SELECT * FROM paragraphe JOIN isfollowing ON idhistfils = idhist AND "
-            		+ "numparagfils = numparag WHERE idhistpere = " + parag.getIdHist() + 
+            ResultSet rs = st.executeQuery("SELECT * FROM paragraphe JOIN isfollowing ON idhistparag = idhist AND "
+            		+ "numparagfils = numparag WHERE idhistparag = " + parag.getIdHist() + 
             		" AND numparagpere = " + parag.getNumParag());
             while (rs.next()) {
-            	Integer nbchoix = rs.getInt("nbchoix");
-            	if(rs.wasNull()) nbchoix = null;
-            	Integer idWritter = rs.getInt("idWritter");
-            	if(rs.wasNull()) idWritter = null;
-                Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), 
-                		rs.getString("texte"), rs.getBoolean("valide"), nbchoix, idWritter);
-                this.setFollowingParagToWrite(childParag, conn); 
+            	Integer numParag = rs.getInt("numParag");
+            	if(rs.wasNull()) numParag = null;
+            	Paragraphe childParag = dicoParag.get(numParag);
+            	if(childParag == null) {            		
+            		Integer nbchoix = rs.getInt("nbchoix");
+            		if(rs.wasNull()) nbchoix = null;
+            		Integer idWritter = rs.getInt("idWritter");
+            		if(rs.wasNull()) idWritter = null;
+            		childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), 
+            				rs.getString("texte"), rs.getBoolean("valide"), nbchoix, idWritter);
+            		dicoParag.put(numParag, childParag);
+            		this.setFollowingParagToWrite(dicoParag, childParag, conn); 
+            	}
                 parag.addParagSuiv(childParag);
             }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
 	}
+	
+    public Paragraphe getHistoireTreeToRead(int idHist) {
+    	Paragraphe firstParag = null;
+    	try (
+    			Connection conn = getConn();
+    			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    			) {
+    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe WHERE idhist = " + idHist + 
+					" AND nbchoix = 0 AND texte IS NOT NULL AND valide = 1");
+    		ArrayList<Paragraphe> paragsConclu = new ArrayList<Paragraphe>();
+    		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+    		while(rs.next()) {
+    			Integer numParag = rs.getInt("numParag");
+				if(rs.wasNull()) numParag = null;
+    			Paragraphe concluParag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0);
+    			paragsConclu.add(concluParag);
+    			dicoParag.put(numParag, concluParag);
+    		}
+    		this.getBrancheConclusion(dicoParag, paragsConclu, null, conn);
+    		firstParag = dicoParag.get(1);
+    	} catch (SQLException e) {
+    		throw new DAOException("Erreur BD " + e.getMessage(), e);
+    	}
+    	return firstParag;
+    }
+    
+    public Paragraphe getHistoireTreeToWrite(int idHist) {
+    	Paragraphe firstParag = this.getParagraphe(idHist, 1);
+    	try (
+		     Connection conn = getConn();
+		     ) {
+    			HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+    			dicoParag.put(1, firstParag);
+    			this.setFollowingParagToWrite(dicoParag, firstParag, conn);    	
+	        } catch (SQLException e) {
+	            throw new DAOException("Erreur BD " + e.getMessage(), e);
+			}
+    	return firstParag;
+    }
 	
 	public Paragraphe getPragEnCours(int idUtil) {
 		Paragraphe result = null;
@@ -162,10 +203,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				while(rs.next()) {
 					numParag = rs.getInt("numParag");
 					if(numParag == 1) {
-						currentParagraphe = getParagraphe(idHist, numParag);
-						HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
-						dicoParag.put(numParag, currentParagraphe);
-						setFollowingParagToRead(dicoParag ,currentParagraphe, conn);
+						currentParagraphe = getHistoireTreeToRead(idHist);
 						blocPara.add(currentParagraphe);
 					}
 					else {
@@ -225,4 +263,12 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		      }
 		return paragrapheRedige;
 	}
+
+
+
+//	public void setDicoParagRead(HashMap<Integer, Paragraphe> dicoParagRead) {
+//		this.dicoParagRead = dicoParagRead;
+//	}
+	
+	
 }

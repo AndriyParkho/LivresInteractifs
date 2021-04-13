@@ -69,34 +69,6 @@ public class HistoireDAO extends AbstractDataBaseDAO {
 		return result;
 	}
     
-    public Paragraphe getHistoireTreeToRead(int idHist) {
-    	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(super.dataSource);
-    	Paragraphe firstParag = paragrapheDAO.getParagraphe(idHist, 1);
-    	try (
-    			Connection conn = getConn();
-    			) {
-    		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
-			dicoParag.put(1, firstParag);
-    		paragrapheDAO.setFollowingParagToRead(dicoParag, firstParag, conn);    	
-    	} catch (SQLException e) {
-    		throw new DAOException("Erreur BD " + e.getMessage(), e);
-    	}
-    	return firstParag;
-    }
-    
-    public Paragraphe getHistoireTreeToWrite(int idHist) {
-    	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(super.dataSource);
-    	Paragraphe firstParag = paragrapheDAO.getParagraphe(idHist, 1);
-    	try (
-		     Connection conn = getConn();
-		     ) {
-    			paragrapheDAO.setFollowingParagToWrite(firstParag, conn);    	
-	        } catch (SQLException e) {
-	            throw new DAOException("Erreur BD " + e.getMessage(), e);
-			}
-    	return firstParag;
-    }
-    
     public Histoire createNewStoryObjet(String title, int userId){
         try(Connection c = dataSource.getConnection()){
             PreparedStatement ps_numero_histoire = c.prepareStatement("SELECT idHist_seq.nextval FROM DUAL");

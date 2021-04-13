@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import dao.DAOException;
-import dao.HistoireDAO;
+import dao.ParagrapheDAO;
 import modele.HistoriqueModele;
 import modele.Paragraphe;
 
@@ -53,7 +53,7 @@ public class ReadStory extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
-        HistoireDAO histoireDAO = new HistoireDAO(ds);
+        ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
         /* On récupère les différents paramètres */
         int idHist = Integer.parseInt(request.getParameter("idHist"));
         /* goBackTo est présent que si on vient de l'historique */
@@ -83,7 +83,7 @@ public class ReadStory extends HttpServlet {
         	if(numChoix == null && numParagToReset == null) {
         		/*S'il n'y a pas d'historique on récupère tout l'arbre de l'histoire à partir de la bdd */
         		if(listePara == null) {        			
-        			currentParag = histoireDAO.getHistoireTreeToRead(idHist);
+        			currentParag = paragrapheDAO.getHistoireTreeToRead(idHist);
         			this.paragsToRead = new ArrayList<Paragraphe>();
         			while(currentParag.getParagSuiv().size() == 1) {
         				listHisto.add(currentParag);

@@ -44,12 +44,10 @@ CREATE TABLE HasRead (
 );
 
 CREATE TABLE IsFollowing (
-       idHistPere integer NOT NULL,
+       idHistParag integer NOT NULL,
        numParagPere integer NOT NULL,
-       numChoix integer NOT NULL,
-       idHistFils integer NOT NULL,
        numParagFils integer NOT NULL,
-       CONSTRAINT fkFollowingPere FOREIGN KEY (idHistPere, numParagPere) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
-       CONSTRAINT fkFollowingFils FOREIGN KEY (idHistFils, numParagFils) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
-       CONSTRAINT pkIsFollowing PRIMARY KEY (idHistPere, numParagPere, idHistFils, numParagFils)
+       CONSTRAINT fkFollowingPere FOREIGN KEY (idHistParag, numParagPere) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
+       CONSTRAINT fkFollowingFils FOREIGN KEY (idHistParag, numParagFils) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
+       CONSTRAINT pkIsFollowing PRIMARY KEY (idHistParag, numParagPere, numParagFils)
 );

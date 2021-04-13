@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import dao.DAOException;
-import dao.HistoireDAO;
+import dao.ParagrapheDAO;
 import modele.Paragraphe;
 
 /**
@@ -56,14 +56,14 @@ public class WriteStory extends HttpServlet {
         if(request.getParameter("choix") == null) numChoix = null;
         else numChoix = Integer.valueOf(request.getParameter("choix"));
         
-        HistoireDAO histoireDAO = new HistoireDAO(ds);
+        ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
         
         List<Paragraphe> choixParagSuite = new ArrayList<Paragraphe>();
         List<Paragraphe> choixParagAEcrire = new ArrayList<Paragraphe>();
         
         try {
         	if(numChoix == null) {
-        		currentParag = histoireDAO.getHistoireTreeToWrite(idHist);
+        		currentParag = paragrapheDAO.getHistoireTreeToWrite(idHist);
         		firstParag = currentParag;
         	}
         	else if(currentParag.getNumParag() != numParagPere) {
