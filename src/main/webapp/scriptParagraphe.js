@@ -1,13 +1,13 @@
 	var nbChoixRedige = 0;
 	var nbChoixJs = 0;
 	
-    function choixRedige(numChoix){
+    function choixRedige(numChoix, bool){
 		 var choix = document.getElementById("choix" + numChoix.toString());
-		 if(choix.disabled == false){
+		 if((bool == 1) && (choix.disabled == false)){
 		 	choix.disabled = true;
 		 	nbChoixRedige++;
 		 }
-		 else{
+		 else if ((bool == 0) && (choix.disabled == true)){
 		 	choix.disabled = false;
 		 	nbChoixRedige--;
 		 }
@@ -47,15 +47,20 @@
     	var div = document.getElementById("choice");
         while (newNbChoice > nbChoixJs){
         	nbChoixJs++;
-        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td>\
+        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" name="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td>\
         	<td>\
         	<p> Choisir un choix déjà rédigé : \
-        	<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ');" name="choixRedige' + nbChoixJs.toString() +'"/>Oui</label>\
-			<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ')" name="choixRedige' + nbChoixJs.toString() +'" checked="checked"/>Non</label>\
+        	<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ', 1);" name="choixRedige' + nbChoixJs.toString() +'"/>Oui</label>\
+			<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ', 0)" name="choixRedige' + nbChoixJs.toString() +'" checked="checked"/>Non</label>\
         	</td>\
         	</tr>');
         }
+        var choix;
     	 while (newNbChoice < nbChoixJs){
+    		choix = document.getElementById("choix" + nbChoixJs.toString());
+    		if(choix.disabled == true){
+    			nbChoixRedige--;
+    		}
     		nbChoixJs--;
  	        div.deleteRow(nbChoixJs);
  	      } 
