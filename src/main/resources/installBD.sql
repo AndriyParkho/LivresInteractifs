@@ -26,7 +26,7 @@ CREATE TABLE Paragraphe (
        idWritter integer REFERENCES Utilisateur(idUtil),
        conditionParag integer NULL,
        constraint pkParag PRIMARY KEY (numParag, idHist),
-       CONSTRAINT fkCondParag FOREIGN KEY(idhist, conditionParag) REFERENCES paragraphe(idhist, numParag);
+       CONSTRAINT fkCondParag FOREIGN KEY(idhist, conditionParag) REFERENCES paragraphe(idhist, numParag)
 );
 
 CREATE TABLE IsInvited (

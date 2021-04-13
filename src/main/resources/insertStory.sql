@@ -153,6 +153,7 @@ INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 6, 5)
 INSERT INTO PARAGRAPHE(numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES(7, 'Rentrer à la maison', 'Nous nous dirigeons vers la sortie du parc. Tout à coup Fabien crie: « Regardez, regardez, c’est le panier de monsieur Charles! ». Il montrait une dame qui portait le panier rouge de notre ami. Tout ceci est bien mystérieux.', 1, 2, 2, 2);
 INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 5, 7);
 INSERT INTO PARAGRAPHE(numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES(8, 'Jouer à la GameBoy à la maison', 'Nous rentrons tous à la maison, on reviendra lundi prochain pour voir s’il sera là... ', 1, 1, 2, 2);
+INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 7, 8);
 INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 8, 1);
 INSERT INTO PARAGRAPHE(numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES(9, 'Suivre la dame', 'Nous suivons la dame. Lucie avait un peu peur, mais je l’ai encouragée: nous devons savoir ce qui est arrivé à monsieur Charles. Nous courons jusqu’à la grille. A suivre...', 1, 0, 2, 2);
 INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 7, 9);
@@ -225,3 +226,58 @@ INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist, valid
 						0, 1, 4, 1);
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(4, 9, 10);
+
+-- TESTS UNITAIRES
+
+-- Une histoire complète à lire
+INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
+	(5, 'Une histoire complète à liste', 1, SYSDATE);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (1, 'Premier paragraphe à lire', 'Corps du premier paragraphe, déjà la fin',  0, 1, 5, 1);
+
+--Une hsitoire complète à publiée
+INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
+	(6, 'Une histoire à publier', 1, NULL);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (1, 'Premier paragraphe à publier', 'Corps du premier paragraphe, comment ça déjà la fin',  0, 1, 6, 1);
+
+--Une histoire avec un paragraphe à valider
+INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
+	(7, 'Une histoire avec un paragraphe à valider', 1, NULL);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (1, 'Premier paragraphe à valider', 'Corps du premier paragraphe, déjà la fin',  0, 1, 7, 1);
+
+--Une histoire avec un paragraphe à valider
+INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
+	(8, 'Une histoire avec un paragraphe à valider', 1, NULL);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (1, 'Premier paragraphe à valider', 'Corps du premier paragraphe, validez moi',  0, 1, 8, 1);
+
+--Une histoire pour laquelle c'est bien de s'arrêter au milieu pour regarder l'histrorique
+INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
+	(9, 'Une histoire à plusieurs chemins pour l''historique', 1, SYSDATE);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (1, 'Premier paragraphe à valider', 'Corps du premier paragraphe, déjà la fin',  2, 1, 9, 1);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (2, 'Second paragraphe, premier choix', 'Second paragraphe, premier chhoix',  1, 1, 9, 1);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (3, 'Second paragraphe, deuxième choix', 'Second paragraphe, deuxième chhoix',  1, 1, 9, 1);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (4, 'Dernier paragraphe, premier choix', 'Essayer de changer votre choix à l''aide de l''historique',  0, 1, 9, 1);
+
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(9, 1, 2);
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(9, 1, 3);
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(9, 2, 4);
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(9, 3, 4);
