@@ -60,6 +60,7 @@ public class WriteStory extends HttpServlet {
         
         List<Paragraphe> choixParagSuite = new ArrayList<Paragraphe>();
         List<Paragraphe> choixParagAEcrire = new ArrayList<Paragraphe>();
+        List<Paragraphe> choixParagVerouille = new ArrayList<Paragraphe>();
         
         try {
         	if(numChoix == null) {
@@ -77,11 +78,14 @@ public class WriteStory extends HttpServlet {
         			choixParagAEcrire.add(parag);
         		} else if(parag.isValide()){
         			choixParagSuite.add(parag);
+        		} else {
+        			choixParagVerouille.add(parag);
         		}
         	}
         	request.setAttribute("currentParag", currentParag);
         	request.setAttribute("choixParagAEcrire", choixParagAEcrire);
         	request.setAttribute("choixParagSuite", choixParagSuite);
+        	request.setAttribute("choixParagVerouille", choixParagVerouille);
         	request.getRequestDispatcher("/WEB-INF/writeStory.jsp").forward(request, response);
         } catch (DAOException e) {
             erreurBD(request, response, e);
