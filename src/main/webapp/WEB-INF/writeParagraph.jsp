@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>InteractiveStory</title>
     <link rel="stylesheet" type="text/css" href="writeParagraph.css" />
-    <script type="text/javascript" src="scriptParagraphe.js"></script>
+    <script type="text/javascript" src="scriptWriteParagraphe.js"></script>
   </head>
   <body>
 	<c:if test="${user != null}">
@@ -28,11 +28,24 @@
 	            	<option value="${paragrapheRedige.numParag}">${paragrapheRedige.titre}</option>
 	            </c:forEach>
 	            </select>
-			  <table id="choice" class="formulaire"></table>
+			  <table id="choice" class="formulaire">
+			  <tr class="formulaire">
+				  <td class="formulaire">
+				  	<input type="text"  id="choix1" name="choix1" value="Choix numéro 1" required/>
+				  </td>
+	        	  <td>
+        		  <p> Choisir un choix déjà rédigé : </p>
+        		  <label><input type="radio" onclick="choixRedige(1, 1);" name="choixRedige1"/>Oui</label>
+				  <label><input type="radio" onclick="choixRedige(1, 0)" name="choixRedige1" checked="checked"/>Non</label>
+        		 </td>
+        	</tr>
+			  </table>
 			  </div>
 			 <input type="button" value="Valider le paragraphe" onclick="submitForm();">
 		</form> 
-		<a onclick="submitTexte();" class="bouton">Sauvegarder la rédaction du paragraphe</a>
+		<div id="boutonDiv">
+		<a onclick="submitTexte();" class="bouton" id="boutonSave">Sauvegarder la rédaction du paragraphe</a>
 		<a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}" class="bouton" id="boutonErase">Annuler la rédaction du paragraphe</a>
+		</div>
 	</c:if>
   </body>
