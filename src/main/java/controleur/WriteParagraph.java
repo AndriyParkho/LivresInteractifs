@@ -56,7 +56,7 @@ public class WriteParagraph extends HttpServlet {
     		HttpSession sess = request.getSession(false);
     		Utilisateur user = (Utilisateur) sess.getAttribute("user");
     		
-    		if(paragToEdit.getIdWritter() != null && paragToEdit.getIdWritter() == user.getId()) {
+    		if(paragToEdit.getIdWritter() != null && paragToEdit.getIdWritter() != user.getId()) {
     			response.sendRedirect("accueil?button=storyToWrite&warning=paragIndisponible");
     		} else {    			
     			String titreParag = request.getParameter("titreParag");
