@@ -23,20 +23,16 @@
             document.getElementById('listAuthors').selectedIndex = -1;
     }
     
-    var nbChoixJs = 0;
+    var nbChoixJs = 1;
     
     function changeChoice(){
     	var newNbChoice = document.getElementById("nbChoix").value;
     	var div = document.getElementById("choice");
         while (newNbChoice > nbChoixJs){
         	nbChoixJs++;
-        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td>\
-        	<td>\
-        	<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ');" name="choixRedige' + nbChoixJs.toString() +'"/>Oui</label>\
-			<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ')" name="choixRedige' + nbChoixJs.toString() +'" checked="checked"/>Non</label>\
-        	</td>\
-        	</tr>');
+        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" name="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td></tr>');
         }
+        var choix;
     	 while (newNbChoice < nbChoixJs){
     		nbChoixJs--;
  	        div.deleteRow(nbChoixJs);

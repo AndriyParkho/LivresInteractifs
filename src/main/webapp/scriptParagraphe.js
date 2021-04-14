@@ -1,5 +1,5 @@
 	var nbChoixRedige = 0;
-	var nbChoixJs = 0;
+	var nbChoixJs = 1;
 	
     function choixRedige(numChoix, bool){
 		 var choix = document.getElementById("choix" + numChoix.toString());
@@ -49,7 +49,7 @@
         	nbChoixJs++;
         	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" name="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td>\
         	<td>\
-        	<p> Choisir un choix déjà rédigé : \
+        	<p> Choisir un choix déjà rédigé : </p>\
         	<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ', 1);" name="choixRedige' + nbChoixJs.toString() +'"/>Oui</label>\
 			<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ', 0)" name="choixRedige' + nbChoixJs.toString() +'" checked="checked"/>Non</label>\
         	</td>\

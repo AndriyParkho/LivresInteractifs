@@ -21,7 +21,7 @@
 	  	Erreur lors de la connexion, veuillez réessayer.
 	  	</p>
 	  </c:if>
-	    <input type="submit" name="Se connecter" />
+	    <input type="submit" value="Se connecter" />
 	    <input type="button"
 	    	   onclick="self.location.href='register.html'"
 	       	   value="S'enregister">

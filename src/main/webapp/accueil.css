@@ -177,6 +177,21 @@ div.emptyStory{
 	text-align: center;
 }
 
+form.formValidHistoire{
+	text-align: center;
+	width: 80%;
+}
+
+p.histoirePubli{
+	width: 55%;
+	background-color: white;
+	color: black;
+	border-radius: 25px;
+	border: solid black;
+	margin: 1% auto;
+	padding:2%;
+}
+
 
 
 

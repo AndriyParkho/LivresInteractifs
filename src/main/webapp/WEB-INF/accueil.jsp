@@ -40,7 +40,7 @@
 			<select name="auteurs"  id="auteurs" size=2 multiple >
 
 				<c:forEach items="${user}" var="user">
-	            	<option name="auteurs" value="${user.id}">${user.nom} ${user.prenom}</option>
+	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
 	            </c:forEach>
 			</select> 
 			<input type="button" value="Effacer la sélection" onclick="EraseSelect()">
@@ -57,7 +57,13 @@
               <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
               <input type="button" value="Afficher les choix" onclick="changeChoice();">
               <br>
-			  <table id="choice" class="formulaire"></table>
+			  <table id="choice" class="formulaire">
+			  	<tr class="formulaire">
+				  	<td class="formulaire"><input type="text"  id="choix1" name="choix1" value="Choix numéro 1" required/>
+				  	</td>
+			  	</tr>
+        
+			  </table>
 			  </div>
 			  <br>
 			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
@@ -147,20 +153,14 @@
 	 	
 	 
 	  <c:if test="${param.bouton == 'histoireAPublier'}">
-	  <c:if test="${not empty histoiresAPublier}">
-     	<table>
-            <tr>
-                <th>Histoires à publier</th>
-            </tr>
-            <form method="post" id="formPublication" action="publication">
-                <c:forEach items="${histoiresAPublier}" var="histoire">
-                    <tr>
-                        <td> ${histoire.titre} <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></td>
-                    </tr>
-                </c:forEach>
-                    <input type="submit" value="publierHistoires"> 
-            </form>
-        </table>
+	  <c:if test="${not empty histoiresAPublier}">                 
+      	<form method="post" class="formValidHistoire" action="publication">
+      		<h2>Histoires à publier</h2>
+        	<c:forEach items="${histoiresAPublier}" var="histoire">                   
+            	<p class="histoirePubli">${histoire.titre} <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></p><br>
+            </c:forEach>
+            <input type="submit" value="Publier les histoires"> 
+        </form>
         </c:if>
         <c:if test="${empty histoiresAPublier}">
         <div class="emptyStory">
@@ -172,19 +172,13 @@
 	 
 	 <c:if test="${param.bouton == 'histoireDepubliable'}">
 	 	<c:if test="${not empty histoiresDepubliables}">
-     	<table>
-            <tr>
-                <th>Histoires dépubliables</th>
-            </tr>
-            <form method="post" id="formPublication" action="depublication">
-                <c:forEach items="${histoiresDepubliables}" var="histoire">
-                    <tr>
-                        <td>${histoire.titre} <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></td>
-                    </tr>
-                </c:forEach>
-                    <input type="submit" value="depublierHistoires"> 
-            </form>
-        </table>
+	 		<form method="post" class="formValidHistoire" action="depublication">
+      		<h2>Histoires à dépublier</h2>
+        	<c:forEach items="${histoiresDepubliables}" var="histoire">                   
+            	<p class="histoirePubli">${histoire.titre} <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></p><br>
+            </c:forEach>
+            <input type="submit" value="Dépublier les histoires"> 
+        </form>
         </c:if>
         <c:if test="${empty histoiresDepubliables}">
         <div class="emptyStory">
