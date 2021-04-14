@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>InteractiveStory</title>
     <link rel="stylesheet" type="text/css" href="accueil.css" />
-    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="scriptAccueil.js"></script>
   </head>
   <body>
 
@@ -43,7 +43,7 @@
 	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
 	            </c:forEach>
 			</select> 
-			<input type="button" value="Effacer la sélection" onclick="EraseSelect()">
+			<input type="button" value="Effacer la sélection" onclick="eraseSelect()">
 			 <br>
 			 </div>
 			 <p>

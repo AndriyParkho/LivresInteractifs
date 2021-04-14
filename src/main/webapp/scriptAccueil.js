@@ -19,7 +19,7 @@
         changeChoice();
     }
     
-    function EraseSelect(){
+    function eraseSelect(){
             document.getElementById('listAuthors').selectedIndex = -1;
     }
     
@@ -89,10 +89,6 @@
     		alert("Tous les champs doivent être remplis.");
     	} 
     }
-    
-    function showStoryFirst(){
-    	document.getElementById('HistoricBox').style.display = 'none';
-    }  
     
     
     
