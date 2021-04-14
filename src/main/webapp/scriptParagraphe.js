@@ -146,6 +146,12 @@
 		select.multiple = false;
     }
     
+    function submitTexte(){
+    		var form = document.getElementById('formCreate');
+    		form.action += "&saveTexte=true" ;
+    		form.submit();
+    }
+    
     
     
     

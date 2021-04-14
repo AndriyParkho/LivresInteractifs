@@ -64,6 +64,10 @@ a.bouton{
 	text-align: center;
 }
 
+a.bouton:hover{
+	cursor:pointer;
+}
+
 #choixRemplis{
 	margin: 1%;
 }

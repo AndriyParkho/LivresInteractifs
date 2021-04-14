@@ -172,6 +172,18 @@ public class Accueil extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
     
+    private void actionAfficherListeDepubliable(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    	HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+    	
+        HistoireDAO histoireDAO = new HistoireDAO(ds);
+        
+        List<Histoire> histoiresDepubliables = histoireDAO.getHistoiresDepubliables(user.getId());
+        request.setAttribute("histoiresDepubliables", histoiresDepubliables);
+        
+        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
+    
     /**
      * 
      */
@@ -198,6 +210,9 @@ public class Accueil extends HttpServlet {
         case "histoireAPublier":
                 actionAfficherListePublication(request, response);
                 break;
+        case "histoireDepubliable":
+        		actionAfficherListeDepubliable(request, response);
+        		break;
     	case "logout":
     		HttpSession session = request.getSession();
             session.invalidate();

@@ -14,7 +14,7 @@
             <br>
             <br>
 		     Nom du paragraphe :<input type="text" name="title" id="titreParagraphe"  value="${titreParag}" disabled/><br>
-			 Paragraphe :<TEXTAREA name="story" id="story" rows=4 cols=80 <c:if test="${not empty param.texte}"> value="param.texte" </c:if> required></TEXTAREA><br>
+			 Paragraphe :<TEXTAREA name="story" id="story" rows=4 cols=80 required><c:if test="${not empty texte}"> ${texte} </c:if></TEXTAREA><br>
              <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" value='1'/>Oui</label>
 			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked"  value='0'/>Non</label> <br>
 			  <div id="listeDesChoix">
@@ -31,8 +31,8 @@
 			  <table id="choice" class="formulaire"></table>
 			  </div>
 			 <input type="button" value="Valider le paragraphe" onclick="submitForm();">
-		</form>
-		<a href="write_paragraph?action=save&idHist=${idHist}&numParag=${numParag}" class="bouton">Sauvegarder la rédaction du paragraphe</a>
+		</form> 
+		<a onclick="submitTexte();" class="bouton">Sauvegarder la rédaction du paragraphe</a>
 		<a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}" class="bouton" id="boutonErase">Annuler la rédaction du paragraphe</a>
 	</c:if>
   </body>

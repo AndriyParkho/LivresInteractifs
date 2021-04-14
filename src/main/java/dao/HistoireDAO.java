@@ -152,7 +152,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     public List<Histoire> getHistoiresAPublier(int idUtilisateur){
         List<Histoire> listStories = new ArrayList<Histoire>();
         try(Connection c = dataSource.getConnection()){
-            PreparedStatement storiesToPublish = c.prepareStatement("SELECT H.idHist FROM Histoire H JOIN Paragraphe P ON H.idHist = P.idHist WHERE P.nbChoix = 0 AND P.valide = AND H.DatePubli IS NULL AND H.idAuteur = "+idUtilisateur);
+            PreparedStatement storiesToPublish = c.prepareStatement("SELECT H.idHist FROM Histoire H JOIN Paragraphe P ON H.idHist = P.idHist WHERE P.nbChoix = 0 AND P.valide = 1 AND H.DatePubli IS NULL AND H.idAuteur = "+idUtilisateur);
             ResultSet rs = storiesToPublish.executeQuery();
             while(rs.next()){
                 int idHist = rs.getInt("idHist");
@@ -167,7 +167,17 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     public void publierHistoire(Histoire histoire){
         try{
             Connection c = dataSource.getConnection();
-            PreparedStatement ps_publication = c.prepareStatement("UPDATE Histoire SET DatePubli = SYSDATE WHERE idHist = "+histoire.getIdAuteur());
+            PreparedStatement ps_publication = c.prepareStatement("UPDATE Histoire SET DatePubli = SYSDATE WHERE idHist = "+histoire.getId());
+            ps_publication.executeUpdate();
+        }catch(SQLException sqle){
+            throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
+        }
+    }
+    
+    public void depublierHistoire(Histoire histoire){
+        try{
+            Connection c = dataSource.getConnection();
+            PreparedStatement ps_publication = c.prepareStatement("UPDATE Histoire SET DatePubli = null WHERE idHist = "+histoire.getId());
             ps_publication.executeUpdate();
         }catch(SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
@@ -185,5 +195,20 @@ public class HistoireDAO extends AbstractDataBaseDAO {
         }catch(SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
         }
+    }
+    
+    public List<Histoire> getHistoiresDepubliables(int idUtilisateur){
+        List<Histoire> listStories = new ArrayList<Histoire>();
+        try(Connection c = dataSource.getConnection()){
+            PreparedStatement storiesToPublish = c.prepareStatement("SELECT H.idHist FROM Histoire H JOIN Paragraphe P ON H.idHist = P.idHist WHERE P.nbChoix = 0 AND P.valide = 1 AND H.DatePubli IS NOT NULL AND H.idAuteur = " + idUtilisateur);
+            ResultSet rs = storiesToPublish.executeQuery();
+            while(rs.next()){
+                int idHist = rs.getInt("idHist");
+                listStories.add(getHistoire(idHist));
+            }
+            return listStories;
+        } catch (SQLException sqle){
+            throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
+        }  
     }
 }
