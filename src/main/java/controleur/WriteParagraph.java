@@ -56,7 +56,7 @@ public class WriteParagraph extends HttpServlet {
         	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
         	String titreParag = request.getParameter("titreParag");
         	Paragraphe parag = new Paragraphe(idHist, numParag);
-        	String texte = paragraph.getTexte(parag);
+        	String texte = paragrapheDAO.getTexte(parag);
         	if(texte != null) {
             	request.setAttribute("texte", texte);
         	}
