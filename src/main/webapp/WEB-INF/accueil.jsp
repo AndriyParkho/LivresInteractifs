@@ -23,6 +23,7 @@
 	      <li class='menu'><a href="accueil" <c:if test="${empty param.bouton}"> class="active" </c:if>>Histoire à lire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" <c:if test="${param.bouton == 'storyToWrite'}"> class="active" </c:if>>Histoire à écrire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}"> class="active" </c:if>>Créer une histoire</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=paragEcrit" <c:if test="${param.bouton == 'paragEcrit'}"> class="active" </c:if>>Paragraphes rédigé</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireAPublier" <c:if test="${param.bouton == 'histoireAPublier'}"> class="active" </c:if>>Histoires à publier</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireDepubliable" <c:if test="${param.bouton == 'histoireDepubliable'}"> class="active" </c:if>>Histoires dépubliables</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
@@ -63,6 +64,29 @@
 			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
 		  </form>
 		  </c:if>
+		  <c:if test="${param.bouton == 'paragEcrit'}">
+           		 <c:forEach var="entry" items="${paragrapheRedige}">
+                	<c:forEach  items="${entry.value}" var="parag">	                		
+	                	<div id='paragraphStory'>
+	                	<h1>${entry.key} : ${parag.titre}</h1>
+					         <p>
+					             ${parag.texte}
+					         </p>
+					         <ul>
+						         <c:forEach  items="${parag.paragSuiv}" var="choix">
+						         	<li>${choix.titre}</li>		
+						         </c:forEach>
+					         </ul>
+					         <form action="parag_ecrit/?button=modifier&idhist=${parag.idHist}&numparag=${parag.numParag}">
+    							<input type="submit" value="Modifier" />
+							</form>
+							<form action="parag_ecrit/?button=supprimer&idhist=${parag.idHist}&numparag=${parag.numParag}">
+    							<input type="submit" value="Supprimer" />
+							</form>
+						</div>
+                	</c:forEach>
+            	</c:forEach>
+	 	  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
                     <c:if test="${paragEnCours != null}">
                         <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}&titreParag=${paragEnCours.titre}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
