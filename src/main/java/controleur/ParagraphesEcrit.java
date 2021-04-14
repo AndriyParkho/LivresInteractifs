@@ -43,7 +43,7 @@ public class ParagraphesEcrit extends HttpServlet {
         if(button.equals("modifier")) {
         	buttonModifier(request, response);
         } else if(button.equals("supprimer")) {
-        	
+        	buttonSupprimer(request, response);
         }
 	}
 	

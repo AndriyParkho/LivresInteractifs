@@ -83,10 +83,28 @@
 						         	<li>${choix.titre}</li>		
 						         </c:forEach>
 					         </ul>
-					         <form action="parag_ecrit/?button=modifier&idhist=${parag.idHist}&numparag=${parag.numParag}">
+					         <form action="parag_ecrit">
+					         	<input type="hidden"
+							            name="button"
+							            value="modifier">
+					         	<input type="hidden"
+							            name="idhist"
+							            value="${parag.idHist}">
+					         	<input type="hidden"
+							            name="numparag"
+							            value="${parag.numParag}">
     							<input type="submit" value="Modifier" />
 							</form>
-							<form action="parag_ecrit/?button=supprimer&idhist=${parag.idHist}&numparag=${parag.numParag}">
+							<form action="parag_ecrit">
+					         	<input type="hidden"
+							            name="button"
+							            value="supprimer">
+					         	<input type="hidden"
+							            name="idhist"
+							            value="${parag.idHist}">
+					         	<input type="hidden"
+							            name="numparag"
+							            value="${parag.numParag}">
     							<input type="submit" value="Supprimer" />
 							</form>
 						</div>
