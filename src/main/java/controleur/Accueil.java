@@ -1,6 +1,8 @@
 package controleur;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -53,6 +55,8 @@ public class Accueil extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
+        String warning = request.getParameter("warning");
+        if(warning != null) request.setAttribute("warning", warning);
         HistoireDAO histoireDAO = new HistoireDAO(ds);
         UtilisateurDAO userDAO = new UtilisateurDAO(ds);
         HttpSession session = request.getSession();
@@ -160,14 +164,26 @@ public class Accueil extends HttpServlet {
     }
     
     private void actionAfficherListePublication(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        HttpSession sess = request.getSession(false);
+    	HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
     	
-        HistoireDAO histoireDAO = new HistoireDAO(ds);
-        
-        List<Histoire> histoiresAPublier = histoireDAO.getHistoiresAPublier(user.getId());
-        
-        request.setAttribute("histoiresAPublier", histoiresAPublier);
+    	HistoireDAO histoireDAO = new HistoireDAO(ds);
+    	
+    	List<Histoire> histoiresAPublier = histoireDAO.getHistoiresAPublier(user.getId());
+    	
+    	request.setAttribute("histoiresAPublier", histoiresAPublier);
+    	
+    	request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
+    
+    
+    private void actionAfficherListeParagraphes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+    	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
+    	
+        HashMap<String, ArrayList<Paragraphe>> paragrapheRedige = paragrapheDAO.setParagrapheRedige(user.getId());
+        request.setAttribute("paragrapheRedige", paragrapheRedige);
         
         request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
@@ -203,6 +219,9 @@ public class Accueil extends HttpServlet {
     		break;
     	case "createStory":
     		actionAfficherListeUtilisateur(request, response);
+    		break;
+    	case "paragEcrit":
+    		actionAfficherListeParagraphes(request, response);
     		break;
     	case "historique":
     		actionHistorique(request, response);

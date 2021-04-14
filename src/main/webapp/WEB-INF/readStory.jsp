@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>InteractiveStory</title>
 <link rel="stylesheet" type="text/css" href="readStory.css" />
-<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="scriptReadStory.js"></script>
 </head>
 <body>
 	<script>
@@ -19,19 +19,6 @@
 				document.getElementById('StoryBox').style.display = 'none';
 			}
 		}
-		
-		function changeDisplay(){
-	    	if(document.getElementById('HistoricBox').style.display == 'none'){
-	    		document.getElementById('HistoricBox').style.display = 'block';
-	    		document.getElementById('StoryBox').style.display = 'none';
-	    		document.getElementById('changeBouton').value = "Histoire";
-	    	}
-	    	else{
-	    		document.getElementById('HistoricBox').style.display = 'none';
-	    		document.getElementById('StoryBox').style.display = 'block';
-	    		document.getElementById('changeBouton').value = "Historique";
-	    	}
-	    }
 		</script>
                 
         <c:if test="${user == null}">

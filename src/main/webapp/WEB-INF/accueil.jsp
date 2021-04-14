@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>InteractiveStory</title>
     <link rel="stylesheet" type="text/css" href="accueil.css" />
-    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="scriptAccueil.js"></script>
   </head>
   <body>
 
@@ -23,6 +23,7 @@
 	      <li class='menu'><a href="accueil" <c:if test="${empty param.bouton}"> class="active" </c:if>>Histoire à lire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" <c:if test="${param.bouton == 'storyToWrite'}"> class="active" </c:if>>Histoire à écrire</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}"> class="active" </c:if>>Créer une histoire</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=paragEcrit" <c:if test="${param.bouton == 'paragEcrit'}"> class="active" </c:if>>Paragraphes rédigé</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireAPublier" <c:if test="${param.bouton == 'histoireAPublier'}"> class="active" </c:if>>Histoires à publier</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireDepubliable" <c:if test="${param.bouton == 'histoireDepubliable'}"> class="active" </c:if>>Histoires dépubliables</a></li>
 		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
@@ -43,7 +44,7 @@
 	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
 	            </c:forEach>
 			</select> 
-			<input type="button" value="Effacer la sélection" onclick="EraseSelect()">
+			<input type="button" value="Effacer la sélection" onclick="eraseSelect()">
 			 <br>
 			 </div>
 			 <p>
@@ -69,7 +70,53 @@
 			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
 		  </form>
 		  </c:if>
+		  <c:if test="${param.bouton == 'paragEcrit'}">
+           		 <c:forEach var="entry" items="${paragrapheRedige}">
+                	<c:forEach  items="${entry.value}" var="parag">	                		
+	                	<div id='paragraphStory'>
+	                	<h1>${entry.key} : ${parag.titre}</h1>
+					         <p>
+					             ${parag.texte}
+					         </p>
+					         <ul>
+						         <c:forEach  items="${parag.paragSuiv}" var="choix">
+						         	<li>${choix.titre}</li>		
+						         </c:forEach>
+					         </ul>
+					         <form action="parag_ecrit">
+					         	<input type="hidden"
+							            name="button"
+							            value="modifier">
+					         	<input type="hidden"
+							            name="idhist"
+							            value="${parag.idHist}">
+					         	<input type="hidden"
+							            name="numparag"
+							            value="${parag.numParag}">
+    							<input type="submit" value="Modifier" />
+							</form>
+							<form action="parag_ecrit">
+					         	<input type="hidden"
+							            name="button"
+							            value="supprimer">
+					         	<input type="hidden"
+							            name="idhist"
+							            value="${parag.idHist}">
+					         	<input type="hidden"
+							            name="numparag"
+							            value="${parag.numParag}">
+    							<input type="submit" value="Supprimer" />
+							</form>
+						</div>
+                	</c:forEach>
+            	</c:forEach>
+	 	  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
+		  			<c:if test="${warning == 'paragIndisponible'}">
+						<script>window.onload=function() {
+							window.alert("Le choix n'est plus disponible, désolé...");
+						};</script>
+				    </c:if>
                     <c:if test="${paragEnCours != null}">
                         <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}&titreParag=${paragEnCours.titre}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
                     </c:if>

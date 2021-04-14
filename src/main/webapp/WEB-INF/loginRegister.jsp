@@ -10,7 +10,7 @@
   </head>
 <body>
 <c:if test="${login}">
-	<h2>Connexion</h2>
+	<h1>Connexion</h1>
 	<form method="post" action="login" accept-charset="UTF-8">
 	    <p>
 	     Email : <input type="text" name="email" required/><br>

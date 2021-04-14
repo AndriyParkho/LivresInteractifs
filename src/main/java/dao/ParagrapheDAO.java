@@ -29,7 +29,13 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	     ) {
             ResultSet rs = st.executeQuery("SELECT * FROM paragraphe WHERE idHist =" + idHist + "AND numParag = " + numParag);
             if (rs.next()) {
-                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getInt("nbChoix"));
+            	Integer nbchoix = rs.getInt("nbchoix");
+				if(rs.wasNull()) nbchoix = null;
+				Integer conditionParag = rs.getInt("conditionParag");
+				if(rs.wasNull()) conditionParag = null;
+				Integer idWritter = rs.getInt("idWritter");
+				if(rs.wasNull()) idWritter = null;
+                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getBoolean("valide") , nbchoix, idWritter, conditionParag);
             }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -105,16 +111,13 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		}
 	}
 	
-    public Paragraphe getHistoireTreeToRead(int idHist) {
-    	Paragraphe firstParag = null;
-    	try (
-    			Connection conn = getConn();
+	public ArrayList<Paragraphe> getParagConclu(int idHist, HashMap<Integer, Paragraphe> dicoParag, Connection conn){
+		try (
     			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
     			) {
     		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist, conditionParag FROM paragraphe WHERE idhist = " + idHist + 
 					" AND nbchoix = 0 AND texte IS NOT NULL AND valide = 1");
     		ArrayList<Paragraphe> paragsConclu = new ArrayList<Paragraphe>();
-    		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
     		while(rs.next()) {
     			Integer numParag = rs.getInt("numParag");
 				if(rs.wasNull()) numParag = null;
@@ -124,8 +127,20 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
     			paragsConclu.add(concluParag);
     			dicoParag.put(numParag, concluParag);
     		}
-    		this.getBrancheConclusion(dicoParag, paragsConclu, null, conn);
-    		firstParag = dicoParag.get(1);
+    		return paragsConclu;
+    	} catch (SQLException e) {
+    		throw new DAOException("Erreur BD " + e.getMessage(), e);
+    	}
+	}
+	
+    public Paragraphe getHistoireTreeToRead(int idHist) {
+    	Paragraphe firstParag = null;
+    	try (
+    			Connection conn = getConn();
+    			){
+    		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+    		this.getBrancheConclusion(dicoParag, getParagConclu(idHist, dicoParag, conn), null, conn);
+    		firstParag = dicoParag.get(1);    		
     	} catch (SQLException e) {
     		throw new DAOException("Erreur BD " + e.getMessage(), e);
     	}
@@ -358,5 +373,81 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}
 		return texte;
+	}
+	
+	public void setFollowingParag(Paragraphe parag) {
+		try (
+		     Connection conn = getConn();
+		     Statement st = conn.createStatement();
+		     ) {
+				ResultSet rs = st.executeQuery("SELECT * FROM paragraphe JOIN isfollowing ON idhistparag = idhist AND " +
+						"numparagfils = numparag WHERE idhistparag = " + parag.getIdHist() +
+						" AND numparagpere = " + parag.getNumParag());					
+				while (rs.next()) {
+					Integer numParag = rs.getInt("numParag");
+	            	if(rs.wasNull()) numParag = null;     		
+            		Integer nbchoix = rs.getInt("nbchoix");
+            		if(rs.wasNull()) nbchoix = null;
+            		Integer idWritter = rs.getInt("idWritter");
+            		if(rs.wasNull()) idWritter = null;
+            		Paragraphe childParag = new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), 
+            				rs.getString("texte"), rs.getBoolean("valide"), nbchoix, idWritter);
+	                parag.addParagSuiv(childParag);
+				}
+			} catch (SQLException e) {
+	            throw new DAOException("Erreur BD " + e.getMessage(), e);
+	        }
+	}
+	
+	public HashMap<String, ArrayList<Paragraphe>> setParagrapheRedige(int idUtil) {
+		try (
+		     Connection conn = getConn();
+		     Statement st = conn.createStatement();
+		     ) {
+				HashMap<String, ArrayList<Paragraphe>> paragrapheRedige = new HashMap<String, ArrayList<Paragraphe>>();
+				ResultSet rsPPublie = st.executeQuery("SELECT numparag, p.idhist, h.titre as htitre, p.titre as ptitre, texte, valide, nbchoix, idwritter FROM paragraphe p JOIN histoire h ON h.idhist = p.idhist WHERE idwritter = " + idUtil +" AND valide = 1");					
+				while (rsPPublie.next()) {
+					String histTitre = rsPPublie.getString("htitre");
+					String paragTitre = rsPPublie.getString("ptitre");
+					int numParag = rsPPublie.getInt("numparag");
+					Paragraphe paragRedige = new Paragraphe(rsPPublie.getInt("idhist"), numParag, paragTitre, rsPPublie.getString("texte"));
+					setFollowingParag(paragRedige);
+					ArrayList<Paragraphe> listParag = paragrapheRedige.get(histTitre);
+					if(listParag == null) {
+						listParag = new ArrayList<Paragraphe>();
+						listParag.add(paragRedige);
+						paragrapheRedige.put(histTitre, listParag);
+					} else {
+						listParag.add(paragRedige);
+					}	
+				}
+				return paragrapheRedige;
+			} catch (SQLException e) {
+	            throw new DAOException("Erreur BD " + e.getMessage(), e);
+	        }
+	}
+	
+	public ArrayList<Paragraphe> getConditionParag(int idHist, int numParag){
+		try (
+				Connection conn = getConn();
+    			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    			) {
+    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist, conditionParag FROM paragraphe WHERE idhist = " + idHist + 
+					" AND numParag = " + numParag);
+    		ArrayList<Paragraphe> parag = new ArrayList<Paragraphe>();
+    		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+    		if(rs.next()) {
+				Integer conditionParag = rs.getInt("conditionParag");
+				if(rs.wasNull()) conditionParag = null;
+    			Paragraphe concluParag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0, conditionParag);
+    			parag.add(concluParag);
+    			dicoParag.put(numParag, concluParag);
+    		}
+    		this.getBrancheConclusion(dicoParag, parag, null, conn);
+    		dicoParag.remove(numParag);
+    		return new ArrayList<Paragraphe>(dicoParag.values());
+    	} catch (SQLException e) {
+    		throw new DAOException("Erreur BD " + e.getMessage(), e);
+    	}
 	}
 }
