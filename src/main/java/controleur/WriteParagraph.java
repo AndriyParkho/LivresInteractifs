@@ -66,7 +66,9 @@ public class WriteParagraph extends HttpServlet {
         	
         	try {
         		List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
+        		List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
         		request.setAttribute("paragrapheRedige", choixRedige);
+        		request.setAttribute("paragrapheCondition", choixCondition);
         		paragrapheDAO.setWritter(idHist, numParag, user.getId());
         	} catch (DAOException e) {
                 erreurBD(request, response, e);

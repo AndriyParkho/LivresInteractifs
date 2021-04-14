@@ -420,4 +420,28 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	            throw new DAOException("Erreur BD " + e.getMessage(), e);
 	        }
 	}
+	
+	public ArrayList<Paragraphe> getConditionParag(int idHist, int numParag){
+		try (
+				Connection conn = getConn();
+    			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    			) {
+    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist, conditionParag FROM paragraphe WHERE idhist = " + idHist + 
+					" AND numParag = " + numParag);
+    		ArrayList<Paragraphe> parag = new ArrayList<Paragraphe>();
+    		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+    		if(rs.next()) {
+				Integer conditionParag = rs.getInt("conditionParag");
+				if(rs.wasNull()) conditionParag = null;
+    			Paragraphe concluParag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0, conditionParag);
+    			parag.add(concluParag);
+    			dicoParag.put(numParag, concluParag);
+    		}
+    		this.getBrancheConclusion(dicoParag, parag, null, conn);
+    		dicoParag.remove(numParag);
+    		return new ArrayList<Paragraphe>(dicoParag.values());
+    	} catch (SQLException e) {
+    		throw new DAOException("Erreur BD " + e.getMessage(), e);
+    	}
+	}
 }
