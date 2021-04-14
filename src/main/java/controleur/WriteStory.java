@@ -14,7 +14,9 @@ import javax.sql.DataSource;
 
 import dao.DAOException;
 import dao.ParagrapheDAO;
+import javax.servlet.http.HttpSession;
 import modele.Paragraphe;
+import modele.Utilisateur;
 
 /**
  * Le contrôleur pour accéder à l'écriture d'une histoire
@@ -49,6 +51,9 @@ public class WriteStory extends HttpServlet {
             HttpServletResponse response)
             throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
+        
+        HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
         
         int idHist = Integer.parseInt(request.getParameter("idHist"));
         int numParagPere = Integer.parseInt(request.getParameter("numParagPere"));

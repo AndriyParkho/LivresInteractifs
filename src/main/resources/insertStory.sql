@@ -287,8 +287,12 @@ INSERT INTO Histoire ( titre, idauteur, datePubli, prive) VALUES
 	('Une histoire sur laquelle je suis invité', 2, NULL, 1);
 
 INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
-        (1, 'Premier paragrpahe, invitation', 'Je suis juste ici pour voir si les invitations fonctionnent',  0, NULL, 10, 0);
+        (1, 'Premier paragrapahe, invitation', 'Je suis juste ici pour voir si les invitations fonctionnent',  0, NULL, 10, 0);
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (2, 'Deuxieme paragraphe, invitation', 'Je suis juste ici pour voir si les invitations fonctionnent, je suis le second paragrpahe',  0, NULL, 10, 0);
 
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(10, 1, 2);
 INSERT INTO isInvited(idHist, idUtil) VALUES(10, 1);
 
 

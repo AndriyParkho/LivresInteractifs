@@ -17,6 +17,7 @@ import dao.DAOException;
 import dao.ParagrapheDAO;
 import modele.HistoriqueModele;
 import modele.Paragraphe;
+import modele.Utilisateur;
 
 /**
  * Le contrôleur de la page d'accueil
@@ -54,6 +55,8 @@ public class ReadStory extends HttpServlet {
         HttpSession session = request.getSession();
         HistoriqueModele historique = ((HistoriqueModele) session.getAttribute("historique"));
         ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
+
+    	Utilisateur user = (Utilisateur) session.getAttribute("user");
         /* On récupère les différents paramètres */
         int idHist = Integer.parseInt(request.getParameter("idHist"));
         /* goBackTo est présent que si on vient de l'historique */
