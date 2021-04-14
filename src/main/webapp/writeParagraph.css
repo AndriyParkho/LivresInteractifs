@@ -87,3 +87,16 @@ a.bouton:hover{
 	position: absolute;
 	width: 100%;
 }
+
+#paragrapheCondition{
+	display:none;
+}
+
+#paragrapheRedige{
+	display:none;
+}
+
+select{
+	margin: 10px;
+}
+

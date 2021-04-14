@@ -72,6 +72,8 @@ public class WriteParagraph extends HttpServlet {
     			try {
     				List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
     				List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
+    				for(Paragraphe c:choixCondition) {
+    				}
     				request.setAttribute("paragrapheRedige", choixRedige);
     				request.setAttribute("paragrapheCondition", choixCondition);
     				paragrapheDAO.setWritter(idHist, numParag, user.getId());
@@ -113,19 +115,9 @@ public class WriteParagraph extends HttpServlet {
                 } catch (DAOException e) {
                 	erreurBD(request, response, e);
                 }
-            	String[] choix = request.getParameterValues("choixRemplis");
-            	if(choix != null) {
-            		Paragraphe paragChoix;
-            		for(String choice : choix) {
-            			paragChoix = new Paragraphe(idHist, Integer.parseInt(choice));
-            			try {
-                    		paragDao.setFollowing(paragActuel, paragChoix);
-                        } catch (DAOException e) {
-                        	erreurBD(request, response, e);
-                        }
-                	}
-            	}
-            	String newChoix;
+            	String newChoixTitle;
+            	int oldChoixNum;
+            	int numParagCondi;
             	int nbParagMax = 1;
             	try {
             		nbParagMax = paragDao.getMaxNbParag(idHist);
@@ -133,14 +125,33 @@ public class WriteParagraph extends HttpServlet {
                 	erreurBD(request, response, e);
                 }
             	Paragraphe parag;
+            	Paragraphe paraCondition;
             	for(int i = 1; i <= nbChoix; i++) {
-            		newChoix = request.getParameter("choix" + Integer.toString(i));
-            		if(newChoix != null) {
+            		newChoixTitle = request.getParameter("choix" + Integer.toString(i));
+            		if(newChoixTitle != null) {
             			nbParagMax++;
-            			parag = new Paragraphe(idHist, nbParagMax, newChoix);
+            			parag = new Paragraphe(idHist, nbParagMax, newChoixTitle);
             			try {
                     		paragDao.setParagraphe(parag);
                     		paragDao.setFollowing(paragActuel, parag);
+                        } catch (DAOException e) {
+                        	erreurBD(request, response, e);
+                        }
+            		}
+            		else {
+            			oldChoixNum = Integer.parseInt(request.getParameter("paragrapheRedige" + Integer.toString(i)));
+            			parag = new Paragraphe(idHist, oldChoixNum);
+            			try {
+                    		paragDao.setFollowing(paragActuel, parag);
+                        } catch (DAOException e) {
+                        	erreurBD(request, response, e);
+                        }
+            		}
+            		if((request.getParameter("paragrapheCondition" + Integer.toString(i))) != null) {
+            			numParagCondi = Integer.parseInt(request.getParameter("paragrapheCondition" + Integer.toString(i)));
+            			paraCondition = new Paragraphe(idHist, numParagCondi);
+            			try {
+                    		paragDao.setCondition(parag, paraCondition);
                         } catch (DAOException e) {
                         	erreurBD(request, response, e);
                         }

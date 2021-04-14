@@ -9,6 +9,16 @@
   </head>
   <body>
 	<c:if test="${user != null}">
+		<select name="paragrapheCondition"  id="paragrapheCondition" size=1 disabled>
+				<c:forEach items="${paragrapheCondition}" var="paragrapheCondition">
+	            	<option value="${paragrapheCondition.numParag}">${paragrapheCondition.titre}</option>
+	            </c:forEach>
+	    </select>
+	    <select name="paragrapheRedige"  id="paragrapheRedige" size=1 disabled>
+				<c:forEach items="${paragrapheRedige}" var="paragrapheRedige">
+           			<option value="${paragrapheRedige.numParag}">${paragrapheRedige.titre}</option>
+           		</c:forEach>
+		    </select>
 		<form method="post" id="formCreate" action="write_paragraph?idHist=${idHist}&numParag=${numParag}&titre=${titreParag}" accept-charset="UTF-8">
 		    <p>
             <br>
@@ -23,22 +33,41 @@
               <input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
               <input type="button" value="Afficher les choix" onclick="changeChoice();">
               <br>
-              <select name="choixRemplis"  id="choixRemplis" size=1 disabled>
-				<c:forEach items="${paragrapheRedige}" var="paragrapheRedige">
-	            	<option value="${paragrapheRedige.numParag}">${paragrapheRedige.titre}</option>
-	            </c:forEach>
-	            </select>
 			  <table id="choice" class="formulaire">
+			  <tr><th>Choix 1</th></tr>
 			  <tr class="formulaire">
 				  <td class="formulaire">
-				  	<input type="text"  id="choix1" name="choix1" value="Choix numéro 1" required/>
-				  </td>
-	        	  <td>
-        		  <p> Choisir un choix déjà rédigé : </p>
-        		  <label><input type="radio" onclick="choixRedige(1, 1);" name="choixRedige1"/>Oui</label>
-				  <label><input type="radio" onclick="choixRedige(1, 0)" name="choixRedige1" checked="checked"/>Non</label>
+					  	<input type="text"  id="choix1" name="choix1" value="Choix numéro 1" required/>
+				  </td></tr>
+			<tr class="formulaire">
+			<td>
+        	<p> Choisir un choix déjà rédigé : </p>
+        	<label><input type="radio" onclick="choixRedige(1, 1);" name="choixRedige1"/>Oui</label>
+			<label><input type="radio" onclick="choixRedige(1, 0)" name="choixRedige1" checked="checked"/>Non</label>
+        	</td>
+			</tr>
+        	<tr>
+        	<td>
+        	<select name="paragrapheRedige1"  id="paragrapheRedige1" size=1 disabled>
+				<c:forEach items="${paragrapheRedige}" var="paragrapheRedige">
+           			<option value="${paragrapheRedige.numParag}">${paragrapheRedige.titre}</option>
+           		</c:forEach>
+		    </select>
+        	</td>
+        	</tr><tr>
+        		 <td>
+        		  <p> Choisir un paragraphe conditionnel : </p>
+        		  <label><input type="radio" onclick="choixConditionnel(1, 1);" name="choixConditionnel1"/>Oui</label>
+				  <label><input type="radio" onclick="choixConditionnel(1, 0)" name="choixConditionnel1" checked="checked"/>Non</label>
         		 </td>
-        	</tr>
+        		 </tr>
+        	<tr><td>
+        	<select name="paragrapheCondition1"  id="paragrapheCondition1" size=1 disabled>
+					<c:forEach items="${paragrapheCondition}" var="paragrapheCondition">
+	            		<option value="${paragrapheCondition.numParag}">${paragrapheCondition.titre}</option>
+	           		 </c:forEach>
+	   				 </select>
+	   				 </td></tr>
 			  </table>
 			  </div>
 			 <input type="button" value="Valider le paragraphe" onclick="submitForm();">
