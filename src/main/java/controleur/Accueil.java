@@ -55,6 +55,8 @@ public class Accueil extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
+        String warning = request.getParameter("warning");
+        if(warning != null) request.setAttribute("warning", warning);
         HistoireDAO histoireDAO = new HistoireDAO(ds);
         UtilisateurDAO userDAO = new UtilisateurDAO(ds);
         HttpSession session = request.getSession();

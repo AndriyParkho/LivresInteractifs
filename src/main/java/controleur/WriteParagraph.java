@@ -51,30 +51,36 @@ public class WriteParagraph extends HttpServlet {
     	int numParag = Integer.parseInt(request.getParameter("numParag"));
     	String action = (String) request.getParameter("action");
     	if(action == null) {
+    		ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
+    		Paragraphe paragToEdit = paragrapheDAO.getParagraphe(idHist, numParag);
     		HttpSession sess = request.getSession(false);
-        	Utilisateur user = (Utilisateur) sess.getAttribute("user");
-        	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
-        	String titreParag = request.getParameter("titreParag");
-        	Paragraphe parag = new Paragraphe(idHist, numParag);
-        	String texte = paragrapheDAO.getTexte(parag);
-        	if(texte != null) {
-            	request.setAttribute("texte", texte);
-        	}
-        	request.setAttribute("titreParag", titreParag);
-        	request.setAttribute("idHist", idHist);
-        	request.setAttribute("numParag", numParag);
-        	
-        	try {
-        		List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
-        		List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
-        		request.setAttribute("paragrapheRedige", choixRedige);
-        		request.setAttribute("paragrapheCondition", choixCondition);
-        		paragrapheDAO.setWritter(idHist, numParag, user.getId());
-        	} catch (DAOException e) {
-                erreurBD(request, response, e);
-            }
-            request.setCharacterEncoding("UTF-8");
-            request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
+    		Utilisateur user = (Utilisateur) sess.getAttribute("user");
+    		
+    		if(paragToEdit.getIdWritter() != null && paragToEdit.getIdWritter() == user.getId()) {
+    			response.sendRedirect("accueil?button=storyToWrite&warning=paragIndisponible");
+    		} else {    			
+    			String titreParag = request.getParameter("titreParag");
+    			Paragraphe parag = new Paragraphe(idHist, numParag);
+    			String texte = paragrapheDAO.getTexte(parag);
+    			if(texte != null) {
+    				request.setAttribute("texte", texte);
+    			}
+    			request.setAttribute("titreParag", titreParag);
+    			request.setAttribute("idHist", idHist);
+    			request.setAttribute("numParag", numParag);
+    			
+    			try {
+    				List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
+    				List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
+    				request.setAttribute("paragrapheRedige", choixRedige);
+    				request.setAttribute("paragrapheCondition", choixCondition);
+    				paragrapheDAO.setWritter(idHist, numParag, user.getId());
+    			} catch (DAOException e) {
+    				erreurBD(request, response, e);
+    			}
+    			request.setCharacterEncoding("UTF-8");
+    			request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
+    		}
     	}
     	else if(action.equals("erase")) {
         	ParagrapheDAO paragraph = new ParagrapheDAO(ds);

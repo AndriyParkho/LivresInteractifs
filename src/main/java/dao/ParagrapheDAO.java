@@ -29,7 +29,13 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	     ) {
             ResultSet rs = st.executeQuery("SELECT * FROM paragraphe WHERE idHist =" + idHist + "AND numParag = " + numParag);
             if (rs.next()) {
-                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getInt("nbChoix"));
+            	Integer nbchoix = rs.getInt("nbchoix");
+				if(rs.wasNull()) nbchoix = null;
+				Integer conditionParag = rs.getInt("conditionParag");
+				if(rs.wasNull()) conditionParag = null;
+				Integer idWritter = rs.getInt("idWritter");
+				if(rs.wasNull()) idWritter = null;
+                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getBoolean("valide") , nbchoix, idWritter, conditionParag);
             }
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);

@@ -112,6 +112,11 @@
             	</c:forEach>
 	 	  </c:if>
 		  <c:if test="${param.bouton == 'storyToWrite'}">
+		  			<c:if test="${warning == 'paragIndisponible'}">
+						<script>window.onload=function() {
+							window.alert("Le choix n'est plus disponible, désolé...");
+						};</script>
+				    </c:if>
                     <c:if test="${paragEnCours != null}">
                         <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}&titreParag=${paragEnCours.titre}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
                     </c:if>
