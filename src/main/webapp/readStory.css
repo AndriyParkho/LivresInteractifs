@@ -7,26 +7,7 @@ background-size: cover;
 font-family: Arial, sans-serif;
 }
 
-form{
-	overflow: hidden;
-	margin: 5% auto;
-	width: 90%;
-	border-collapse: collapse;
-	color: black;
-	background-color: #4CAF50;
-	border: solid #f2f2f2;
-	border-radius: 25px;
-}
-
-input{
-	margin: 10px;
-}
-
 p{
-	margin: 10px;
-}
-
-TEXTAREA{
 	margin: 10px;
 }
 
@@ -43,6 +24,24 @@ TEXTAREA{
 	border-radius: 25px;
 }
 
+a.choixSuite{
+	text-decoration: none;
+	color: black;
+	display:block;
+	margin: 2% auto;
+	padding:2%;
+	width: 30%;
+	border: solid #4CAF50;
+	border-radius: 10px;
+	background-color: white;
+	text-align: center;
+}
+
+a.choixSuite:hover{
+	font-weight: bold;
+	font-size: 120%;
+}
+
 #changeBouton{
 	width: 20%;
 	margin: 2% auto;
@@ -50,8 +49,20 @@ TEXTAREA{
 	display:block;
 }
 
+div.choixHistorique{
+	width : 60%;
+	overflow: hidden;
+	margin: 1% auto;
+	padding:3%;
+	width: 90%;
+	border-collapse: collapse;
+	color: black;
+	background-color: #4CAF50;
+	border: solid #f2f2f2;
+	border-radius: 25px;
+}
 
-a.bouton{
+a.TitreHistorique{
 	text-decoration: none;
 	color: black;
 	display:block;
@@ -63,10 +74,18 @@ a.bouton{
 	text-align: center;
 }
 
-a.bouton:hover{
-	cursor:pointer;
+
+#boutonSauvegarde{
+	text-decoration: none;
+	color: black;
+	display:block;
+	padding:2%;
+	width: 10%;
+	border: solid #4CAF50;
+	border-radius: 10px;
+	background-color: white;
+	text-align: center;
 }
 
-#choixRemplis{
-	margin: 1%;
-}
+
+

@@ -4,7 +4,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>InteractiveStory</title>
-    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="accueil.css" />
     <script type="text/javascript" src="script.js"></script>
   </head>
   <body>
@@ -68,53 +68,86 @@
                         <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}&titreParag=${paragEnCours.titre}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
                     </c:if>
 	                <c:if test="${paragEnCours == null}">
+	                	<c:if test="${not empty histoires}">
 	                 	<table>
 	            			<tr>
 	                			<th>Titre</th>
 	            			</tr>
 			           		 <c:forEach items="${histoires}" var="histoire">
-			                	<tr>
+			                	<tr class="activable">
 			                    	<td class="click"><a href="write_story?idHist=${histoire.id}&numParagPere=1" class="story">${histoire.titre}</a></td>
 			                	</tr>
 			            	</c:forEach>
 			            </table>
+			            </c:if>
+			            </c:if>
+			        <c:if test="${empty histoires}">
+			        <div class="emptyStory">
+			        <h2>Il n'y a pas d'histoire à écrire</h2>
+			        <a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a>
+			        </div>
+			        </c:if>
 		            </c:if>
 	        	
 
 	 	  </c:if>
 		  
-     </c:if>
+     
      
      <c:if test="${param.bouton == 'historique'}">
-     <table>
-            <tr>
-                <th>Liste des histoires commencées</th>
-            </tr>
-            <c:forEach items="${histoires}" var="histoire">
-                <tr>
-                    <td class="click"><a href="read_story?idHist=${histoire.id}">${histoire.titre}</a></td>
-                </tr>
-            </c:forEach>
-        </table>
-        <c:if test="${(user != null) and isModified}">
-			<a href="accueil?action=save" id="boutonSauvegarde">Sauvegarder et revenir à l'accueil</a>
+     	<c:if test="${not empty histoires}">
+		     <table>
+		            <tr>
+		                <th>Liste des histoires commencées</th>
+		            </tr>
+		            <c:forEach items="${histoires}" var="histoire">
+		                <tr class="activable">
+		                    <td class="click"><a href="read_story?idHist=${histoire.id}">${histoire.titre}</a></td>
+		                </tr>
+		            </c:forEach>
+		        </table>
+		        <c:if test="${(user != null) and isModified}">
+					<a href="accueil?action=save" id="boutonSauvegarde">Sauvegarder et revenir à l'accueil</a>
+				</c:if>
 		</c:if>
+		<c:if test="${empty histoires}">
+			        <div class="emptyStory">
+			        <h2>Votre historique est vide</h2>
+			        <a href="accueil">Commencer une histoire</a>
+			        </div>
+			</c:if>
 	 </c:if>
 	 
      <c:if test="${empty param.bouton}">
+     	<c:if test ="${not empty histoires}">
      	<table>
             <tr>
                 <th>Titre</th>
             </tr>
             <c:forEach items="${histoires}" var="histoire">
-                <tr>
+                <tr class="activable">
                     <td class="click"><a href="read_story?idHist=${histoire.id}&numParagPere=1">${histoire.titre}</a></td>
                 </tr>
             </c:forEach>
         </table>
-	 </c:if>
+        </c:if>
+        	<c:if test="${(empty histoires) and (user != null)}">
+			        <div class="emptyStory">
+			        <h2>Il n'y a pas d'histoire à lire</h2>
+			        <a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a>
+			        </div>
+			</c:if>
+			<c:if test="${(empty histoires) and (user == null)}">
+			        <div class="emptyStory">
+			        <h2>Il n'y a pas d'histoire à lire</h2>
+			        <a href="accueil?action=bouton&bouton=login">Connectez-vous pour créer une histoire</a>
+			        </div>
+			</c:if>
+	 	</c:if>
+	 	
 	 
 	  <c:if test="${param.bouton == 'histoireAPublier'}">
+	  <c:if test="${not empty histoiresAPublier}">
      	<table>
             <tr>
                 <th>Histoires à publier</th>
@@ -122,15 +155,23 @@
             <form method="post" id="formPublication" action="publication">
                 <c:forEach items="${histoiresAPublier}" var="histoire">
                     <tr>
-                        <td class="click"><a href="read_story?idHist=${histoire.id}&numParagPere=1">${histoire.titre}</a> <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></td>
+                        <td> ${histoire.titre} <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></td>
                     </tr>
                 </c:forEach>
                     <input type="submit" value="publierHistoires"> 
             </form>
         </table>
+        </c:if>
+        <c:if test="${empty histoiresAPublier}">
+        <div class="emptyStory">
+        <h2>Vous n'avez pas d'histoire à publier</h2>
+        <a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a>
+        </div>
+        </c:if>
 	 </c:if>
 	 
 	 <c:if test="${param.bouton == 'histoireDepubliable'}">
+	 	<c:if test="${not empty histoiresDepubliables}">
      	<table>
             <tr>
                 <th>Histoires dépubliables</th>
@@ -138,12 +179,20 @@
             <form method="post" id="formPublication" action="depublication">
                 <c:forEach items="${histoiresDepubliables}" var="histoire">
                     <tr>
-                        <td class="click"><a href="read_story?idHist=${histoire.id}&numParagPere=1">${histoire.titre}</a> <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></td>
+                        <td>${histoire.titre} <input type="checkbox" id="${histoire.id}" name="${histoire.id}"></td>
                     </tr>
                 </c:forEach>
                     <input type="submit" value="depublierHistoires"> 
             </form>
         </table>
+        </c:if>
+        <c:if test="${empty histoiresDepubliables}">
+        <div class="emptyStory">
+        <h2>Vous n'avez pas d'histoire à dépublier</h2>
+        <a href="accueil?action=bouton&bouton=histoireAPublier">Histoires à publier</a>
+        <a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a>
+        </div>
+        </c:if>
 	 </c:if>
                         
      

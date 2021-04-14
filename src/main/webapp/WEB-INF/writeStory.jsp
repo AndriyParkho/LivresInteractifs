@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>InteractiveStory</title>
-<link rel="stylesheet" type="text/css" href="styles.css" />
+<link rel="stylesheet" type="text/css" href="writeStory.css" />
 </head>
 <body>
 	<div id='paragraphStory'>
