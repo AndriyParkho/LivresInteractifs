@@ -327,4 +327,36 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}
 	}
+	
+	public void setTexte(Paragraphe parag) {
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET texte=? WHERE idHist=? and numParag=?");
+			     ) {
+					ps.setString(1, parag.getTexte());
+		            ps.setInt(2, parag.getIdHist());
+		            ps.setInt(3, parag.getNumParag());
+		            ps.executeQuery();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+	}
+	
+	public String getTexte(Paragraphe parag) {
+		String texte = null;
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("SELECT texte FROM paragraphe WHERE idHist=? and numParag=?");
+			     ) {
+		            ps.setInt(1, parag.getIdHist());
+		            ps.setInt(2, parag.getNumParag());
+		            ResultSet rs = ps.executeQuery();
+					if(rs.next()) {
+						texte = rs.getString("texte");
+					}
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+		return texte;
+	}
 }

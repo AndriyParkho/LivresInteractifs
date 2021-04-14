@@ -43,6 +43,14 @@ public class Paragraphe {
 		this.nbChoix = nbChoix;
 	}
 	
+	public Paragraphe(int idHist, int numParag, String titre, String texte) {
+		super();
+		this.idHist = idHist;
+		this.numParag = numParag;
+		this.titre = titre;
+		this.texte = texte;
+	}
+	
 	public Paragraphe(int idHist, int numParag, String titre) {
 		super();
 		this.idHist = idHist;

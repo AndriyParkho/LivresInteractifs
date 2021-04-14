@@ -40,7 +40,6 @@ public class CreateStory extends HttpServlet {
         if(request.getParameter("confident") != null) confidentialite = Integer.parseInt(request.getParameter("confident"));
             
         String[] auteurs = request.getParameterValues("auteurs");
-        
         String title = request.getParameter("title");
         String titreParagraphe = request.getParameter("titreParagraphe");
         String paragraphe = request.getParameter("story");
