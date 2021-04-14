@@ -43,7 +43,9 @@
 			  </div>
 			 <input type="button" value="Valider le paragraphe" onclick="submitForm();">
 		</form> 
-		<a onclick="submitTexte();" class="bouton">Sauvegarder la rédaction du paragraphe</a>
+		<div id="boutonDiv">
+		<a onclick="submitTexte();" class="bouton" id="boutonSave">Sauvegarder la rédaction du paragraphe</a>
 		<a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}" class="bouton" id="boutonErase">Annuler la rédaction du paragraphe</a>
+		</div>
 	</c:if>
   </body>

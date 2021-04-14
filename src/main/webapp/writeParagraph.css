@@ -70,3 +70,20 @@ a.bouton:hover{
 #choixRemplis{
 	margin: 1%;
 }
+
+#boutonErase{
+	position: absolute;
+	right: 20%;
+	top: 0%;
+}
+
+#boutonSave{
+	position: absolute;
+	left: 20%;
+	top: 0%;
+}
+
+#boutonDiv{
+	position: absolute;
+	width: 100%;
+}
