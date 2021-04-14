@@ -37,6 +37,7 @@ li.menu a {
 li.menu a:hover {
   background-color: #111;
 }
+
 .active {
   background-color: #4CAF50;
 }
@@ -74,7 +75,7 @@ tr{
 	color: #f2f2f2;
 }
 
-tr:hover {background-color: #f2f2f2;
+tr.activable:hover {background-color: #f2f2f2;
 	color: black;}
 
 table tr:not(:last-child) { border-bottom: 1px solid #ddd;}
@@ -125,7 +126,6 @@ a.alreadyWritting:hover{
 }
 
 form{
-	width : 60%;
 	overflow: hidden;
 	margin: 5% auto;
 	width: 90%;
@@ -143,105 +143,56 @@ input{
 p{
 	margin: 10px;
 }
+
 #listPersons{
-	margin: 10px;
-	display: none;
+	margin : 10px;
 }
 
 TEXTAREA{
 	margin: 10px;
 }
 
-#paragraphStory{
-	width : 60%;
+div.emptyStory{
+	width : 70%;
 	overflow: hidden;
-	margin: 4% auto;
-	padding:3%;
-	width: 90%;
+	margin: 5% auto;
 	border-collapse: collapse;
 	color: black;
 	background-color: #4CAF50;
 	border: solid #f2f2f2;
 	border-radius: 25px;
-}
-
-a.choixSuite{
-	text-decoration: none;
-	color: black;
-	display:block;
-	margin: 2% auto;
-	padding:2%;
-	width: 30%;
-	border: solid #4CAF50;
-	border-radius: 10px;
-	background-color: white;
 	text-align: center;
 }
 
-a.choixSuite:hover{
-	font-weight: bold;
-	font-size: 120%;
-}
-
-#changeBouton{
-	width: 20%;
-	margin: 2% auto;
-	padding:2%;
+.emptyStory a{
+	text-decoration: none;
+	color: black;
 	display:block;
-}
-
-div.choixHistorique{
-	width : 60%;
-	overflow: hidden;
+	padding:2%;
 	margin: 1% auto;
-	padding:3%;
-	width: 90%;
-	border-collapse: collapse;
+	width: 10%;
+	border: solid black;
+	border-radius: 10px;
+	background-color: white;
+	text-align: center;
+}
+
+form.formValidHistoire{
+	text-align: center;
+	width: 80%;
+}
+
+p.histoirePubli{
+	width: 55%;
+	background-color: white;
 	color: black;
-	background-color: #4CAF50;
-	border: solid #f2f2f2;
 	border-radius: 25px;
-}
-
-a.TitreHistorique{
-	text-decoration: none;
-	color: black;
-	display:block;
+	border: solid black;
+	margin: 1% auto;
 	padding:2%;
-	width: 10%;
-	border: solid #4CAF50;
-	border-radius: 10px;
-	background-color: white;
-	text-align: center;
 }
 
 
-#boutonSauvegarde{
-	text-decoration: none;
-	color: black;
-	display:block;
-	padding:2%;
-	width: 10%;
-	border: solid #4CAF50;
-	border-radius: 10px;
-	background-color: white;
-	text-align: center;
-}
 
-#boutonErase{
-	text-decoration: none;
-	color: black;
-	display:block;
-	padding:2%;
-	width: 10%;
-	border: solid #4CAF50;
-	border-radius: 10px;
-	background-color: white;
-	text-align: center;
-}
-
-#choixRemplis{
-	margin: 1%;
-}
 
 

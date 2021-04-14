@@ -202,7 +202,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				idHist = r.getInt("idHist");
 				treeOfStory = new ArrayList<ArrayList<Paragraphe>>();
 				blocPara = new ArrayList<Paragraphe>();
-				rs = ss.executeQuery("SELECT numParag FROM hasRead WHERE idUtil=" + Integer.toString(userId) + "AND idHist = " + Integer.toString(idHist));
+				rs = ss.executeQuery("SELECT numParag, locationid FROM hasRead WHERE idUtil=" + Integer.toString(userId) + "AND idHist = " + Integer.toString(idHist) + " ORDER BY locationid");
 				Paragraphe currentParagraphe = null;
 				while(rs.next()) {
 					numParag = rs.getInt("numParag");

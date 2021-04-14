@@ -1,0 +1,30 @@
+body {
+color:white;
+background-color:black;
+background-image:url(background.jpg);
+background-position:center center;
+background-size: cover;
+font-family: Arial, sans-serif;
+}
+
+form{
+	overflow: hidden;
+	margin: 5% auto;
+	width: 90%;
+	border-collapse: collapse;
+	color: black;
+	background-color: #4CAF50;
+	border: solid #f2f2f2;
+	border-radius: 25px;
+}
+
+input{
+	margin: 10px;
+}
+
+p{
+	margin: 10px;
+}
+
+
+

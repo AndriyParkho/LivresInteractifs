@@ -6,7 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>InteractiveStory</title>
-    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="loginRegister.css" />
   </head>
 <body>
 <c:if test="${login}">
@@ -21,7 +21,7 @@
 	  	Erreur lors de la connexion, veuillez réessayer.
 	  	</p>
 	  </c:if>
-	    <input type="submit" name="Se connecter" />
+	    <input type="submit" value="Se connecter" />
 	    <input type="button"
 	    	   onclick="self.location.href='register.html'"
 	       	   value="S'enregister">

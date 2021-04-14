@@ -53,10 +53,10 @@ public class WriteParagraph extends HttpServlet {
     	if(action == null) {
     		HttpSession sess = request.getSession(false);
         	Utilisateur user = (Utilisateur) sess.getAttribute("user");
-        	ParagrapheDAO paragraph = new ParagrapheDAO(ds);
+        	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
         	String titreParag = request.getParameter("titreParag");
         	Paragraphe parag = new Paragraphe(idHist, numParag);
-        	String texte = paragraph.getTexte(parag);
+        	String texte = paragrapheDAO.getTexte(parag);
         	if(texte != null) {
             	request.setAttribute("texte", texte);
         	}
@@ -65,9 +65,9 @@ public class WriteParagraph extends HttpServlet {
         	request.setAttribute("numParag", numParag);
         	
         	try {
-        		List<Paragraphe> choixRedige = paragraph.getParagrapheFromHist(idHist);
+        		List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
         		request.setAttribute("paragrapheRedige", choixRedige);
-        		paragraph.setWritter(idHist, numParag, user.getId());
+        		paragrapheDAO.setWritter(idHist, numParag, user.getId());
         	} catch (DAOException e) {
                 erreurBD(request, response, e);
             }
