@@ -8,8 +8,8 @@ INSERT INTO Utilisateur (nom, prenom, email, password) VALUES
 	('Ousset', 'Mickaël', 'mickael.ousset@grenoble-inp.org', 'code');
 
 -- Première histoire
-INSERT INTO Histoire (idhist, titre, idauteur, prive) VALUES
-	(1, 'Les trois pièces d''or', 1, 1);
+INSERT INTO Histoire (titre, idauteur, prive) VALUES
+	('Les trois pièces d''or', 1, 1);
 INSERT INTO Paragraphe(numparag, idhist, titre, texte, nbchoix, idwritter, valide) VALUES
 	(1, 1, 'début', 'Tout commence à l''époque où les humains vivaient en harmonie avec de nombreuses autres créatures comme les dragons, les elfes, les nains... La magie était alors utilisée par quelques initiés... Durant ces temps oubliés, de nobles guerriers parcouraient le monde à la recherche de richesses et luttaient vaillamment contre des créatures maléfiques. Peut-être es-tu l''un de ces héros...  Ton aventure débute un matin ensoleillé, près de la tanière de ton ami Dragono. Il t''explique qu''il s''est absenté toute la journée d''hier et en rentrant dans sa grotte, il a découvert qu''il lui manquait 3 pièces d''or ! Il aimerait savoir qui a bien pu lui voler les précieuses pièces de son trésor ? Comme tu es son ami, il te demande de l''aider à retrouver ses pièces car il sait que tu es très fort pour ce genre d''enquête.
 Voici ce que contient ta sacoche:
@@ -133,7 +133,7 @@ INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(1, 14, 15);
 	
 -- Deuxième histoire
-INSERT INTO Histoire(idHist, titre, prive, datePubli, idAuteur) VALUES(2, 'Monsieur Charles', 0, SYSDATE, 2);
+INSERT INTO Histoire(titre, prive, datePubli, idAuteur) VALUES('Monsieur Charles', 0, SYSDATE, 2);
 
 INSERT INTO PARAGRAPHE(numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES (1, 'Le commencement', 'Aujourd''hui, comme tous les lundis, dès la sortie de la classe, je cours vers le parc avec mes copains pour y retrouver monsieur Charles. J''essaye d''arriver le premier pour pouvoir choisir l''histoire qu''il va nous conter. Moi, je choisis toujours des histoires de détectives... Vite je dois me dépêcher...', 1, 1, 2, 2);
 
@@ -160,15 +160,15 @@ INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 7, 9)
 
 
 -- Troisième histoire : à publier publique
-INSERT INTO Histoire (idhist, titre, idauteur, prive) VALUES
-	(3, 'Histoire à publier', 3, 0);
+INSERT INTO Histoire (titre, idauteur, prive) VALUES
+	('Histoire à publier', 3, 0);
 INSERT INTO Paragraphe(numparag, idhist, titre, texte, nbchoix, idwritter, valide) VALUES
 	(1, 3, 'Un unique paragraphe', 'Ceci est une histoire à un paragraphe qui permet de tester la publication d''une histoire',
 						0, 2, 1);
 
 -- Quatrième histoire : très simple random
-INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
-	(4, 'Random latin', 1, TO_DATE('03/04/2020', 'MM/DD/YYYY'));
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Random latin', 1, TO_DATE('03/04/2020', 'MM/DD/YYYY'));
 INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist, valide) VALUES
 	(1, 'latin first', 'Dein Syria per speciosam interpatet diffusa planitiem. hanc nobilitat Antiochia, 
 						mundo cognita civitas, cui non certaverit alia advecticiis ita adfluere copiis et 
@@ -230,36 +230,36 @@ INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 -- TESTS UNITAIRES
 
 -- Une histoire complète à lire
-INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
-	(5, 'Une histoire complète à liste', 1, SYSDATE);
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Une histoire complète à lire', 1, SYSDATE);
 
 INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
         (1, 'Premier paragraphe à lire', 'Corps du premier paragraphe, déjà la fin',  0, 1, 5, 1);
 
 --Une hsitoire complète à publiée
-INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
-	(6, 'Une histoire à publier', 1, NULL);
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Une histoire à publier', 1, NULL);
 
 INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
         (1, 'Premier paragraphe à publier', 'Corps du premier paragraphe, comment ça déjà la fin',  0, 1, 6, 1);
 
 --Une histoire avec un paragraphe à valider
-INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
-	(7, 'Une histoire avec un paragraphe à valider', 1, NULL);
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Une histoire avec un paragraphe à valider', 1, NULL);
 
 INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
         (1, 'Premier paragraphe à valider', 'Corps du premier paragraphe, déjà la fin',  0, 1, 7, 1);
 
 --Une histoire avec un paragraphe à valider
-INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
-	(8, 'Une histoire avec un paragraphe à valider', 1, NULL);
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Une histoire avec un paragraphe à valider', 1, NULL);
 
 INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
         (1, 'Premier paragraphe à valider', 'Corps du premier paragraphe, validez moi',  0, 1, 8, 1);
 
 --Une histoire pour laquelle c'est bien de s'arrêter au milieu pour regarder l'histrorique
-INSERT INTO Histoire (idhist, titre, idauteur, datePubli) VALUES
-	(9, 'Une histoire à plusieurs chemins pour l''historique', 1, SYSDATE);
+INSERT INTO Histoire (titre, idauteur, datePubli) VALUES
+	('Une histoire à plusieurs chemins pour l''historique', 1, SYSDATE);
 
 INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
         (1, 'Premier paragraphe à valider', 'Corps du premier paragraphe, déjà la fin',  2, 1, 9, 1);
@@ -271,7 +271,7 @@ INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valid
         (3, 'Second paragraphe, deuxième choix', 'Second paragraphe, deuxième chhoix',  1, 1, 9, 1);
 
 INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
-        (4, 'Dernier paragraphe, premier choix', 'Essayer de changer votre choix à l''aide de l''historique',  0, 1, 9, 1);
+        (4, 'Dernier paragraphe, premier choix', 'Essayez de changer votre choix à l''aide de l''historique',  0, 1, 9, 1);
 
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(9, 1, 2);
@@ -281,3 +281,14 @@ INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(9, 2, 4);
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(9, 3, 4);
+
+--Histoire sur laquelle andriy est invité
+INSERT INTO Histoire ( titre, idauteur, datePubli, prive) VALUES
+	('Une histoire sur laquelle je suis invité', 2, NULL, 1);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (1, 'Premier paragrpahe, invitation', 'Je suis juste ici pour voir si les invitations fonctionnent',  0, NULL, 10, 0);
+
+INSERT INTO isInvited(idHist, idUtil) VALUES(10, 1);
+
+
