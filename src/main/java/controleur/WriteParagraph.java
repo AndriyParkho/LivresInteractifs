@@ -85,9 +85,9 @@ public class WriteParagraph extends HttpServlet {
     		}
     	}
     	else if(action.equals("erase")) {
-        	ParagrapheDAO paragraph = new ParagrapheDAO(ds);
+        	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
             try {
-            	paragraph.deleteWritter(idHist, numParag);
+            	paragrapheDAO.deleteWritter(idHist, numParag);
             } catch (DAOException e) {
             	erreurBD(request, response, e);
             }

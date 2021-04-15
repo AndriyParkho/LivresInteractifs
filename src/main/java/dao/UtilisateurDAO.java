@@ -39,6 +39,8 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
                 
             }
             else {
+            	s.close();
+            	conn.close();
             	return null;
             }
         } catch (SQLException e) {
@@ -55,6 +57,8 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
             ps.setString(3, email);
             ps.setString(4, pass);
             ps.executeUpdate();
+            ps.close();
+            c.close();
             return true;
         } catch (SQLException sqle) {
             return false;
@@ -74,6 +78,8 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
             	Utilisateur user = new Utilisateur(r.getInt("idUtil"), r.getString("nom"), r.getString("prenom"), r.getString("email"), r.getString("password"));
                 result.add(user);
             }
+            s.close();
+            conn.close();
         } catch (SQLException e) {
         	throw new DAOException("Erreur BD" + e.getMessage(), e);
         }
@@ -101,6 +107,8 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
             		throw new DAOException("Une histoire a été cherchée mais n'est pas contenu dans la bdd");
             	}
             }
+            s.close();
+            conn.close();
         } catch (SQLException e) {
         	throw new DAOException("Erreur BD" + e.getMessage(), e);
         }
@@ -130,6 +138,8 @@ public class UtilisateurDAO extends AbstractDataBaseDAO {
 					    		compteur++;
 					    	}
 					    }
+					    st.close();
+					    conn.close();
 				} catch (SQLException e) {
 					throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}

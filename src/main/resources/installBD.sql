@@ -24,9 +24,7 @@ CREATE TABLE Paragraphe (
        valide NUMBER(1,0) DEFAULT 0,
        nbChoix integer,
        idWritter integer REFERENCES Utilisateur(idUtil),
-       conditionParag integer NULL,
-       constraint pkParag PRIMARY KEY (numParag, idHist),
-       CONSTRAINT fkCondParag FOREIGN KEY(idhist, conditionParag) REFERENCES paragraphe(idhist, numParag)
+       constraint pkParag PRIMARY KEY (numParag, idHist)
 );
 
 CREATE TABLE IsInvited (
@@ -49,7 +47,9 @@ CREATE TABLE IsFollowing (
        idHistParag integer NOT NULL,
        numParagPere integer NOT NULL,
        numParagFils integer NOT NULL,
+       conditionParag integer NULL,
        CONSTRAINT fkFollowingPere FOREIGN KEY (idHistParag, numParagPere) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
        CONSTRAINT fkFollowingFils FOREIGN KEY (idHistParag, numParagFils) REFERENCES Paragraphe(idHist, numParag) ON DELETE CASCADE,
+       CONSTRAINT fkCondParag FOREIGN KEY(idHistParag, conditionParag) REFERENCES Paragraphe(idhist, numParag),
        CONSTRAINT pkIsFollowing PRIMARY KEY (idHistParag, numParagPere, numParagFils)
 );

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import javax.sql.DataSource;
 
 import modele.HistoriqueModele;
+import modele.Pair;
 import modele.Paragraphe;
 
 public class ParagrapheDAO extends AbstractDataBaseDAO {
@@ -31,12 +32,12 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
             if (rs.next()) {
             	Integer nbchoix = rs.getInt("nbchoix");
 				if(rs.wasNull()) nbchoix = null;
-				Integer conditionParag = rs.getInt("conditionParag");
-				if(rs.wasNull()) conditionParag = null;
 				Integer idWritter = rs.getInt("idWritter");
 				if(rs.wasNull()) idWritter = null;
-                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getBoolean("valide") , nbchoix, idWritter, conditionParag);
+                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getBoolean("valide") , nbchoix, idWritter);
             }
+            st.close();
+            conn.close();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
@@ -45,37 +46,42 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	
 	/*
 	 * @param dicoParag : stock les paragraphes qu'on a déjà vu
-	 * @param parag : paragraphe sur le quel on est dans notre parcours de l'arbre
+	 * @param paragsPere : liste des paragraphes père avec leur condition pour mener au paragrapheToAdd 
+	 * @param paragToAdd : paragraphe à ajouter aux paragraphes père
 	 */
-	public void getBrancheConclusion(HashMap<Integer, Paragraphe> dicoParag, ArrayList<Paragraphe> paragsPere, Paragraphe paragToadd, Connection conn) {
+	public void getBrancheConclusion(HashMap<Integer, Paragraphe> dicoParag, ArrayList<Pair<Paragraphe, Integer>> paragsPere, Paragraphe paragToadd, Connection conn) {
 		if(paragsPere.isEmpty() && paragToadd.getNumParag() == 1) {
 			return;
 		} else {
-			for(Paragraphe parag: paragsPere) {
-				if(paragToadd != null) parag.addParagSuiv(paragToadd);
+			for(Pair<Paragraphe, Integer> pair: paragsPere) {
+				Paragraphe parag = pair.getLeft();
+				if(paragToadd != null) {
+					parag.addParagSuiv(paragToadd, pair.getRight());
+				}
 				try (
 					Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 					) {
 					ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist, conditionParag FROM paragraphe JOIN "
 								+ "isfollowing ON idhistparag = idhist AND numparagpere = numparag WHERE idhistparag = " + parag.getIdHist() + 
 								" AND numparagfils = " + parag.getNumParag()  + "AND texte IS NOT NULL AND valide = 1");
-					ArrayList<Paragraphe> newParagsPere = new ArrayList<Paragraphe>();
+					ArrayList<Pair<Paragraphe, Integer>> newParagsPere = new ArrayList<Pair<Paragraphe,Integer>>();
 					while (rs.next()) {
 						Integer numParag = rs.getInt("numParag");
 						Paragraphe pereParag = dicoParag.get(numParag); /*On vérifie si on est déjà passé par le paragraphe*/ 
+						Integer conditionParag = rs.getInt("conditionParag");
+						if(rs.wasNull()) conditionParag = null;
 						if(pereParag == null) {/*Si ce n'est pas le cas on créer le paragraphe pere*/						
 							Integer nbchoix = rs.getInt("nbchoix");
 							if(rs.wasNull()) nbchoix = null;
-							Integer conditionParag = rs.getInt("conditionParag");
-							if(rs.wasNull()) conditionParag = null;
-							pereParag = new Paragraphe(rs.getInt("idhist"), numParag, rs.getString("titre"), rs.getString("texte"), nbchoix, conditionParag);
+							pereParag = new Paragraphe(rs.getInt("idhist"), numParag, rs.getString("titre"), rs.getString("texte"), nbchoix);
 							dicoParag.put(numParag, pereParag); /*On le rajoute à la liste des paragraphes déjà vu*/
-							newParagsPere.add(pereParag);
+							newParagsPere.add(new Pair(pereParag, conditionParag));
 						} else { /*Si c'est le cas on rajoute ce paragraphe pere*/
-							pereParag.addParagSuiv(parag);
+							pereParag.addParagSuiv(parag, conditionParag);
 						}
 					}
 					getBrancheConclusion(dicoParag, newParagsPere, parag, conn);
+					st.close();
 					} catch (SQLException e) {
 						throw new DAOException("Erreur BD " + e.getMessage(), e);
 					}
@@ -106,27 +112,27 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
             	}
                 parag.addParagSuiv(childParag);
             }
+            st.close();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
 	}
 	
-	public ArrayList<Paragraphe> getParagConclu(int idHist, HashMap<Integer, Paragraphe> dicoParag, Connection conn){
+	public ArrayList<Pair<Paragraphe, Integer>> getParagConclu(int idHist, HashMap<Integer, Paragraphe> dicoParag, Connection conn){
 		try (
     			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
     			) {
-    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist, conditionParag FROM paragraphe WHERE idhist = " + idHist + 
+    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe WHERE idhist = " + idHist + 
 					" AND nbchoix = 0 AND texte IS NOT NULL AND valide = 1");
-    		ArrayList<Paragraphe> paragsConclu = new ArrayList<Paragraphe>();
+    		ArrayList<Pair<Paragraphe, Integer>> paragsConclu = new ArrayList<Pair<Paragraphe, Integer>>();
     		while(rs.next()) {
     			Integer numParag = rs.getInt("numParag");
 				if(rs.wasNull()) numParag = null;
-				Integer conditionParag = rs.getInt("conditionParag");
-				if(rs.wasNull()) conditionParag = null;
-    			Paragraphe concluParag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0, conditionParag);
-    			paragsConclu.add(concluParag);
+    			Paragraphe concluParag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0);
+    			paragsConclu.add(new Pair(concluParag, null));
     			dicoParag.put(numParag, concluParag);
     		}
+    		st.close();
     		return paragsConclu;
     	} catch (SQLException e) {
     		throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -140,7 +146,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
     			){
     		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
     		this.getBrancheConclusion(dicoParag, getParagConclu(idHist, dicoParag, conn), null, conn);
-    		firstParag = dicoParag.get(1);    		
+    		firstParag = dicoParag.get(1);
+    		conn.close();
     	} catch (SQLException e) {
     		throw new DAOException("Erreur BD " + e.getMessage(), e);
     	}
@@ -154,7 +161,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		     ) {
     			HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
     			dicoParag.put(1, firstParag);
-    			this.setFollowingParagToWrite(dicoParag, firstParag, conn);    	
+    			this.setFollowingParagToWrite(dicoParag, firstParag, conn);    
+    			conn.close();
 	        } catch (SQLException e) {
 	            throw new DAOException("Erreur BD " + e.getMessage(), e);
 			}
@@ -177,6 +185,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	                    new Paragraphe(rs.getInt("idhist"), rs.getInt("numparag"), rs.getString("titre"), 
 	                    		rs.getString("texte"), rs.getBoolean("valide"), nbchoix, idWritter);
 	            }
+	            st.close();
+	            conn.close();
 	        } catch (SQLException e) {
 	            throw new DAOException("Erreur BD " + e.getMessage(), e);
 			}
@@ -192,6 +202,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				ps.setInt(2, histId);
 				ps.setInt(3, paragraphNum);
 			 	ps.executeQuery();
+			 	ps.close();
+			 	conn.close();
 		      }catch (SQLException e) {
 		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
 		      }
@@ -222,7 +234,9 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				while(rs.next()) {
 					numParag = rs.getInt("numParag");
 					if(numParag == 1) {
-						currentParagraphe = getHistoireTreeToRead(idHist);
+						HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+			    		this.getBrancheConclusion(dicoParag, getParagConclu(idHist, dicoParag, conn), null, conn);
+						currentParagraphe = dicoParag.get(1);
 						blocPara.add(currentParagraphe);
 					}
 					else {
@@ -244,7 +258,10 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 					treeOfStory.add(blocPara);
 				}
 				historique.addStory(idHist, treeOfStory);
-			}	
+			}
+			s.close();
+			ss.close();
+			conn.close();
 		} catch (SQLException e) {
 			throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
@@ -259,6 +276,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				ps.setInt(1, idHist);
 				ps.setInt(2, numParag);
 			 	ps.executeQuery();
+			 	ps.close();
+			 	conn.close();
 		      }catch (SQLException e) {
 		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
 		      }
@@ -277,6 +296,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 					parag = new Paragraphe(histId, rs.getInt("numParag"), rs.getString("titre"),rs.getString("texte"), rs.getInt("nbChoix"));
 					paragrapheRedige.add(parag);
 				}
+				ps.close();
+				conn.close();
 		      }catch (SQLException e) {
 		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
 		      }
@@ -294,6 +315,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				if(rs.next()) {
 					max = rs.getInt("max(numParag)");
 				}
+				ps.close();
+				conn.close();
 				return max;
 		      }catch (SQLException e) {
 		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -309,6 +332,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
             ps.setString(2, parag.getTitre());
             ps.setInt(3, parag.getIdHist());
             ps.executeQuery();
+            ps.close();
+            conn.close();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
@@ -324,6 +349,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		            ps.setInt(3, parag.getIdHist());
 		            ps.setInt(4, parag.getNumParag());
 		            ps.executeQuery();
+		            ps.close();
+		            conn.close();
 		        } catch (SQLException e) {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}
@@ -338,6 +365,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		            ps.setInt(2, parag1.getNumParag());
 		            ps.setInt(3, parag2.getNumParag());
 		            ps.executeQuery();
+		            ps.close();
+		            conn.close();
 		        } catch (SQLException e) {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}
@@ -352,6 +381,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		            ps.setInt(2, parag.getIdHist());
 		            ps.setInt(3, parag.getNumParag());
 		            ps.executeQuery();
+		            ps.close();
+		            conn.close();
 		        } catch (SQLException e) {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}
@@ -369,6 +400,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 					if(rs.next()) {
 						texte = rs.getString("texte");
 					}
+					ps.close();
+					conn.close();
 		        } catch (SQLException e) {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}
@@ -394,6 +427,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
             				rs.getString("texte"), rs.getBoolean("valide"), nbchoix, idWritter);
 	                parag.addParagSuiv(childParag);
 				}
+				st.close();
+				conn.close();
 			} catch (SQLException e) {
 	            throw new DAOException("Erreur BD " + e.getMessage(), e);
 	        }
@@ -421,6 +456,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 						listParag.add(paragRedige);
 					}	
 				}
+				st.close();
+				conn.close();
 				return paragrapheRedige;
 			} catch (SQLException e) {
 	            throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -432,19 +469,19 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				Connection conn = getConn();
     			Statement st = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
     			) {
-    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist, conditionParag FROM paragraphe WHERE idhist = " + idHist + 
+    		ResultSet rs = st.executeQuery("SELECT numparag, titre, texte, nbchoix, idhist FROM paragraphe WHERE idhist = " + idHist + 
 					" AND numParag = " + numParag);
-    		ArrayList<Paragraphe> parag = new ArrayList<Paragraphe>();
+    		ArrayList<Pair<Paragraphe, Integer>> parags = new ArrayList<Pair<Paragraphe, Integer>>();
     		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
     		if(rs.next()) {
-				Integer conditionParag = rs.getInt("conditionParag");
-				if(rs.wasNull()) conditionParag = null;
-    			Paragraphe concluParag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0, conditionParag);
-    			parag.add(concluParag);
-    			dicoParag.put(numParag, concluParag);
+    			Paragraphe parag = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), 0);
+    			parags.add(new Pair(parag, null));
+    			dicoParag.put(numParag, parag);
     		}
-    		this.getBrancheConclusion(dicoParag, parag, null, conn);
+    		this.getBrancheConclusion(dicoParag, parags, null, conn);
     		dicoParag.remove(numParag);
+    		st.close();
+    		conn.close();
     		return new ArrayList<Paragraphe>(dicoParag.values());
     	} catch (SQLException e) {
     		throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -460,6 +497,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		            ps.setInt(2, parag.getIdHist());
 		            ps.setInt(3, parag.getNumParag());
 		            ps.executeQuery();
+		            ps.close();
+		            conn.close();
 		        } catch (SQLException e) {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}

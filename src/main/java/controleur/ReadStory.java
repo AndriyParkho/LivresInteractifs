@@ -129,8 +129,10 @@ public class ReadStory extends HttpServlet {
 	        	paragsToRead.add(currentParag);
         	}
         	/*On place les paragraphes suivants comme choix pour l'utilisateur*/
-        	for(Paragraphe parag : currentParag.getParagSuiv()) {
-        		if(parag.getConditionParag() == null || historique.isInHistorique(idHist, parag.getConditionParag())) {
+        	for(int i=0 ; i < currentParag.getParagSuiv().size() ; i++) {
+        		Paragraphe parag = currentParag.getParagSuiv().get(i);
+        		Integer conditionParag = currentParag.getCondParagSuiv().get(i);
+        		if(conditionParag == null || historique.isInHistorique(idHist, conditionParag)) {
         			choixParag.add(parag);
         		}
         	}
