@@ -147,8 +147,8 @@ INSERT INTO PARAGRAPHE(numParag, titre, texte, valide, nbChoix, idWritter, idHis
 INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 3, 5);
 INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 4, 5);
 INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 5, 2);
-INSERT INTO PARAGRAPHE(numParag, titre, texte, valide, nbChoix, idWritter, idHist, conditionParag) VALUES(6, 'Nous partons vers l''entrée du parc', 'Arrivés à l’entrée du parc, nous voyons un petit monsieur avec un manteau gris. C’est lui!!! Nous l’appelons « Monsieur Charles!!!» Mais il ne se retourne pas: ce n’était pas lui... nous décidons de retourner vers le banc vert. ', 1, 1, 2, 2, 4);
-INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 2, 6);
+INSERT INTO PARAGRAPHE(numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES(6, 'Nous partons vers l''entrée du parc', 'Arrivés à l’entrée du parc, nous voyons un petit monsieur avec un manteau gris. C’est lui!!! Nous l’appelons « Monsieur Charles!!!» Mais il ne se retourne pas: ce n’était pas lui... nous décidons de retourner vers le banc vert. ', 1, 1, 2, 2);
+INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils, conditionParag) VALUES(2, 2, 6, 4);
 INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 6, 5);
 INSERT INTO PARAGRAPHE(numParag, titre, texte, valide, nbChoix, idWritter, idHist) VALUES(7, 'Rentrer à la maison', 'Nous nous dirigeons vers la sortie du parc. Tout à coup Fabien crie: « Regardez, regardez, c’est le panier de monsieur Charles! ». Il montrait une dame qui portait le panier rouge de notre ami. Tout ceci est bien mystérieux.', 1, 2, 2, 2);
 INSERT INTO isFollowing(idHistParag, numParagPere, numParagFils) VALUES(2, 5, 7);
@@ -182,7 +182,7 @@ INSERT INTO Paragraphe(numparag, titre, texte, nbchoix, idwritter, idhist, valid
 						nunc repetetur ordo gestorum.',
 						2, 1, 4, 1);
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
-	(4, 1, 2)
+	(4, 1, 2);
 INSERT INTO Paragraphe(numparag, titre, idhist) VALUES
 	(3, 'latin trois', 4);
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES

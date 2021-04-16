@@ -1,33 +1,27 @@
-	var nbChoixRedige = 0;
-	var nbChoixJs = 1;
+	var nbChoixJs;
 	
     function choixRedige(numChoix, bool){
 		 var choix = document.getElementById("choix" + numChoix.toString());
+		 var choixRedige = document.getElementById("paragrapheRedige" + numChoix.toString());
 		 if((bool == 1) && (choix.disabled == false)){
 		 	choix.disabled = true;
-		 	nbChoixRedige++;
+			 choixRedige.disabled = false;
 		 }
 		 else if ((bool == 0) && (choix.disabled == true)){
 		 	choix.disabled = false;
-		 	nbChoixRedige--;
+			choixRedige.disabled = true;
 		 }
-		var select = document.getElementById('choixRemplis');
-		if((nbChoixRedige == 0) && (select.disabled == false)){
-			select.disabled = true;
-		}
-		else if((nbChoixRedige != 0) && (select.disabled == true)){
-			select.disabled = false;
-		}
-		else if(nbChoixRedige == 1){
-			select.size = 1;
-			select.multiple = false;
-		}
-		else if(nbChoixRedige != 0){
-			select.size = 4;
-			select.multiple = true;
-		}
-		
     }
+	
+	function choixConditionnel(numChoix, bool){
+		var choix = document.getElementById("paragrapheCondition" + numChoix.toString());
+		 if((bool == 0) && (choix.disabled == false)){
+		 	choix.disabled = true;
+		 }
+		 else if ((bool == 1) && (choix.disabled == true)){
+		 	choix.disabled = false;
+		 }
+	}
     
     function displayChoice(){
     	document.getElementById('nbChoix').value = 1;
@@ -42,58 +36,106 @@
         resetChoixRedige();
     }
     
+	function insertHtmlChoice(div){
+		div.insertAdjacentHTML('beforeend', '<tr><th>Choix'+ nbChoixJs.toString() + '</th></tr>\
+			<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" name="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td>\
+			</tr>\
+			<tr class="formulaire">\
+			<td>\
+        	<p> Choisir un choix déjà rédigé : </p>\
+        	<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ', 1);" name="choixRedige' + nbChoixJs.toString() +'"/>Oui</label>\
+			<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ', 0)" name="choixRedige' + nbChoixJs.toString() +'" checked="checked"/>Non</label>\
+        	</td>\
+			</tr>');
+	}
+
+	function insertHtmlChoice2(div){
+		div.insertAdjacentHTML('beforeend', '<tr class="formulaire">\
+			<td>\
+        	<p> Choisir un paragraphe conditionnel : </p>\
+        	<label><input type="radio" onclick="choixConditionnel(' + nbChoixJs.toString() +', 1);" name="choixConditionnel' + nbChoixJs.toString() +'"/>Oui</label>\
+			<label><input type="radio" onclick="choixConditionnel(' + nbChoixJs.toString() +', 0)" name="choixConditionnel' + nbChoixJs.toString() +'" checked="checked"/>Non</label>\
+        	</td>\
+			</tr>');
+	}
+
+	function insertCondition(div){
+		var exemple = document.getElementById("paragrapheCondition");
+		var paragCond = exemple.cloneNode(true);
+		paragCond.id = "paragrapheCondition" + nbChoixJs.toString();
+		paragCond.name = "paragrapheCondition" + nbChoixJs.toString();
+		div.appendChild(paragCond);
+	}
+
+	function insertRedige(div){
+		var exemple = document.getElementById("paragrapheRedige");
+		var paragCond = exemple.cloneNode(true);
+		paragCond.id = "paragrapheRedige" + nbChoixJs.toString();
+		paragCond.name = "paragrapheRedige" + nbChoixJs.toString();
+		div.appendChild(paragCond);
+	}
+	
     function changeChoice(){
     	var newNbChoice = document.getElementById("nbChoix").value;
     	var div = document.getElementById("choice");
         while (newNbChoice > nbChoixJs){
         	nbChoixJs++;
-        	div.insertAdjacentHTML('beforeend', '<tr class="formulaire"><td class="formulaire"><input type="text"  id="choix'+nbChoixJs.toString()+'" name="choix'+nbChoixJs.toString()+'" value="Choix numéro '+nbChoixJs.toString()+'" required/></td>\
-        	<td>\
-        	<p> Choisir un choix déjà rédigé : </p>\
-        	<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ', 1);" name="choixRedige' + nbChoixJs.toString() +'"/>Oui</label>\
-			<label><input type="radio" onclick="choixRedige(' + nbChoixJs.toString() + ', 0)" name="choixRedige' + nbChoixJs.toString() +'" checked="checked"/>Non</label>\
-        	</td>\
-        	</tr>');
+        	insertHtmlChoice(div);
+			insertRedige(div);
+			insertHtmlChoice2(div);
+			insertCondition(div);
         }
         var choix;
     	 while (newNbChoice < nbChoixJs){
     		choix = document.getElementById("choix" + nbChoixJs.toString());
-    		if(choix.disabled == true){
-    			nbChoixRedige--;
-    		}
     		nbChoixJs--;
- 	        div.deleteRow(nbChoixJs);
+			div.removeChild(div.lastChild);
+			div.removeChild(div.lastChild);
+			div.removeChild(div.lastChild);
+			div.removeChild(div.lastChild);
  	      } 
     }
     
-    function submitForm(){
+	function checkRequired(){
+    	if(document.getElementById("story").value == ""){
+    		return false;
+    	}
+    	else{
+			return true;
+		}
+    } 
+	
+	function submitForm(){
     	if(checkRequired()){
-    		if(checkChoice()){
-    			if(checkChoiceRedige()){
-    				document.getElementById("formCreate").submit();
+			if(document.getElementById("isConclusionId").checked){
+				document.getElementById("formCreate").submit();
+			} else{
+				if(checkChoice()){
+					if(document.getElementById("nbOldChoix").value > 0){
+						if(checkChoiceRedigeOld()){
+    						document.getElementById("formCreate").submit();
+    					}
+						else{
+							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensé à vérifier vos anciens choix vérifés !");
+						}
+					}else{
+						if(checkChoiceRedige()){
+    						document.getElementById("formCreate").submit();
+    					}
+						else{
+							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+						}
+					}
     			}
-    		}
-    		else{
-    			alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
-    		}
+    			else{
+    				alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
+    			}
+			}
     	}
     	else{
     		alert("Tous les champs doivent être remplis.");
     	} 
     }
-    
-    function checkRequired(){
-    	if(document.getElementById("titreParagraphe").value == ""){
-    		return false;
-    	}
-    	if(document.getElementById("story").value == ""){
-    		return false;
-    	}
-    	if(document.getElementById("nbChoix").value == ""){
-    		return false;
-    	}
-    	return true;
-    } 
     
     function checkChoice(){
     	var nbChoiceSupposed = document.getElementById("nbChoix").value;
@@ -116,42 +158,127 @@
     	}
     }
     
+	function setChoice(){
+		nbChoixJs = document.getElementById("nbChoix").value;
+	}
+
     function checkChoiceRedige(){
-    	if(document.getElementById("choixRemplis").disabled == false){
-    		var select = document.getElementById("choixRemplis");
-			var selected = 0;
-			for (var i=0;i < select.options.length;i++){
-				if(select[i].selected){
-					selected++;
+    	let listOfChoice = [];
+		let choice;
+		let value;
+		for (let i = 1; i <= nbChoixJs; i++) {
+			choice = document.getElementById('paragrapheRedige' + i.toString());
+			if(choice.disabled == false){
+				value = choice.value;
+				if(listOfChoice.includes(value)){
+					return false;
+				} else{
+					listOfChoice.push(value);
 				}
 			}
-			if(selected == nbChoixRedige){
-				return true;
+		}
+		return true;
+    }
+
+	function checkChoiceRedigeOld(){
+    	let listOfChoice = [];
+		let choice;
+		let value;
+		for (let i = 1; i <= nbChoixJs; i++) {
+			choice = document.getElementById('paragrapheRedige' + i.toString());
+			if(choice.disabled == false){
+				value = choice.value;
+				if(listOfChoice.includes(value)){
+					return false;
+				} else{
+					listOfChoice.push(value);
+				}
+			}
+		}
+		let buttonSupress;
+		let nbOldChoice = document.getElementById("nbOldChoix").value;
+		for (let j = 1; j <= nbOldChoice; j++) {
+			buttonSupress = document.getElementById("supressOldChoix" + j.toString());
+			if(buttonSupress.checked){
+				choice = document.getElementById('oldParagrapheRedige' + j.toString());
+				if(choice.disabled == false){
+					value = choice.value;
+					if(listOfChoice.includes(value)){
+						return false;
+					} else{
+						listOfChoice.push(value);
+					}
+				}
+			}
+				
+		}
+		return true;
+    }
+    function submitSave(){
+		if(document.getElementById("isConclusionId").checked){
+			var form = document.getElementById('formCreate');
+			form.action += "&save=true" ;
+			form.submit();
+		} else{
+			if(checkChoice()){
+				if(document.getElementById("nbOldChoix").value > 0){
+					if(checkChoiceRedigeOld()){
+						var form = document.getElementById('formCreate');
+						form.action += "&save=true" ;
+						form.submit();
+
+					}
+					else{
+						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensez à vérifier vos anciens choix vérifés !");
+					}
+				}else{
+					if(checkChoiceRedige()){
+						var form = document.getElementById('formCreate');
+						form.action += "&save=true" ;
+						form.submit();
+					}
+					else{
+						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+					}
+				}
 			}
 			else{
-    			alert("Nombre de choix rédigés à sélectionner : " + nbChoixRedige.toString() + ", nombre actuellement sélectionné : " + selected.toString());
-				return false;
+				alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
 			}
-    	}
-    	else{
-    	return true;
-    	}
+		}
     }
     
-    function resetChoixRedige(){
-    	nbChoixRedige = 0;
-    	var select = document.getElementById('choixRemplis');
-    	select.disabled = true;
-    	select.size = 1;
-		select.multiple = false;
+    function oldChoixRedige(numChoix, bool){
+		 var choix = document.getElementById("oldChoix" + numChoix.toString());
+		 var choixRedige = document.getElementById("oldParagrapheRedige" + numChoix.toString());
+		 if((bool == 1) && (choix.disabled == false)){
+		 	choix.disabled = true;
+			 choixRedige.disabled = false;
+		 }
+		 else if ((bool == 0) && (choix.disabled == true)){
+		 	choix.disabled = false;
+			choixRedige.disabled = true;
+		 }
     }
-    
-    function submitTexte(){
-    		var form = document.getElementById('formCreate');
-    		form.action += "&saveTexte=true" ;
-    		form.submit();
-    }
-    
-    
+	
+	function oldChoixConditionnel(numChoix, bool){
+		var choix = document.getElementById("oldParagrapheCondition" + numChoix.toString());
+		 if((bool == 0) && (choix.disabled == false)){
+		 	choix.disabled = true;
+		 }
+		 else if ((bool == 1) && (choix.disabled == true)){
+		 	choix.disabled = false;
+		 }
+	}
+
+	function lock(num, bool){
+		var tableChoix = document.getElementById("tableOldChoice" + num.toString());
+		if(bool){
+			tableChoix.style.display = 'none';
+		} else{
+			tableChoix.style.display = 'block';
+		}
+	}
+
     
     

@@ -87,3 +87,21 @@ a.bouton:hover{
 	position: absolute;
 	width: 100%;
 }
+
+#paragrapheCondition{
+	display:none;
+}
+
+#paragrapheRedige{
+	display:none;
+}
+
+select{
+	margin: 10px;
+}
+
+div.introChoix{
+	margin: 10px;
+	color: white;
+	padding: 2%;
+}

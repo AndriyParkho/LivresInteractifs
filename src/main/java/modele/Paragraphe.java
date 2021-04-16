@@ -10,18 +10,8 @@ public class Paragraphe {
 	private boolean valide;
 	private Integer nbChoix;
 	private ArrayList<Paragraphe> paragSuiv = new ArrayList<Paragraphe>();
+	private ArrayList<Integer> condParagSuiv = new ArrayList<Integer>();
 	private Integer idWritter;
-	private Integer conditionParag;
-	
-	public Paragraphe(int idHist, int numParag, String titre, String texte, Integer nbChoix, Integer conditionParag) {
-		super();
-		this.idHist = idHist;
-		this.numParag = numParag;
-		this.titre = titre;
-		this.texte = texte;
-		this.nbChoix = nbChoix;
-		this.conditionParag = conditionParag;
-	}
 	
 	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, Integer nbChoix, Integer idWritter) {
 		super();
@@ -34,18 +24,6 @@ public class Paragraphe {
 		this.idWritter = idWritter;
 	}
 	
-	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, Integer nbChoix, Integer idWritter, Integer conditionParag) {
-		super();
-		this.idHist = idHist;
-		this.numParag = numParag;
-		this.titre = titre;
-		this.texte = texte;
-		this.valide = valide;
-		this.nbChoix = nbChoix;
-		this.idWritter = idWritter;
-		this.conditionParag = conditionParag;
-	}
-	
 	public Paragraphe(int idHist, int numParag, String titre, String texte, Integer nbChoix) {
 		super();
 		this.idHist = idHist;
@@ -53,6 +31,14 @@ public class Paragraphe {
 		this.titre = titre;
 		this.texte = texte;
 		this.nbChoix = nbChoix;
+	}
+	
+	public Paragraphe(int idHist, int numParag, String titre, int valide) {
+		super();
+		this.idHist = idHist;
+		this.numParag = numParag;
+		this.titre = titre;
+		this.valide = (valide == 1);
 	}
 	
 	public Paragraphe(int idHist, int numParag, String titre, String texte) {
@@ -104,6 +90,13 @@ public class Paragraphe {
 
 	public void addParagSuiv(Paragraphe parag) {
 		this.paragSuiv.add(parag);
+		this.condParagSuiv.add(null);
+	}
+	
+	
+	public void addParagSuiv(Paragraphe parag, Integer conditionParag) {
+		this.paragSuiv.add(parag);
+		this.condParagSuiv.add(conditionParag);
 	}
 	
 	public Paragraphe findParag(int numParag) {
@@ -131,8 +124,8 @@ public class Paragraphe {
 		return null;
 	}
 	
-	public Integer getConditionParag() {
-		return conditionParag;
+	public ArrayList<Integer> getCondParagSuiv() {
+		return condParagSuiv;
 	}
 
 	@Override

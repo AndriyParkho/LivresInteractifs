@@ -36,6 +36,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                     new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
                 result.add(histoire);
             }
+            st.close();
+            conn.close();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
@@ -63,6 +65,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                     new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
                 result.add(histoire);
             }
+            st.close();
+            conn.close();
         } catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
@@ -79,6 +83,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                     numero_histoire = result_set.getInt(1);
                     
                 }
+                ps_numero_histoire.close();
+                c.close();
                 return new Histoire(numero_histoire, title, null, userId);
             }catch(SQLException e){
             	throw new DAOException("Erreur BD" + e.getMessage(), e);
@@ -118,7 +124,10 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 ps_ajoutInvitation.setInt(2, histoire.getIdAuteur());
                 ps_ajoutInvitation.executeUpdate();
             }
-            
+            ps_histoire.close();
+            ps_paragraphe.close();
+            ps_ajoutInvitation.close();
+            c.close();
         }catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
@@ -143,6 +152,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
     		if(rs.next()) {
     			hist = new Histoire(histId, rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
     		}
+    		story.close();
+    		c.close();
     	} catch (SQLException e) {
             throw new DAOException("Erreur BD " + e.getMessage(), e);
 		}
@@ -158,6 +169,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 int idHist = rs.getInt("idHist");
                 listStories.add(getHistoire(idHist));
             }
+            storiesToPublish.close();
+            c.close();
             return listStories;
         } catch (SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
@@ -169,6 +182,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             Connection c = dataSource.getConnection();
             PreparedStatement ps_publication = c.prepareStatement("UPDATE Histoire SET DatePubli = SYSDATE WHERE idHist = "+histoire.getId());
             ps_publication.executeUpdate();
+            ps_publication.close();
+            c.close();
         }catch(SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
         }
@@ -179,6 +194,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
             Connection c = dataSource.getConnection();
             PreparedStatement ps_publication = c.prepareStatement("UPDATE Histoire SET DatePubli = null WHERE idHist = "+histoire.getId());
             ps_publication.executeUpdate();
+            ps_publication.close();
+            c.close();
         }catch(SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
         }
@@ -191,7 +208,9 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 ps_newInvit.setInt(1, histoire.getId());
                 ps_newInvit.setInt(2, Integer.parseInt(auteur));
                 ps_newInvit.execute();
+                ps_newInvit.close();
             }
+            c.close();
         }catch(SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
         }
@@ -206,6 +225,8 @@ public class HistoireDAO extends AbstractDataBaseDAO {
                 int idHist = rs.getInt("idHist");
                 listStories.add(getHistoire(idHist));
             }
+            storiesToPublish.close();
+            c.close();
             return listStories;
         } catch (SQLException sqle){
             throw new DAOException("Erreur BD" + sqle.getMessage(), sqle);
