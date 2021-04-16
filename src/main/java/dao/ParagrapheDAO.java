@@ -342,13 +342,12 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	public void saveParagraph(Paragraphe parag, int valide) {
 		try (
 			     Connection conn = getConn();
-						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET valide=?, texte=?, nbChoix=? WHERE idHist=? and numParag=?");
+						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET valide=?, texte=? WHERE idHist=? and numParag=?");
 			     ) {
 					ps.setInt(1, valide);
 		            ps.setString(2, parag.getTexte());
-		            ps.setInt(3, parag.getNbChoix());
-		            ps.setInt(4, parag.getIdHist());
-		            ps.setInt(5, parag.getNumParag());
+		            ps.setInt(3, parag.getIdHist());
+		            ps.setInt(4, parag.getNumParag());
 		            ps.executeQuery();
 		            ps.close();
 		            conn.close();
@@ -615,6 +614,42 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}
 		return condition;
+	}
+	
+	public void setNbChoix(Paragraphe parag, int nbChoix) {
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET nbChoix=? WHERE idHist=? and numParag=?");
+			     ) {
+		            ps.setInt(1, nbChoix);
+		            ps.setInt(2, parag.getIdHist());
+		            ps.setInt(3, parag.getNumParag());
+		            ps.executeQuery();
+					ps.close();
+					conn.close();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+	}
+	
+	public int getNumChoix(Paragraphe parag) {
+		int nbChoix = 0;
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("SELECT nbChoix FROM paragraphe WHERE idHist=? and numParag=?");
+			     ) {
+		            ps.setInt(1, parag.getIdHist());
+		            ps.setInt(2, parag.getNumParag());
+		            ResultSet rs = ps.executeQuery();
+		            if(rs.next()) {
+		            	nbChoix = rs.getInt("nbChoix");
+		            }
+					ps.close();
+					conn.close();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+		return nbChoix;
 	}
 	
 }

@@ -71,9 +71,12 @@ public class WriteParagraph extends HttpServlet {
     			request.setAttribute("numParag", numParag);
     			
     			try {
+    				int numChoix = paragrapheDAO.getNumChoix(parag);
     				List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
     				List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
     				List<ParagrapheConditionnel> choixDejaFait = paragrapheDAO.getFollowingParag(parag);
+    				System.out.println(numChoix);
+    				request.setAttribute("nbChoix", numChoix);
     				request.setAttribute("paragrapheRedige", choixRedige);
     				request.setAttribute("paragrapheCondition", choixCondition);
     				request.setAttribute("ancienChoix", choixDejaFait);
@@ -117,7 +120,7 @@ public class WriteParagraph extends HttpServlet {
             	int nbChoix = Integer.parseInt(request.getParameter("nbChoix"));
             	Paragraphe paragActuel = null;
             	try {
-            		paragActuel = new Paragraphe(idHist, numParagActuel, titre, paragraphe, nbChoix);
+            		paragActuel = new Paragraphe(idHist, numParagActuel, titre, paragraphe);
             		if(request.getParameter("save") == null) {
             			paragDao.saveParagraph(paragActuel, 1);
             		}
@@ -131,13 +134,18 @@ public class WriteParagraph extends HttpServlet {
             	int oldChoixNum;
             	int numParagCondi;
             	int nbParagMax = 1;
+            	Paragraphe parag;
+            	Paragraphe paraCondition;
             	try {
-            		nbParagMax = paragDao.getMaxNbParag(idHist);
+                	List<Paragraphe> paragToDelete = paragDao.getParagToDelete(paragActuel);
+                	for(Paragraphe paraDelete : paragToDelete) {
+                		paragDao.delete(paraDelete);
+                	}
+                	paragDao.deleteLink(paragActuel);
+                	nbParagMax = paragDao.getMaxNbParag(idHist);
                 } catch (DAOException e) {
                 	erreurBD(request, response, e);
                 }
-            	Paragraphe parag;
-            	Paragraphe paraCondition;
             	for(int i = 1; i <= nbChoix; i++) {
             		newChoixTitle = request.getParameter("choix" + Integer.toString(i));
             		if((request.getParameter("paragrapheCondition" + Integer.toString(i))) != null) {
@@ -176,10 +184,70 @@ public class WriteParagraph extends HttpServlet {
                         }
             		}
             	}
+            	
+            	String choixTitle;
+            	int suppression;
+            	int nbOldChoice = Integer.parseInt(request.getParameter("nbOldChoix"));
+            	for(int i = 1; i <= nbOldChoice; i++) {
+        			//Pour chaque ancien choix
+        			suppression = Integer.parseInt(request.getParameter("supressOldChoix"+i));
+//        			Si on ne supprime pas le choix, on doit donc le rajouter en bdd
+        			if(suppression == 0) {
+        				nbChoix++;
+        				choixTitle = request.getParameter("oldChoix" + Integer.toString(i));
+                		if((request.getParameter("oldParagrapheCondition" + Integer.toString(i))) != null) {
+                			numParagCondi = Integer.parseInt(request.getParameter("oldParagrapheCondition" + Integer.toString(i)));
+                			paraCondition = new Paragraphe(idHist, numParagCondi);
+                		} else {
+                			paraCondition = null;
+                		}
+                		if(choixTitle != null) {
+                			nbParagMax++;
+                			parag = new Paragraphe(idHist, nbParagMax, choixTitle);
+                			try {
+                        		paragDao.setParagraphe(parag);
+                        		if(paraCondition == null) {
+                        			paragDao.setFollowing(paragActuel, parag);
+                        		}
+                        		else {
+                        			paragDao.setFollowing(paragActuel, parag, paraCondition);
+                        		}
+                            } catch (DAOException e) {
+                            	erreurBD(request, response, e);
+                            }
+                		}
+                		else {
+                			oldChoixNum = Integer.parseInt(request.getParameter("oldParagrapheRedige" + Integer.toString(i)));
+                			parag = new Paragraphe(idHist, oldChoixNum);
+                			try {
+                				if(paraCondition == null) {
+                        			paragDao.setFollowing(paragActuel, parag);
+                        		}
+                        		else {
+                        			paragDao.setFollowing(paragActuel, parag, paraCondition);
+                        		}
+                            } catch (DAOException e) {
+                            	erreurBD(request, response, e);
+                            }
+                		}
+        			}
+        		}
+            	
+            	try {
+            			paragDao.setNbChoix(paragActuel, nbChoix);
+                } catch (DAOException e) {
+                	erreurBD(request, response, e);
+                }
+            	
             }
             else {
+            	Paragraphe paragActuel = new Paragraphe(idHist, numParagActuel, titre, paragraphe, 0);
             	try {
-            		Paragraphe paragActuel = new Paragraphe(idHist, numParagActuel, titre, paragraphe, 0);
+            		List<Paragraphe> paragToDelete = paragDao.getParagToDelete(paragActuel);
+                	for(Paragraphe paraDelete : paragToDelete) {
+                		paragDao.delete(paraDelete);
+                	}
+                	paragDao.deleteLink(paragActuel);
             		if(request.getParameter("save") == null) {
             			paragDao.saveParagraph(paragActuel, 1);
             		}
@@ -208,60 +276,8 @@ public class WriteParagraph extends HttpServlet {
             }
     		Paragraphe choice;
     		Paragraphe paragActuel = new Paragraphe(idHist, numParagActuel);
-    		for(int i = 1; i <= nbOldChoice; i++) {
-    			//Pour chaque ancien choix
-    			suppression = Integer.parseInt(request.getParameter("supressOldChoix"+i));
-    			numParag = Integer.parseInt(request.getParameter("oldChoixNumParag"+i));
-    			//On reset la bdd liée à ce paragraphe
-    			try {
-                	List<Paragraphe> paragToDelete = paragDao.getParagToDelete(paragActuel);
-                	for(Paragraphe paraDelete : paragToDelete) {
-                		paragDao.delete(paraDelete);
-                	}
-                	paragDao.deleteLink(paragActuel);
-                } catch (DAOException e) {
-                	erreurBD(request, response, e);
-                }
-//    			Si on ne supprime pas le choix, on doit donc le rajouter en bdd
-    			if(suppression == 0) {
-    				choixTitle = request.getParameter("oldChoix" + Integer.toString(i));
-            		if((request.getParameter("oldParagrapheCondition" + Integer.toString(i))) != null) {
-            			numParagCondi = Integer.parseInt(request.getParameter("oldParagrapheCondition" + Integer.toString(i)));
-            			paraCondition = new Paragraphe(idHist, numParagCondi);
-            		} else {
-            			paraCondition = null;
-            		}
-            		if(choixTitle != null) {
-            			nbParagMax++;
-            			parag = new Paragraphe(idHist, nbParagMax, choixTitle);
-            			try {
-                    		paragDao.setParagraphe(parag);
-                    		if(paraCondition == null) {
-                    			paragDao.setFollowing(paragActuel, parag);
-                    		}
-                    		else {
-                    			paragDao.setFollowing(paragActuel, parag, paraCondition);
-                    		}
-                        } catch (DAOException e) {
-                        	erreurBD(request, response, e);
-                        }
-            		}
-            		else {
-            			oldChoixNum = Integer.parseInt(request.getParameter("oldParagrapheRedige" + Integer.toString(i)));
-            			parag = new Paragraphe(idHist, oldChoixNum);
-            			try {
-            				if(paraCondition == null) {
-                    			paragDao.setFollowing(paragActuel, parag);
-                    		}
-                    		else {
-                    			paragDao.setFollowing(paragActuel, parag, paraCondition);
-                    		}
-                        } catch (DAOException e) {
-                        	erreurBD(request, response, e);
-                        }
-            		}
-    			}
-    		}
+    		//On reset la bdd
+ 
     		response.sendRedirect("accueil");
     	}else {
             invalidParameters(request, response);

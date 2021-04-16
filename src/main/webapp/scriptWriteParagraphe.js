@@ -107,26 +107,30 @@
 	
 	function submitForm(){
     	if(checkRequired()){
-    		if(checkChoice()){
-				if(document.getElementById("nbOldChoix").value > 0){
-					if(checkChoiceRedigeOld()){
-    					document.getElementById("formCreate").submit();
-    				}
-					else{
-						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensé à vérifier vos anciens choix vérifés !");
+			if(document.getElementById("isConclusionId").checked){
+				document.getElementById("formCreate").submit();
+			} else{
+				if(checkChoice()){
+					if(document.getElementById("nbOldChoix").value > 0){
+						if(checkChoiceRedigeOld()){
+    						document.getElementById("formCreate").submit();
+    					}
+						else{
+							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensé à vérifier vos anciens choix vérifés !");
+						}
+					}else{
+						if(checkChoiceRedige()){
+    						document.getElementById("formCreate").submit();
+    					}
+						else{
+							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+						}
 					}
-				}else{
-					if(checkChoiceRedige()){
-    					document.getElementById("formCreate").submit();
-    				}
-					else{
-						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
-					}
-				}
-    		}
-    		else{
-    			alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
-    		}
+    			}
+    			else{
+    				alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
+    			}
+			}
     	}
     	else{
     		alert("Tous les champs doivent être remplis.");
@@ -194,58 +198,55 @@
 		let buttonSupress;
 		let nbOldChoice = document.getElementById("nbOldChoix").value;
 		for (let j = 1; j <= nbOldChoice; j++) {
-			choice = document.getElementById('oldParagrapheRedige' + j.toString());
-			if(choice.disabled == false){
-				value = choice.value;
-				if(listOfChoice.includes(value)){
-					return false;
-				} else{
-					listOfChoice.push(value);
+			buttonSupress = document.getElementById("supressOldChoix" + j.toString());
+			if(buttonSupress.checked){
+				choice = document.getElementById('oldParagrapheRedige' + j.toString());
+				if(choice.disabled == false){
+					value = choice.value;
+					if(listOfChoice.includes(value)){
+						return false;
+					} else{
+						listOfChoice.push(value);
+					}
 				}
-			}	
+			}
+				
 		}
 		return true;
     }
-    
     function submitSave(){
-		if(checkChoice()){
-			if(document.getElementById("nbOldChoix").value > 0){
-				if(checkChoiceRedigeOld()){
-					var form = document.getElementById('formCreate');
-    				form.action += "&save=true" ;
-    				form.submit();
+		if(document.getElementById("isConclusionId").checked){
+			var form = document.getElementById('formCreate');
+			form.action += "&save=true" ;
+			form.submit();
+		} else{
+			if(checkChoice()){
+				if(document.getElementById("nbOldChoix").value > 0){
+					if(checkChoiceRedigeOld()){
+						var form = document.getElementById('formCreate');
+						form.action += "&save=true" ;
+						form.submit();
 
-				}
-				else{
-					alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensez à vérifier vos anciens choix vérifés !");
-				}
-			}else{
-				if(checkChoiceRedige()){
-					var form = document.getElementById('formCreate');
-    				form.action += "&save=true" ;
-    				form.submit();
-				}
-				else{
-					alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+					}
+					else{
+						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensez à vérifier vos anciens choix vérifés !");
+					}
+				}else{
+					if(checkChoiceRedige()){
+						var form = document.getElementById('formCreate');
+						form.action += "&save=true" ;
+						form.submit();
+					}
+					else{
+						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+					}
 				}
 			}
-		}
-		else{
-			alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
+			else{
+				alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
+			}
 		}
     }
-	function changeDisplay(){
-	    	if(document.getElementById('formModify').style.display == 'none'){
-	    		document.getElementById('formModify').style.display = 'block';
-	    		document.getElementById('formCreate').style.display = 'none';
-	    		document.getElementById('changeBouton').value = "Retour au paragraphe";
-	    	}
-	    	else{
-	    		document.getElementById('formModify').style.display = 'none';
-	    		document.getElementById('formCreate').style.display = 'block';
-	    		document.getElementById('changeBouton').value = "Modifier les anciens choix";
-	    	}
-	    }
     
     function oldChoixRedige(numChoix, bool){
 		 var choix = document.getElementById("oldChoix" + numChoix.toString());
