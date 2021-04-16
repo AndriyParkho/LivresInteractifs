@@ -1,4 +1,4 @@
-	var nbChoixJs = 1;
+	var nbChoixJs;
 	
     function choixRedige(numChoix, bool){
 		 var choix = document.getElementById("choix" + numChoix.toString());
@@ -108,11 +108,20 @@
 	function submitForm(){
     	if(checkRequired()){
     		if(checkChoice()){
-    			if(checkChoiceCondition()){
-    				document.getElementById("formCreate").submit();
-    			}
-				else{
-					alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+				if(document.getElementById("nbOldChoix").value > 0){
+					if(checkChoiceRedigeOld()){
+    					document.getElementById("formCreate").submit();
+    				}
+					else{
+						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensé à vérifier vos anciens choix vérifés !");
+					}
+				}else{
+					if(checkChoiceRedige()){
+    					document.getElementById("formCreate").submit();
+    				}
+					else{
+						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+					}
 				}
     		}
     		else{
@@ -145,12 +154,16 @@
     	}
     }
     
-    function checkChoiceCondition(){
+	function setChoice(){
+		nbChoixJs = document.getElementById("nbChoix").value;
+	}
+
+    function checkChoiceRedige(){
     	let listOfChoice = [];
 		let choice;
 		let value;
 		for (let i = 1; i <= nbChoixJs; i++) {
-			choice = document.getElementById('paragrapheCondition' + i.toString());
+			choice = document.getElementById('paragrapheRedige' + i.toString());
 			if(choice.disabled == false){
 				value = choice.value;
 				if(listOfChoice.includes(value)){
@@ -162,13 +175,109 @@
 		}
 		return true;
     }
-    
-    function submitTexte(){
-    		var form = document.getElementById('formCreate');
-    		form.action += "&saveTexte=true" ;
-    		form.submit();
+
+	function checkChoiceRedigeOld(){
+    	let listOfChoice = [];
+		let choice;
+		let value;
+		for (let i = 1; i <= nbChoixJs; i++) {
+			choice = document.getElementById('paragrapheRedige' + i.toString());
+			if(choice.disabled == false){
+				value = choice.value;
+				if(listOfChoice.includes(value)){
+					return false;
+				} else{
+					listOfChoice.push(value);
+				}
+			}
+		}
+		let buttonSupress;
+		let nbOldChoice = document.getElementById("nbOldChoix").value;
+		for (let j = 1; j <= nbOldChoice; j++) {
+			choice = document.getElementById('oldParagrapheRedige' + j.toString());
+			if(choice.disabled == false){
+				value = choice.value;
+				if(listOfChoice.includes(value)){
+					return false;
+				} else{
+					listOfChoice.push(value);
+				}
+			}	
+		}
+		return true;
     }
     
+    function submitSave(){
+		if(checkChoice()){
+			if(document.getElementById("nbOldChoix").value > 0){
+				if(checkChoiceRedigeOld()){
+					var form = document.getElementById('formCreate');
+    				form.action += "&save=true" ;
+    				form.submit();
+
+				}
+				else{
+					alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensez à vérifier vos anciens choix vérifés !");
+				}
+			}else{
+				if(checkChoiceRedige()){
+					var form = document.getElementById('formCreate');
+    				form.action += "&save=true" ;
+    				form.submit();
+				}
+				else{
+					alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+				}
+			}
+		}
+		else{
+			alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
+		}
+    }
+	function changeDisplay(){
+	    	if(document.getElementById('formModify').style.display == 'none'){
+	    		document.getElementById('formModify').style.display = 'block';
+	    		document.getElementById('formCreate').style.display = 'none';
+	    		document.getElementById('changeBouton').value = "Retour au paragraphe";
+	    	}
+	    	else{
+	    		document.getElementById('formModify').style.display = 'none';
+	    		document.getElementById('formCreate').style.display = 'block';
+	    		document.getElementById('changeBouton').value = "Modifier les anciens choix";
+	    	}
+	    }
     
+    function oldChoixRedige(numChoix, bool){
+		 var choix = document.getElementById("oldChoix" + numChoix.toString());
+		 var choixRedige = document.getElementById("oldParagrapheRedige" + numChoix.toString());
+		 if((bool == 1) && (choix.disabled == false)){
+		 	choix.disabled = true;
+			 choixRedige.disabled = false;
+		 }
+		 else if ((bool == 0) && (choix.disabled == true)){
+		 	choix.disabled = false;
+			choixRedige.disabled = true;
+		 }
+    }
+	
+	function oldChoixConditionnel(numChoix, bool){
+		var choix = document.getElementById("oldParagrapheCondition" + numChoix.toString());
+		 if((bool == 0) && (choix.disabled == false)){
+		 	choix.disabled = true;
+		 }
+		 else if ((bool == 1) && (choix.disabled == true)){
+		 	choix.disabled = false;
+		 }
+	}
+
+	function lock(num, bool){
+		var tableChoix = document.getElementById("tableOldChoice" + num.toString());
+		if(bool){
+			tableChoix.style.display = 'none';
+		} else{
+			tableChoix.style.display = 'block';
+		}
+	}
+
     
     

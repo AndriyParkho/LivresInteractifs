@@ -33,6 +33,14 @@ public class Paragraphe {
 		this.nbChoix = nbChoix;
 	}
 	
+	public Paragraphe(int idHist, int numParag, String titre, int valide) {
+		super();
+		this.idHist = idHist;
+		this.numParag = numParag;
+		this.titre = titre;
+		this.valide = (valide == 1);
+	}
+	
 	public Paragraphe(int idHist, int numParag, String titre, String texte) {
 		super();
 		this.idHist = idHist;

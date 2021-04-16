@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import modele.HistoriqueModele;
 import modele.Pair;
 import modele.Paragraphe;
+import modele.ParagrapheConditionnel;
 
 public class ParagrapheDAO extends AbstractDataBaseDAO {
 	
@@ -268,15 +269,14 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		return historique;
 	}
 	
-	public void deleteWritter(int idHist, int numParag) {
+	public void resetParagWrite(Paragraphe parag) {
+		deleteLink(parag);
 		try (
 				Connection conn = getConn();
-			    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idWritter=NULL WHERE idHist=? and numParag=?");
 			) {
-				ps.setInt(1, idHist);
-				ps.setInt(2, numParag);
-			 	ps.executeQuery();
-			 	ps.close();
+				Statement st = conn.createStatement();
+				st.executeQuery("UPDATE paragraphe SET idWritter=NULL WHERE idHist=" + parag.getIdHist() +" AND numParag=" + parag.getNumParag());
+				
 			 	conn.close();
 		      }catch (SQLException e) {
 		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
@@ -287,7 +287,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		ArrayList<Paragraphe> paragrapheRedige = new ArrayList<Paragraphe>();
 		try (
 				Connection conn = getConn();
-			    PreparedStatement ps = conn.prepareStatement("SELECT numParag, titre, texte, nbChoix FROM paragraphe WHERE idHist = ?");
+			    PreparedStatement ps = conn.prepareStatement("SELECT numParag, titre, texte, nbChoix FROM paragraphe WHERE idHist = ? AND valide = 1");
 			) {
 				ps.setInt(1, histId);
 				ResultSet rs = ps.executeQuery();
@@ -339,15 +339,16 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		}
 	}
 	
-	public void valideParagraph(Paragraphe parag) {
+	public void saveParagraph(Paragraphe parag, int valide) {
 		try (
 			     Connection conn = getConn();
-						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET valide=1, texte=?, nbChoix=? WHERE idHist=? and numParag=?");
+						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET valide=?, texte=?, nbChoix=? WHERE idHist=? and numParag=?");
 			     ) {
-		            ps.setString(1, parag.getTexte());
-		            ps.setInt(2, parag.getNbChoix());
-		            ps.setInt(3, parag.getIdHist());
-		            ps.setInt(4, parag.getNumParag());
+					ps.setInt(1, valide);
+		            ps.setString(2, parag.getTexte());
+		            ps.setInt(3, parag.getNbChoix());
+		            ps.setInt(4, parag.getIdHist());
+		            ps.setInt(5, parag.getNumParag());
 		            ps.executeQuery();
 		            ps.close();
 		            conn.close();
@@ -372,14 +373,15 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				}
 	}
 	
-	public void setTexte(Paragraphe parag) {
+	public void setFollowing(Paragraphe parag1, Paragraphe parag2, Paragraphe parag3) {
 		try (
 			     Connection conn = getConn();
-						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET texte=? WHERE idHist=? and numParag=?");
+						PreparedStatement ps = conn.prepareStatement("INSERT INTO isFollowing (idHistParag, numParagPere, numParagFils, conditionParag) VALUES (?, ?, ?, ?)");
 			     ) {
-					ps.setString(1, parag.getTexte());
-		            ps.setInt(2, parag.getIdHist());
-		            ps.setInt(3, parag.getNumParag());
+					ps.setInt(1, parag1.getIdHist());
+		            ps.setInt(2, parag1.getNumParag());
+		            ps.setInt(3, parag2.getNumParag());
+		            ps.setInt(4, parag3.getNumParag());
 		            ps.executeQuery();
 		            ps.close();
 		            conn.close();
@@ -488,19 +490,131 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
     	}
 	}
 	
-	public void setCondition(Paragraphe parag, Paragraphe paraCondition) {
+	public ArrayList<Paragraphe> getParagToDelete(Paragraphe parag){
+		ArrayList<Paragraphe> paragToDelete = new ArrayList<Paragraphe>();
 		try (
 			     Connection conn = getConn();
-						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET conditionparag=? WHERE idHist=? and numParag=?");
+						PreparedStatement ps = conn.prepareStatement("SELECT numParag FROM paragraphe JOIN isFollowing ON paragraphe.numParag=isFollowing.numParagFils WHERE paragraphe.valide=0 AND isFollowing.numParagPere = ? AND paragraphe.idHist = ?");
 			     ) {
-					ps.setInt(1, paraCondition.getNumParag());
+		            ps.setInt(1, parag.getNumParag());
 		            ps.setInt(2, parag.getIdHist());
-		            ps.setInt(3, parag.getNumParag());
+		            ResultSet rs = ps.executeQuery();
+		            int numParag;
+		            Paragraphe paraDelete = null;
+					while(rs.next()) {
+						numParag = rs.getInt("numParag");
+						paraDelete = new Paragraphe(parag.getIdHist(), numParag);
+						paragToDelete.add(paraDelete);
+					}
+					ps.close();
+					conn.close();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+		return paragToDelete;
+		
+	}
+	
+	public void delete(Paragraphe parag) {
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("DELETE FROM paragraphe WHERE idHist = ? AND numParag = ? ");
+			     ) {
+		            ps.setInt(1, parag.getIdHist());
+		            ps.setInt(2, parag.getNumParag());
 		            ps.executeQuery();
-		            ps.close();
+					ps.close();
+					conn.close();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+	}
+	
+	public ArrayList<ParagrapheConditionnel> getFollowingParag(Paragraphe parag){
+		ArrayList<ParagrapheConditionnel> paragFollowing = new ArrayList<ParagrapheConditionnel>();
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("SELECT numParag, texte, titre, valide FROM paragraphe JOIN isFollowing ON (paragraphe.numParag=isFollowing.numParagFils AND paragraphe.idHist = isFollowing.idHistParag) WHERE isFollowing.numParagPere = ? AND paragraphe.idHist = ?");
+			     ) {
+		            ps.setInt(1, parag.getNumParag());
+		            ps.setInt(2, parag.getIdHist());
+		            ResultSet rs = ps.executeQuery();
+		            int numParag;
+		            String texte; 
+		            String titre; 
+		            int valide;
+		            ParagrapheConditionnel paraFollow = null;
+		            Paragraphe condition;
+					while(rs.next()) {
+						numParag = rs.getInt("numParag");
+						texte = rs.getString("texte");
+						titre = rs.getString("titre");
+						valide = rs.getInt("valide");
+						condition = getCondition(parag.getIdHist(), parag.getNumParag(), numParag);
+						if(condition != null) {
+							paraFollow = new ParagrapheConditionnel(parag.getIdHist(), numParag, titre, valide, condition);
+						}else {
+							paraFollow = new ParagrapheConditionnel(parag.getIdHist(), numParag, titre, valide);
+						}
+						paragFollowing.add(paraFollow);
+					}
+					ps.close();
+					conn.close();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+		return paragFollowing;
+		
+	}
+	
+	public void deleteChoice(Paragraphe para, Paragraphe paragPere) {
+		try (
+			     Connection conn = getConn();
+			     ) {
+					Statement st = conn.createStatement();
+					st.executeQuery("DELETE FROM paragraphe WHERE idHist = " + para.getIdHist() + " AND numParag = " + para.getNumParag() + " AND valide=0");
+		            Statement s = conn.createStatement();
+					s.executeQuery("DELETE FROM isFollowing WHERE idHistParag = " + para.getIdHist() + " AND numParagFils = " + para.getNumParag() + " AND numParagPere = " + paragPere.getNumParag());
 		            conn.close();
 		        } catch (SQLException e) {
 		            throw new DAOException("Erreur BD " + e.getMessage(), e);
 				}
 	}
+	
+	public void deleteLink(Paragraphe parag) {
+		try (
+				Connection conn = getConn();
+			) {
+				Statement s = conn.createStatement();
+				s.executeQuery("DELETE FROM isFollowing WHERE idHistParag = " + parag.getIdHist() + "AND numParagPere=" + parag.getNumParag());
+			 	conn.close();
+		      }catch (SQLException e) {
+		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+		      }
+	}
+	
+	public Paragraphe getCondition(int idHist, int numParag, int numParagFils) {
+		Paragraphe condition;
+		try (
+			     Connection conn = getConn();
+						PreparedStatement ps = conn.prepareStatement("SELECT conditionParag FROM isFollowing WHERE idHistParag = ? AND numParagPere = ? AND numParagFils = ?");
+			     ) {
+		            ps.setInt(1, idHist);
+		            ps.setInt(2, numParag);
+		            ps.setInt(3, numParagFils);
+		            ResultSet rs = ps.executeQuery();
+		            if(rs.next() && (rs.getInt("conditionParag") != 0)) {
+		            	condition = new Paragraphe(idHist, rs.getInt("conditionParag"));
+		            }
+		            else {
+		            	condition = null;
+		            }
+					ps.close();
+					conn.close();
+		        } catch (SQLException e) {
+		            throw new DAOException("Erreur BD " + e.getMessage(), e);
+				}
+		return condition;
+	}
+	
 }

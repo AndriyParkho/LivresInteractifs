@@ -100,3 +100,8 @@ select{
 	margin: 10px;
 }
 
+div.introChoix{
+	margin: 10px;
+	color: white;
+	padding: 2%;
+}
