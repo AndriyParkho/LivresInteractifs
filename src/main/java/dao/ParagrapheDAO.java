@@ -450,4 +450,33 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
     		throw new DAOException("Erreur BD " + e.getMessage(), e);
     	}
 	}
+        
+        public boolean suppressionParagraphe(Paragraphe paragraphe){
+            try(Connection c = getConn()){
+                PreparedStatement ps_paraASupp = c.prepareStatement("SELECT P.idHist,P.numParag FROM Paragraphe P WHERE P.idHist = ? AND P.numParag = ? AND (SELECT COUNT(*) FROM Paragraphe P JOIN isFollowing isF ON P.idHist = isF.idHistParag WHERE P.idHist = ? AND isF.NumParagPere = ? AND P.idWritter is NOT NULL)=0");
+                ps_paraASupp.setInt(1, paragraphe.getIdHist());
+                ps_paraASupp.setInt(2, paragraphe.getNumParag());
+                ps_paraASupp.setInt(3, paragraphe.getIdHist());
+                ps_paraASupp.setInt(4, paragraphe.getNumParag());
+                ResultSet rs = ps_paraASupp.executeQuery();
+                System.out.println(rs);
+                if(!rs.next()){
+                    System.out.println("On ne peut pas supprimer ce paragraphe");
+                    return false;
+                }
+                else{
+                    PreparedStatement ps_supp = c.prepareStatement("DELETE FROM Paragraphe P WHERE P.idHist = ? AND P.numParag = ? AND (SELECT COUNT(*) FROM Paragraphe P JOIN isFollowing isF ON P.idHist = isF.idHistParag WHERE P.idHist = ? AND isF.NumParagPere = ? AND P.idWritter is NOT NULL)=0");
+                    ps_supp.setInt(1, paragraphe.getIdHist());
+                    ps_supp.setInt(2, paragraphe.getNumParag());
+                    ps_supp.setInt(3, paragraphe.getIdHist());
+                    ps_supp.setInt(4, paragraphe.getNumParag());
+                    ps_supp.execute();
+                    System.out.println("Paragraphe supprimé");
+                    return true;
+                }
+                
+            }catch(SQLException sqle){
+            throw new DAOException("Erreur BD " + sqle.getMessage(), sqle);
+        }
+    }
 }

@@ -12,6 +12,12 @@ import javax.sql.DataSource;
 
 import dao.DAOException;
 import dao.HistoireDAO;
+import dao.ParagrapheDAO;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpSession;
+import modele.Histoire;
+import modele.Paragraphe;
 
 /**
  * Servlet implementation class ParagraphesEcrit
@@ -21,6 +27,19 @@ public class ParagraphesEcrit extends HttpServlet {
 
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
+    
+    private void actionAfficher(HttpServletRequest request, 
+            HttpServletResponse response, 
+            HistoireDAO histoireDAO) throws ServletException, IOException {
+    	
+    	
+        List<Histoire> histoires = histoireDAO.getListeHistoiresPublie();
+        
+        request.setAttribute("histoires", histoires);
+        
+        request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
+    }
+    
 
     /* pages d’erreurs */
     private void invalidParameters(HttpServletRequest request,
@@ -44,7 +63,7 @@ public class ParagraphesEcrit extends HttpServlet {
         	buttonModifier(request, response);
         } else if(button.equals("supprimer")) {
         	buttonSupprimer(request, response);
-        }
+            }
 	}
 	
 	private void buttonModifier(HttpServletRequest request, 
@@ -54,7 +73,14 @@ public class ParagraphesEcrit extends HttpServlet {
 	
 	private void buttonSupprimer(HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
-		// TODO
-	}
+                ParagrapheDAO paragrapheDao = new ParagrapheDAO(ds);
+                HistoireDAO histoireDao = new HistoireDAO(ds);
+                Paragraphe paragrapheASupprimer = paragrapheDao.getParagraphe(Integer.parseInt(request.getParameter("idhist")), Integer.parseInt(request.getParameter("numparag")));
+                if(!paragrapheDao.suppressionParagraphe(paragrapheASupprimer)){
+                    
+                }
+                
+                actionAfficher(request, response, histoireDao);
+        }
 
 }

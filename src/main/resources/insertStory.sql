@@ -295,4 +295,10 @@ INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(10, 1, 2);
 INSERT INTO isInvited(idHist, idUtil) VALUES(10, 1);
 
+--Paragraphe à supprimer
+INSERT INTO Histoire ( titre, idauteur, datePubli, prive) VALUES
+	('Une histoire à supprimer', 1, NULL, 0);
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (1, 'Premier paragrapahe, a supprimer', 'Je vais être supprimé',  0, 1, 11, 1);
+
 
