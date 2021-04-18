@@ -75,7 +75,6 @@ public class WriteParagraph extends HttpServlet {
     				List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
     				List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
     				List<ParagrapheConditionnel> choixDejaFait = paragrapheDAO.getFollowingParag(parag);
-    				System.out.println(numChoix);
     				request.setAttribute("nbChoix", numChoix);
     				request.setAttribute("paragrapheRedige", choixRedige);
     				request.setAttribute("paragrapheCondition", choixCondition);

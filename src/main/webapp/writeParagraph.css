@@ -63,29 +63,8 @@ a.bouton{
 	text-align: center;
 }
 
-a.bouton:hover{
-	cursor:pointer;
-}
-
 #choixRemplis{
 	margin: 1%;
-}
-
-#boutonErase{
-	position: absolute;
-	right: 20%;
-	top: 0%;
-}
-
-#boutonSave{
-	position: absolute;
-	left: 20%;
-	top: 0%;
-}
-
-#boutonDiv{
-	position: absolute;
-	width: 100%;
 }
 
 #paragrapheCondition{
@@ -104,4 +83,14 @@ div.introChoix{
 	margin: 10px;
 	color: white;
 	padding: 2%;
+}
+
+#blocDesChoix{
+	justify-content: space-around;
+	display: flex;
+}
+
+#divBouton{
+	justify-content: space-evenly;
+	display: flex;
 }

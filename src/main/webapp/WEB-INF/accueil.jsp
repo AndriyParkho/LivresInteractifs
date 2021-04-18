@@ -230,8 +230,10 @@
         <c:if test="${empty histoiresDepubliables}">
         <div class="emptyStory">
         <h2>Vous n'avez pas d'histoire à dépublier</h2>
+        <div id="boutonBlock">
         <a href="accueil?action=bouton&bouton=histoireAPublier">Histoires à publier</a>
         <a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a>
+        </div>
         </div>
         </c:if>
 	 </c:if>

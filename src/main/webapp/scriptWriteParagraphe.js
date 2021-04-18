@@ -113,7 +113,11 @@
 				if(checkChoice()){
 					if(document.getElementById("nbOldChoix").value > 0){
 						if(checkChoiceRedigeOld()){
-    						document.getElementById("formCreate").submit();
+							if(checkSupress()){
+								document.getElementById("formCreate").submit();
+							} else{
+								alert("En prenant en compte vos suppression, vous n'avez plus de choix. Mettez un choix valide ou passez votre paragraphe en conclusion.");
+							}
     					}
 						else{
 							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensé à vérifier vos anciens choix vérifés !");
@@ -223,10 +227,13 @@
 			if(checkChoice()){
 				if(document.getElementById("nbOldChoix").value > 0){
 					if(checkChoiceRedigeOld()){
-						var form = document.getElementById('formCreate');
-						form.action += "&save=true" ;
-						form.submit();
-
+						if(checkSupress()){
+							var form = document.getElementById('formCreate');
+							form.action += "&save=true" ;
+							form.submit();
+						} else{
+							alert("En prenant en compte vos suppression, vous n'avez plus de choix. Mettez un choix valide ou passez votre paragraphe en conclusion.");
+						}
 					}
 					else{
 						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensez à vérifier vos anciens choix vérifés !");
@@ -280,5 +287,24 @@
 		}
 	}
 
-    
-    
+    function checkSupress(){
+		if(!(document.getElementById("isConclusionId").checked)){
+			var nbChoice = document.getElementById("nbChoix").value;
+			if(nbChoice == 0){
+				let nbOldChoice = document.getElementById("nbOldChoix").value;
+				for (let j = 1; j <= nbOldChoice; j++) {
+					buttonSupress = document.getElementById("supressOldChoix" + j.toString());
+					if(buttonSupress.checked){
+						return true;
+					}
+				}
+				return false;
+			} 
+			else {
+				return true;
+			}
+		}
+		else {
+			return true;
+		}
+	}
