@@ -36,8 +36,9 @@
 			  
 			  </c:if>
 			  
-			  <div id="listeDesChoix">
-			  <c:if test="${not empty ancienChoix}"><p>Nombre de nouveaux choix :</p></c:if>
+				<div id="listeDesChoix">
+				
+				<c:if test="${not empty ancienChoix}"><p>Nombre de nouveaux choix :</p></c:if>
 			  <c:if test="${empty ancienChoix}"><p>Nombre de choix :</p></c:if>
               <br>
               <input type="number" id="nbChoix" name="nbChoix" <c:if test="${not empty ancienChoix}">value="0" min="0"</c:if> <c:if test="${empty ancienChoix}">value="1" min="1"</c:if> max="100" required>
@@ -147,17 +148,20 @@
 			  </table>
 	   				 
 	   		</div>
+				</div>
+			  
 	   		<div id="divBouton">
 	   		<input type="button" value="Valider le paragraphe" onclick="submitForm();">
 	   		<input type="number" id="nbOldChoix" name="nbOldChoix" value="${compteurChoix}" style="display: none">
 			 <input class="button"
                onclick="submitSave();"
                value="Sauvegarder la rédaction du paragraphe"
-               type="submit" />
+               type="button" />
+               <a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}">Annuler la rédaction du paragraphe</a>
 			 <input class="button"
                onclick="location.href=write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}';return false;"
                value="Annuler la rédaction du paragraphe"
-               type="submit" />
+               type="button" />
                </div>
 			 </form> 
 		<c:if test="${nbChoix == 0}">

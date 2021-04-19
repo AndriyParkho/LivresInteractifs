@@ -85,10 +85,10 @@ div.introChoix{
 	padding: 2%;
 }
 
-#blocDesChoix{
+/* #blocDesChoix{
 	justify-content: space-around;
 	display: flex;
-}
+} */
 
 #divBouton{
 	justify-content: space-evenly;
