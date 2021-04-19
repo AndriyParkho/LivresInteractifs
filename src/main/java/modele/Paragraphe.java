@@ -1,6 +1,7 @@
 package modele;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Paragraphe {
 	private int idHist;
@@ -99,14 +100,16 @@ public class Paragraphe {
 		this.condParagSuiv.add(conditionParag);
 	}
 	
-	public Paragraphe findParag(int numParag) {
+	public Paragraphe findParag(int numParag, HashMap<Integer, Paragraphe> dicoParag) {
 		if(this.getNumParag() == numParag) return this;
+		else if(dicoParag.get(this.getNumParag()) != null) return null;
 		else if(this.getParagSuiv().size() == 0) return null;
 		else {
+			dicoParag.put(this.getNumParag(), this);
 			Paragraphe result = null;
 			Paragraphe temp = null;
 			for(Paragraphe parag: this.getParagSuiv()) {
-				temp = parag.findParag(numParag);
+				temp = parag.findParag(numParag, dicoParag);
 				if(temp != null) {
 					result = temp;
 				}
