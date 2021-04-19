@@ -22,7 +22,7 @@ CREATE TABLE Paragraphe (
        titre varchar2(1000),
        texte varchar2(4000),
        valide NUMBER(1,0) DEFAULT 0,
-       nbChoix integer,
+       nbChoix integer DEFAULT 0,
        idWritter integer REFERENCES Utilisateur(idUtil),
        constraint pkParag PRIMARY KEY (numParag, idHist)
 );

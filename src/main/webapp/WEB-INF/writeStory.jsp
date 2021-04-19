@@ -20,12 +20,13 @@
      </c:if>
      <c:if test="${user != null}">
      	<ul class='menu'>
-	      <li class='menu'><a href="accueil" <c:if test="${empty param.bouton}"> class="active" </c:if>>Histoire à lire</a></li>
-		  <li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" <c:if test="${param.bouton == 'storyToWrite'}"> class="active" </c:if>>Histoire à écrire</a></li>
-		  <li class='menu'><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}"> class="active" </c:if>>Créer une histoire</a></li>
-		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireAPublier" <c:if test="${param.bouton == 'histoireAPublier'}"> class="active" </c:if>>Histoires à publier</a></li>
-		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireDepubliable" <c:if test="${param.bouton == 'histoireDepubliable'}"> class="active" </c:if>>Histoires dépubliables</a></li>
-		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" <c:if test="${param.bouton == 'historique'}"> class="active" </c:if>>Historique</a></li>
+	      <li class='menu'><a href="accueil">Histoire à lire</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" class="active" >Histoire à écrire</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=createStory" >Créer une histoire</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=paragEcrit" >Paragraphes rédigé</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireAPublier" >Histoires à publier</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=histoireDepubliable" >Histoires dépubliables</a></li>
+		  <li class='menu'><a href="accueil?action=bouton&bouton=historique" >Historique</a></li>
                   <li style="float:right" class='menu'><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
      </c:if>
@@ -53,7 +54,7 @@
 	<c:if test="${choixParagVerouille.size() gt 0}">
 		<h1>Choix en cours de rédaction :</h1>
 		<c:forEach items="${choixParagVerouille}" var="choix">
-	    	<div class="choixSuite">${choix.titre}</div>
+	    	<div class="choixEnRedaction">${choix.titre}</div>
 	    	<br>
 		</c:forEach>
 	</c:if>

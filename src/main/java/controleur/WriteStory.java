@@ -2,6 +2,7 @@ package controleur;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -73,7 +74,8 @@ public class WriteStory extends HttpServlet {
         		firstParag = currentParag;
         	}
         	else if(currentParag.getNumParag() != numParagPere) {
-        		currentParag = firstParag.findParag(numParagPere).getParagSuiv().get(numChoix);
+        		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+        		currentParag = firstParag.findParag(numParagPere, dicoParag).getParagSuiv().get(numChoix);
         	}
         	else {
         		currentParag = currentParag.getParagSuiv().get(numChoix);

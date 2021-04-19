@@ -24,16 +24,11 @@
             <br>
             <br>
 		     Nom du paragraphe :<input type="text" name="title" id="titreParagraphe"  value="${titreParag}" disabled/><br>
-			 Paragraphe :<TEXTAREA name="story" id="story" rows=4 cols=80 required><c:if test="${not empty texte}"> ${texte} </c:if></TEXTAREA><br>
-             <c:if test="${numChoix == 0}">
+			 Paragraphe :<TEXTAREA name="story" id="story" rows=4 cols=80><c:if test="${not empty texte}"> ${texte} </c:if></TEXTAREA><br>
+             <c:if test="${nbChoix == 0}">
              <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" id="isConclusionId" value='1' checked="checked"/>Oui</label>
 			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion"  value='0'/>Non</label> <br>
 			  
-			  	<script>
-					window.onload=function() {
-					hideChoice();
-				}
-			</script>
 			  </c:if>
 			  <c:if test="${nbChoix != 0}">
              <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" id="isConclusionId" value='1' />Oui</label>
@@ -41,8 +36,11 @@
 			  
 			  </c:if>
 			  
-			  <div id="listeDesChoix">
-              <p>Nombre de choix :</p><br>
+				<div id="listeDesChoix">
+				
+				<c:if test="${not empty ancienChoix}"><p>Nombre de nouveaux choix :</p></c:if>
+			  <c:if test="${empty ancienChoix}"><p>Nombre de choix :</p></c:if>
+              <br>
               <input type="number" id="nbChoix" name="nbChoix" <c:if test="${not empty ancienChoix}">value="0" min="0"</c:if> <c:if test="${empty ancienChoix}">value="1" min="1"</c:if> max="100" required>
               
               <input type="button" value="Afficher les choix" onclick="changeChoice();">
@@ -54,7 +52,10 @@
 				}
 			</script>
 			</c:if>
-			  <table id="choice" class="formulaire">
+			
+			<div id = "blocDesChoix">
+			
+			<table id="choice" class="formulaire">
 			  <c:if test="${empty ancienChoix}">
 			  <tr><th>Choix 1</th></tr>
 			  <tr class="formulaire">
@@ -92,11 +93,8 @@
 	   				 </td></tr>
 	   				 </c:if>
 			  </table>
-			 <input type="button" value="Valider le paragraphe" onclick="submitForm();">
-			 
-			 
-			 
-			 
+			
+			 <div id="divAncienChoix">
 			 <c:set var="compteurChoix" value="0" scope="page" />
 			<c:forEach items="${ancienChoix}" var="oldChoice">
 			<c:set var="compteurChoix" value="${compteurChoix + 1}" scope="page"/>
@@ -148,15 +146,32 @@
 	   				 </table>
 	   				 </c:forEach>
 	   				 </div>
+	   				 
+	   		</div>
+				</div>
+			  
+	   		<div id="divBouton">
+	   		<input type="button" value="Valider le paragraphe" onclick="submitForm();">
 	   		<input type="number" id="nbOldChoix" name="nbOldChoix" value="${compteurChoix}" style="display: none">
+			 <input class="button"
+               onclick="submitSave();"
+               value="Sauvegarder la rédaction du paragraphe"
+               type="button" />
+               <a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}">Annuler la rédaction du paragraphe</a>
+			 <input class="button"
+               onclick="location.href=write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}';return false;"
+               value="Annuler la rédaction du paragraphe"
+               type="button" />
+               </div>
 			 </form> 
-			 
-			 
-		<div id="boutonDiv">
-		<a onclick="submitSave();" class="bouton" id="bouton">Sauvegarder la rédaction du paragraphe</a>
-		<a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}" class="bouton" id="boutonErase">Annuler la rédaction du paragraphe</a>
-		</div>
-		
+		<c:if test="${nbChoix == 0}">
+		<script type="text/javascript">
+		window.onload=function() {
+			hideChoice();
+		}
+		</script>
+
+		</c:if>
 		
 			
 	   		

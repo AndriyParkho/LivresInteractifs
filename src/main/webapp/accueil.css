@@ -192,7 +192,10 @@ p.histoirePubli{
 	padding:2%;
 }
 
-
+#boutonBlock{
+	justify-content: space-evenly;
+	display: flex;
+}
 
 
 

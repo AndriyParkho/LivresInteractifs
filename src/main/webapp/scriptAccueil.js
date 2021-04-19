@@ -20,7 +20,7 @@
     }
     
     function eraseSelect(){
-            document.getElementById('listAuthors').selectedIndex = -1;
+            document.getElementById('auteurs').selectedIndex = -1;
     }
     
     var nbChoixJs = 1;
