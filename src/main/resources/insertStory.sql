@@ -299,6 +299,16 @@ INSERT INTO isInvited(idHist, idUtil) VALUES(10, 1);
 INSERT INTO Histoire ( titre, idauteur, datePubli, prive) VALUES
 	('Une histoire à supprimer', 1, NULL, 0);
 INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
-        (1, 'Premier paragrapahe, a supprimer', 'Je vais être supprimé',  0, 1, 11, 1);
+        (1, 'Premier paragraphe, a supprimer', 'Je vais être supprimé',  2, 1, 11, 1);
+
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (2, 'Deuxieme paragraphe, choix 1, a supprimer', 'Je vais être supprimé',  0, NULL, 11, 0);
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (3, 'Deuxieme paragraphe choix 2, a supprimer', 'Je vais être supprimé',  0, NULL, 11, 0);
 
 
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(11, 1, 2);
+
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(11, 1, 3);

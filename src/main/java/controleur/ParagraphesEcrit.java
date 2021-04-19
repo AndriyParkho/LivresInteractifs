@@ -77,9 +77,9 @@ public class ParagraphesEcrit extends HttpServlet {
                 HistoireDAO histoireDao = new HistoireDAO(ds);
                 Paragraphe paragrapheASupprimer = paragrapheDao.getParagraphe(Integer.parseInt(request.getParameter("idhist")), Integer.parseInt(request.getParameter("numparag")));
                 if(!paragrapheDao.suppressionParagraphe(paragrapheASupprimer)){
-                    
+                    request.setAttribute("suppression", false);
                 }
-                
+                request.setAttribute("suppression", true);
                 actionAfficher(request, response, histoireDao);
         }
 

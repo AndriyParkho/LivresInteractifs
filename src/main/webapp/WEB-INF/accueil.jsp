@@ -235,7 +235,14 @@
         </div>
         </c:if>
 	 </c:if>
-                        
-     
+         
+                                        
+        <c:if test="${param.bouton == 'supprimer'}$">
+            <c:if test="${not suppression}$">
+                <script>window.onload=function() {
+                    window.alert("Ce paragraphe ne peut pas être supprimé : quelqu'un écrit sur l'un des fils");
+		};</script>
+            </c:if>
+        </c:if>
   </body>
 </html>
