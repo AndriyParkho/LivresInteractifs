@@ -81,7 +81,7 @@
         		 <td>
         		  <p> Choisir un paragraphe conditionnel : </p>
         		  <label><input type="radio" onclick="choixConditionnel(1, 1);" name="choixConditionnel1"/>Oui</label>
-				  <label><input type="radio" onclick="choixConditionnel(1, 0)" name="choixConditionnel1" checked="checked"/>Non</label>
+				  <label><input type="radio" onclick="choixConditionnel(1, 0)" name="choixConditionnel1" checked="checked" id="isNotConditionnal1"/>Non</label>
         		 </td>
         		 </tr>
         	<tr><td>
@@ -132,8 +132,8 @@
         	</tr><tr>
         		 <td>
         		  <p> Choisir un paragraphe conditionnel : </p>
-        		  <label><input type="radio" onclick="oldChoixConditionnel(${compteurChoix}, 1);" name="oldChoixConditionnel${compteurChoix}" id="oldChoixConditionnel${compteurChoix}" value='1' <c:if test="${not empty oldChoice.condition}">checked="checked"</c:if>/>Oui</label>
-				  <label><input type="radio" onclick="oldChoixConditionnel(${compteurChoix}, 0)" name="oldChoixConditionnel${compteurChoix}" id="oldChoixConditionnel${compteurChoix}" value='0' <c:if test="${empty oldChoice.condition}">checked="checked"</c:if>/>Non</label>
+        		  <label><input type="radio" onclick="oldChoixConditionnel(${compteurChoix}, 1);" name="oldChoixConditionnel${compteurChoix}" value='1' <c:if test="${not empty oldChoice.condition}">checked="checked"</c:if>/>Oui</label>
+				  <label><input type="radio" onclick="oldChoixConditionnel(${compteurChoix}, 0)" name="oldChoixConditionnel${compteurChoix}" id="oldIsNotConditionnal${compteurChoix}" value='0' <c:if test="${empty oldChoice.condition}">checked="checked"</c:if>/>Non</label>
         		 </td>
         		 </tr>
         	<tr><td>
@@ -158,10 +158,6 @@
                value="Sauvegarder la rédaction du paragraphe"
                type="button" />
                <a href="write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}">Annuler la rédaction du paragraphe</a>
-			 <input class="button"
-               onclick="location.href=write_paragraph?action=erase&idHist=${idHist}&numParag=${numParag}';return false;"
-               value="Annuler la rédaction du paragraphe"
-               type="button" />
                </div>
 			 </form> 
 		<c:if test="${nbChoix == 0}">

@@ -260,27 +260,23 @@ public class WriteParagraph extends HttpServlet {
                 }
             }
             response.sendRedirect("accueil");
-    	}else if(action.equals("modify")) {
-    		int nbOldChoice = Integer.parseInt(request.getParameter("nbOldChoix"));
-    		int suppression;
-    		int numParag;
-    		int nbParagMax = 1;
-    		int numParagCondi;
-    		int oldChoixNum;
-    		Paragraphe paraCondition;
-    		String choixTitle;
-    		Paragraphe parag;
-        	try {
-        		nbParagMax = paragDao.getMaxNbParag(idHist);
+    	} else if(action.equals("erase")) {
+    		System.out.println("eeeeee");
+        	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
+        	Paragraphe parag = new Paragraphe(idHist, numParagActuel);
+            try {
+            	List<Paragraphe> paragToDelete = paragrapheDAO.getParagToDelete(parag);
+            	for(Paragraphe paraDelete : paragToDelete) {
+            		paragrapheDAO.delete(paraDelete);
+            	}
+            	paragrapheDAO.resetParagWrite(parag);
             } catch (DAOException e) {
             	erreurBD(request, response, e);
             }
-    		Paragraphe choice;
-    		Paragraphe paragActuel = new Paragraphe(idHist, numParagActuel);
-    		//On reset la bdd
- 
-    		response.sendRedirect("accueil");
-    	}else {
+            response.sendRedirect("accueil"); 
+        }
+    	
+    	else {
             invalidParameters(request, response);
         }
 		 

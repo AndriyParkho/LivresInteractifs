@@ -78,7 +78,7 @@
 		  <c:if test="${param.bouton == 'paragEcrit'}">
            		 <c:forEach var="entry" items="${paragrapheRedige}">
                 	<c:forEach  items="${entry.value}" var="parag">	                		
-	                	<div id='paragraphStory'>
+	                	<div class='paragraphStory'>
 	                	<h1>${entry.key} : ${parag.titre}</h1>
 					         <p>
 					             ${parag.texte}
@@ -88,30 +88,10 @@
 						         	<li>${choix.titre}</li>		
 						         </c:forEach>
 					         </ul>
-					         <form action="parag_ecrit">
-					         	<input type="hidden"
-							            name="button"
-							            value="modifier">
-					         	<input type="hidden"
-							            name="idhist"
-							            value="${parag.idHist}">
-					         	<input type="hidden"
-							            name="numparag"
-							            value="${parag.numParag}">
-    							<input type="submit" value="Modifier" />
-							</form>
-							<form action="parag_ecrit">
-					         	<input type="hidden"
-							            name="button"
-							            value="supprimer">
-					         	<input type="hidden"
-							            name="idhist"
-							            value="${parag.idHist}">
-					         	<input type="hidden"
-							            name="numparag"
-							            value="${parag.numParag}">
-    							<input type="submit" value="Supprimer" />
-							</form>
+					         <div id="divBouton">
+					         <a class="boutonParagRedige" href="write_paragraph?action=erase&idHist=${parag.idHist}&numParag=${parag.numParag}">Modifier</a>
+					         <a class="boutonParagRedige" href="write_paragraph?action=erase&idHist=${parag.idHist}&numParag=${parag.numParag}">Supprimer</a>
+							 </div>
 						</div>
                 	</c:forEach>
             	</c:forEach>
