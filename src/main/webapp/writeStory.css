@@ -76,3 +76,14 @@ a.choixSuite:hover{
 	font-size: 120%;
 }
 
+div.choixEnRedaction{
+	text-align: center;
+	margin: 4% auto;
+	padding:3%;
+	width: 40%;
+	border-collapse: collapse;
+	color: black;
+	background-color: #4CAF50;
+	border: solid #f2f2f2;
+	border-radius: 25px;
+}
