@@ -30,45 +30,50 @@
                   <li style="float:right" class='menu'><a href="accueil?action=bouton&bouton=logout">Se déconnecter</a></li>
 		</ul>
 		  <c:if test="${param.bouton == 'createStory'}">
-		  <form method="post" id="formCreate" action="createStory" accept-charset="UTF-8">
-		    <p>
-
-		     Nom d'histoire :<input type="text" name="title" id="title"/><br>
-                     Confidentialité de l'histoire : <label><input type="radio" onclick="hideInvite();" name="confident" checked="checked" id="buttonPublic" value="0"/>Publique</label>
-			   								 <label><input type="radio" onclick="displayInvite();" name="confident" value="1"/>Privée</label> <br>
-			<div id='listPersons'>Personnes invitées pour l'écriture : <br><br>
+			  <c:if test="${paragEnCours != null}">
+                       <div class='alreadyWritting'>Vous avez déja un paragraphe en cours de rédaction : <a href="write_paragraph?idHist=${paragEnCours.idHist}&numParag=${paragEnCours.numParag}&titreParag=${paragEnCours.titre}" class='alreadyWritting'>${paragEnCours.titre}</a></div>
+	          </c:if>
+	          <c:if test="${paragEnCours == null}">	          			
+				  <form method="post" id="formCreate" action="createStory" accept-charset="UTF-8">
+				    <p>
 		
-			<select name="auteurs"  id="auteurs" size=2 multiple >
-
-				<c:forEach items="${user}" var="user">
-	            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
-	            </c:forEach>
-			</select> 
-			<input type="button" value="Effacer la sélection" onclick="eraseSelect()">
-			 <br>
-			 </div>
-			 <p>
-			  Nom du premier paragraphe :</p><input type="text" name="titreParagraphe" id="titreParagraphe"/>
-			  <br>
-			  <p>Premier paragraphe :</p><TEXTAREA name="story" id="story" rows=4 cols=80 required></TEXTAREA>
-			  <br>
-			  <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" value='1'/>Oui</label>
-			   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked" value='0'/>Non</label> <br>
-			  <div id="listeDesChoix">
-              <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
-              <input type="button" value="Afficher les choix" onclick="changeChoice();">
-              <br>
-			  <table id="choice" class="formulaire">
-			  	<tr class="formulaire">
-				  	<td class="formulaire"><input type="text"  id="choix1" name="choix1" value="Choix numéro 1" required/>
-				  	</td>
-			  	</tr>
-        
-			  </table>
-			  </div>
-			  <br>
-			  <input type="button" value="Créer l'histoire" onclick="submitForm();">
-		  </form>
+				     Nom d'histoire :<input type="text" name="title" id="title"/><br>
+		                     Confidentialité de l'histoire : <label><input type="radio" onclick="hideInvite();" name="confident" checked="checked" id="buttonPublic" value="0"/>Publique</label>
+					   								 <label><input type="radio" onclick="displayInvite();" name="confident" value="1"/>Privée</label> <br>
+					<div id='listPersons'>Personnes invitées pour l'écriture : <br><br>
+				
+					<select name="auteurs"  id="auteurs" size=2 multiple >
+		
+						<c:forEach items="${user}" var="user">
+			            	<option value="${user.id}">${user.nom} ${user.prenom}</option>
+			            </c:forEach>
+					</select> 
+					<input type="button" value="Effacer la sélection" onclick="eraseSelect()">
+					 <br>
+					 </div>
+					 <p>
+					  Nom du premier paragraphe :</p><input type="text" name="titreParagraphe" id="titreParagraphe"/>
+					  <br>
+					  <p>Premier paragraphe :</p><TEXTAREA name="story" id="story" rows=4 cols=80 required></TEXTAREA>
+					  <br>
+					  <p>Mon paragraphe est une conclusion :</p> <label><input type="radio" onclick="hideChoice();" name="isConclusion" value='1'/>Oui</label>
+					   								 <label><input type="radio" onclick="displayChoice();" name="isConclusion" checked="checked" value='0'/>Non</label> <br>
+					  <div id="listeDesChoix">
+		              <p>Nombre de choix :</p><input type="number" id="nbChoix" name="nbChoix" value="1" min="1" max="100" required>
+		              <input type="button" value="Afficher les choix" onclick="changeChoice();">
+		              <br>
+					  <table id="choice" class="formulaire">
+					  	<tr class="formulaire">
+						  	<td class="formulaire"><input type="text"  id="choix1" name="choix1" value="Choix numéro 1" required/>
+						  	</td>
+					  	</tr>
+		        
+					  </table>
+					  </div>
+					  <br>
+					  <input type="button" value="Créer l'histoire" onclick="submitForm();">
+				  </form>
+	          </c:if>
 		  </c:if>
 		  <c:if test="${param.bouton == 'paragEcrit'}">
            		 <c:forEach var="entry" items="${paragrapheRedige}">

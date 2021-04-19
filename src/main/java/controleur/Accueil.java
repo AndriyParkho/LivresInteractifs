@@ -134,15 +134,20 @@ public class Accueil extends HttpServlet {
     		HttpServletResponse response) throws ServletException, IOException {
     	
     	UtilisateurDAO userDAO = new UtilisateurDAO(ds);
+    	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
     	
     	HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+    	Paragraphe paragraphe =  paragrapheDAO.getPragEnCours(user.getId());
+    	
     	List<Utilisateur> users = null;
     	try {
     		users = userDAO.getUserExceptMe(user.getId());
     	} catch (DAOException e) {
     		erreurBD(request, response, e);
     	}
+    	
+    	request.setAttribute("paragEnCours", paragraphe);
     	request.setAttribute("user", users);
     	request.getRequestDispatcher("/WEB-INF/accueil.jsp").forward(request, response);
     }
