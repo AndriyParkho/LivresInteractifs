@@ -115,8 +115,9 @@ public class WriteParagraph extends HttpServlet {
     		String titre = request.getParameter("titre");
             String paragraphe = request.getParameter("story");
             int value = Integer.parseInt(request.getParameter("isConclusion"));
+            int nbChoix = 0;
             if(value == 0) {
-            	int nbChoix = Integer.parseInt(request.getParameter("nbChoix"));
+            	nbChoix = Integer.parseInt(request.getParameter("nbChoix"));
             	Paragraphe paragActuel = null;
             	try {
             		paragActuel = new Paragraphe(idHist, numParagActuel, titre, paragraphe);
@@ -253,6 +254,7 @@ public class WriteParagraph extends HttpServlet {
             		else {
             			paragDao.saveParagraph(paragActuel, 0);
             		}
+            		paragDao.setNbChoix(paragActuel, nbChoix);
                 } catch (DAOException e) {
                 	erreurBD(request, response, e);
                 }

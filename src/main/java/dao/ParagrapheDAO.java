@@ -275,7 +275,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				Connection conn = getConn();
 			) {
 				Statement st = conn.createStatement();
-				st.executeQuery("UPDATE paragraphe SET idWritter=NULL WHERE idHist=" + parag.getIdHist() +" AND numParag=" + parag.getNumParag());
+				st.executeQuery("UPDATE paragraphe SET idWritter=NULL, texte=NULL, nbChoix=0 WHERE idHist=" + parag.getIdHist() +" AND numParag=" + parag.getNumParag());
 				
 			 	conn.close();
 		      }catch (SQLException e) {

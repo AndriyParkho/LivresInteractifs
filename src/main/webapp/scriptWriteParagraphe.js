@@ -1,4 +1,4 @@
-	var nbChoixJs;
+	var nbChoixJs = 0;
 	
     function choixRedige(numChoix, bool){
 		 var choix = document.getElementById("choix" + numChoix.toString());
