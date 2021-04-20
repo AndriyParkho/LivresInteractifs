@@ -151,22 +151,22 @@ INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(1, 9, 7);
-INSERT INTO Paragraphe(numparag, idhist, titre, texte, idwritter, valide) VALUES
+INSERT INTO Paragraphe(numparag, idhist, titre, texte, idwritter, valide, idModifier) VALUES
 	(10, 1, 'Les 3 vilains', ' Tu t''approches vers les trois voyageurs en leur demandant si tu peux te joindre à eux. Les vilains cessent de ricaner et te dévisagent. Le plus petit des deux hommes, pousse son assiette devant lui et te répond: «Ce serait avec plaisir mais moi et mes camarades devons reprendre la route». Les trois vilains se lèvent en silence et ramassent leurs affaires. Le grand ahuri se baisse alors pour prendre le gros sac et le met sur son épaule. Lorsqu''il passe près de toi, tu remarques à nouveau le trou dans le sac qui correspond parfaitement au lambeau trouvé dans la grotte. Les trois individus sortent ensuite l''auberge.
 Que fais-tu? ',
-						1, 0);
+						1, 0, 1);
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(1, 9, 10);
 
-INSERT INTO Paragraphe(numparag, idhist, titre, texte, nbchoix, idwritter, valide) VALUES
+INSERT INTO Paragraphe(numparag, idhist, titre, texte, nbchoix, idwritter, valide, idModifier) VALUES
 	(11, 1, 'L''aubergiste', 'Tu t''approches vers les trois voyageurs en leur demandant si tu peux te joindre à eux. Les vilains cessent de ricaner et te dévisagent. Le plus petit des deux hommes, pousse son assiette devant lui et te répond: «Ce serait avec plaisir mais moi et mes camarades devons reprendre la route». Les trois vilains se lèvent en silence et ramassent leurs affaires. Le grand ahuri se baisse alors pour prendre le gros sac et le met sur son épaule. Lorsqu''il passe près de toi, tu remarques à nouveau le trou dans le sac qui correspond parfaitement au lambeau trouvé dans la grotte. Les trois individus sortent ensuite l''auberge.
 Que fais-tu? ',
-						4 , 2, 0);
+						4 , 2, 0, 2);
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(1, 9, 11);
 
-INSERT INTO Paragraphe(numparag, idhist, titre, idwritter, valide) VALUES
-	(12, 1, 'L''homme pressé', 3, 0);
+INSERT INTO Paragraphe(numparag, idhist, titre, idwritter, valide, idModifier) VALUES
+	(12, 1, 'L''homme pressé', 3, 0, 3);
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(1, 9, 12);
 	
@@ -375,3 +375,48 @@ INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 
 INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
 	(11, 1, 3);
+	
+INSERT INTO Histoire ( titre, idauteur, datePubli, prive) VALUES
+	('Une histoire à condition', 3, SYSDATE, 0);
+	
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (1, 'Premier paragraphe','En fonction de votre prochain choix, le quatrième paragraphe proposé ne sera pas le même.', 2, 3, 12, 1);
+        
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (2, 'Deuxième paragraphe','Vous avez choisi le deuxième paragraphe.', 1, 3, 12, 1);
+        
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (3, 'Troisième paragraphe','Vous avez choisi le troisième paragraphe.', 1, 3, 12, 1);
+        
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (4, 'Quatrième paragraphe','Comme vous le voyez, vous avez un choix conditionnel.', 3, 3, 12, 1);
+        
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (5, 'Choix conditionnel, vous êtes passé par le deuxième paragraphe','Comme vous le voyez, vous avez un choix conditionnel.', 0, 3, 12, 1);
+        
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (6, 'Choix conditionnel, vous êtes passé par le troisième paragraphe','Comme vous le voyez, vous avez un choix conditionnel.', 0, 3, 12, 1);
+        
+INSERT INTO Paragraphe(numParag, titre, texte, nbChoix, idWritter, idHist, valide) VALUES
+        (7, 'Choix inconditionnel','Comme vous le voyez, vous avez un choix inconditionnel.', 0, 3, 12, 1);
+        
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(12, 1, 2);
+	
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(12, 1, 3);
+	
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(12, 2, 4);
+	
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(12, 3, 4);
+	
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils) VALUES
+	(12, 4, 7);
+	
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils, conditionParag) VALUES
+	(12, 4, 5, 2);
+	
+INSERT INTO IsFollowing(idhistparag, numparagpere, numparagfils, conditionParag) VALUES
+	(12, 4, 6, 3);
