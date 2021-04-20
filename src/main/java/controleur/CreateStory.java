@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 
 import dao.DAOException;
 import dao.HistoireDAO;
+import dao.ParagrapheDAO;
 import modele.Histoire;
 import modele.Paragraphe;
 import modele.Utilisateur;
@@ -33,6 +34,7 @@ public class CreateStory extends HttpServlet {
     
     private void createStory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         HistoireDAO histoireDao = new HistoireDAO(ds);
+        ParagrapheDAO paragDao = new ParagrapheDAO(ds);
         HttpSession session = request.getSession();
         Utilisateur user = (Utilisateur)session.getAttribute("user");
         int confidentialite = 0;
@@ -42,17 +44,27 @@ public class CreateStory extends HttpServlet {
         String[] auteurs = request.getParameterValues("auteurs");
         String title = request.getParameter("title");
         String titreParagraphe = request.getParameter("titreParagraphe");
-        String paragraphe = request.getParameter("story");
+        String texte = request.getParameter("story");
         int nb_choix = Integer.parseInt(request.getParameter("nbChoix"));
         Histoire histoire = histoireDao.createNewStoryObjet(title, user.getId());
-        Paragraphe paragrahe = new Paragraphe(histoire.getId(), 1, titreParagraphe, paragraphe, true, nb_choix, user.getId());
+        Paragraphe paragraphe = new Paragraphe(histoire.getId(), 1, titreParagraphe, texte, true, nb_choix, user.getId());
         
-        histoire.setFirstParag(paragrahe);
+        histoire.setFirstParag(paragraphe);
         histoireDao.createStory(histoire, confidentialite);
         if(confidentialite == 1){
             histoire.setAuteurs(auteurs);
             histoireDao.inviteUsers(histoire);
         }
+        int nbParagMax = 1;
+        String newChoixTitle;
+        Paragraphe parag;
+        for(int i = 1; i <= nb_choix; i++) {
+    		newChoixTitle = request.getParameter("choix" + Integer.toString(i));
+    		nbParagMax++;
+    		parag = new Paragraphe(paragraphe.getIdHist(), nbParagMax, newChoixTitle);
+           	paragDao.setParagraphe(parag);
+           	paragDao.setFollowing(paragraphe, parag);
+    	}
         
     }
     
@@ -63,7 +75,6 @@ public class CreateStory extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         
         /* Mise à jour de la base de données*/
-        HistoireDAO histoireDAO = new HistoireDAO(ds);
         try {
         	createStory(request, response);
         } catch (DAOException e) {

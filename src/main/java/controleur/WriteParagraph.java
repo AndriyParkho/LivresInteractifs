@@ -71,7 +71,6 @@ public class WriteParagraph extends HttpServlet {
     			response.sendRedirect("accueil?button=storyToWrite&warning=paragIndisponible");
     		} else {
     			if (modify != null){
-    				System.out.println("On modifie");
 	    			if(paragToEdit.getIdWritter() == user.getId()) {
 	    				request.setAttribute("author", true);
 	    			}else {
