@@ -118,7 +118,7 @@
 						<a class="boutonParagRedige"
 							href="write_paragraph?idHist=${parag.idHist}&numParag=${parag.numParag}&modify=true">Modifier</a>
 						<a class="boutonParagRedige"
-							href="delete_parag?idHist=${parag.idHist}&numParag=${parag.numParag}">Supprimer</a>
+							href="delete_parag?idhist=${parag.idHist}&numparag=${parag.numParag}">Supprimer</a>
 					</div>
 				</div>
 			</c:forEach>
