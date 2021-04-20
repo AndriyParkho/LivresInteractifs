@@ -12,4 +12,8 @@
 	    }
     
     
-     
+     function goBack(idHist, index){
+		 if (confirm("Etes vous sûr de vouloir retourner en arrière ?")) {
+ 			 window.location.href = "read_story?idHist=" + idHist.toString() + "&goBackTo=" + index.toString();
+		}
+	 }

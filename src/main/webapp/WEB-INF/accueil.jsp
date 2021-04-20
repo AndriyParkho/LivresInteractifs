@@ -25,10 +25,10 @@
 	<c:if test="${user != null}">
 		<c:if test="${warning != null}">
 			<script>
-		window.onload=function() {
-			alert("Le paragraphe que vous vouliez modifier n'est plus disponible");
-		}
-		</script>
+				window.onload = function () {
+					alert("Le paragraphe que vous vouliez modifier n'est plus disponible");
+				}
+			</script>
 		</c:if>
 		<ul class='menu'>
 			<li class='menu'><a href="accueil" <c:if test="${empty param.bouton}"> class="active"
