@@ -74,10 +74,8 @@ public class WriteParagraph extends HttpServlet {
     				System.out.println("On modifie");
 	    			if(paragToEdit.getIdWritter() == user.getId()) {
 	    				request.setAttribute("author", true);
-	    				System.out.println("Je suis l'auteur");
 	    			}else {
 	    				request.setAttribute("author", false);
-	    				System.out.println("Je ne suis pas l'auteur");
 	    			}
 	    			request.setAttribute("modify", true);
 	    			try {
