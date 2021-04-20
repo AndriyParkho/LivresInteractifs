@@ -82,8 +82,10 @@
         	nbChoixJs++;
         	insertHtmlChoice(div);
 			insertRedige(div);
-			insertHtmlChoice2(div);
-			insertCondition(div);
+			if(document.getElementById("paragrapheCondition").length != 0){
+				insertHtmlChoice2(div);
+				insertCondition(div);
+			}
         }
         var choix;
     	 while (newNbChoice < nbChoixJs){
@@ -130,12 +132,17 @@
 							}
 						}else{
 							if(checkChoiceRedige()){
-								if(checkUnconditionnal()){
+								if(checkSupress()){
+									if(checkUnconditionnal()){
 										document.getElementById("formCreate").submit();
 									}
 									else{
 										alert("Au minimum un de vos choix doit être inconditionnel.")
 									}
+								}
+								else{
+									alert("Vous n'avez aucun choix, ajoutez-en ou passez votre paragraphe en conclusion.")
+								}
 							}
 							else{
 								alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
@@ -160,6 +167,7 @@
     	var nbChoiceSupposed = document.getElementById("nbChoix").value;
     	var testChoix = document.getElementById("choix" + nbChoiceSupposed.toString());
     	if(nbChoiceSupposed == 0){
+			testChoix = document.getElementById("choix1");
     		if(testChoix == null){
     			return true;
     		}
@@ -258,13 +266,18 @@
 						}
 					}else{
 						if(checkChoiceRedige()){
-							if(checkUnconditionnal()){
-								var form = document.getElementById('formCreate');
-								form.action += "&save=true" ;
-								form.submit();
+							if(checkSupress()){
+								if(checkUnconditionnal()){
+									var form = document.getElementById('formCreate');
+									form.action += "&save=true" ;
+									form.submit();
+								}
+								else{
+									alert("Au minimum un de vos choix doit être inconditionnel.")
+								}
 							}
 							else{
-								alert("Au minimum un de vos choix doit être inconditionnel.")
+								alert("Vous n'avez aucun choix, ajoutez-en ou passez votre paragraphe en conclusion.")
 							}
 						}
 						else{

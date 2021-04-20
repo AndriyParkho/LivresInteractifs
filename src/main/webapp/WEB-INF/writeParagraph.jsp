@@ -179,7 +179,7 @@
 						Nom du paragraphe :<input type="text" name="title" id="titreParagraphe" value="${titreParag}"
 							disabled /><br>
 						Paragraphe :<TEXTAREA name="story" id="story" rows=4 cols=80 <c:if
-							test="${author == null}"> disabled </c:if>>${texte}</TEXTAREA><br>
+							test="${not author}"> disabled </c:if>>${texte}</TEXTAREA><br>
 					<div id="listeDesChoix">
 						<p>Nombre de nouveaux choix :</p>
 						<br>

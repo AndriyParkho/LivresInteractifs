@@ -48,6 +48,7 @@ public class WriteParagraph extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+    	request.setCharacterEncoding("UTF-8");
     	int idHist = Integer.parseInt(request.getParameter("idHist"));
     	int numParag = Integer.parseInt(request.getParameter("numParag"));
     	String action = (String) request.getParameter("action");
@@ -70,6 +71,7 @@ public class WriteParagraph extends HttpServlet {
     			response.sendRedirect("accueil?button=storyToWrite&warning=paragIndisponible");
     		} else {
     			if (modify != null){
+    				System.out.println("On modifie");
 	    			if(paragToEdit.getIdWritter() == user.getId()) {
 	    				request.setAttribute("author", true);
 	    			}else {
@@ -99,7 +101,6 @@ public class WriteParagraph extends HttpServlet {
     			} catch (DAOException e) {
     				erreurBD(request, response, e);
     			}
-    			request.setCharacterEncoding("UTF-8");
     			request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
     		}
     	}
