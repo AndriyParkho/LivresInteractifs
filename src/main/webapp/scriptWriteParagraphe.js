@@ -82,8 +82,10 @@
         	nbChoixJs++;
         	insertHtmlChoice(div);
 			insertRedige(div);
-			insertHtmlChoice2(div);
-			insertCondition(div);
+			if(document.getElementById("paragrapheCondition").length != 0){
+				insertHtmlChoice2(div);
+				insertCondition(div);
+			}
         }
         var choix;
     	 while (newNbChoice < nbChoixJs){
