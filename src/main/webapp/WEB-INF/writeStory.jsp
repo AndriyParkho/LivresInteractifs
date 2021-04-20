@@ -28,7 +28,7 @@
 			<li class='menu'><a href="accueil?action=bouton&bouton=storyToWrite" class="active">Histoire à écrire</a>
 			</li>
 			<li class='menu'><a href="accueil?action=bouton&bouton=createStory">Créer une histoire</a></li>
-			<li class='menu'><a href="accueil?action=bouton&bouton=paragEcrit">Paragraphes rédigé</a></li>
+			<li class='menu'><a href="accueil?action=bouton&bouton=paragEcrit">Paragraphes rédigés</a></li>
 			<li class='menu'><a href="accueil?action=bouton&bouton=histoireAPublier">Histoires à publier</a></li>
 			<li class='menu'><a href="accueil?action=bouton&bouton=histoireDepubliable">Histoires dépubliables</a></li>
 			<li class='menu'><a href="accueil?action=bouton&bouton=historique">Historique</a></li>

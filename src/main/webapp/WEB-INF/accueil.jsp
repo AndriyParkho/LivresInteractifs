@@ -38,7 +38,7 @@
 	<li class='menu'><a href="accueil?action=bouton&bouton=createStory" <c:if test="${param.bouton == 'createStory'}">
 			class="active" </c:if>>Créer une histoire</a></li>
 	<li class='menu'><a href="accueil?action=bouton&bouton=paragEcrit" <c:if test="${param.bouton == 'paragEcrit'}">
-			class="active" </c:if>>Paragraphes rédigé</a></li>
+			class="active" </c:if>>Paragraphes rédigés</a></li>
 	<li class='menu'><a href="accueil?action=bouton&bouton=histoireAPublier" <c:if
 			test="${param.bouton == 'histoireAPublier'}"> class="active" </c:if>>Histoires à publier</a></li>
 	<li class='menu'><a href="accueil?action=bouton&bouton=histoireDepubliable" <c:if
