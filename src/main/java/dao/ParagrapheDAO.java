@@ -743,9 +743,24 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
         			Connection conn = getConn();
         		    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idModifier =? WHERE idHist=? and numParag=?");
         		) {
+        			deleteModifierValide(userId);
         			ps.setInt(1, userId);
         			ps.setInt(2, parag.getIdHist());
         			ps.setInt(3, parag.getNumParag());
+        		 	ps.executeQuery();
+        		 	ps.close();
+        		 	conn.close();
+        	      }catch (SQLException e) {
+        	    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+        	      }
+        }
+        
+        public void deleteModifierValide(int userId) {
+        	try (
+        			Connection conn = getConn();
+        		    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idModifier = NULL WHERE idModifier=? AND valide=1");
+        		) {
+        			ps.setInt(1, userId);
         		 	ps.executeQuery();
         		 	ps.close();
         		 	conn.close();
