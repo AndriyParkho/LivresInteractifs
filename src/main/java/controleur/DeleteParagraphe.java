@@ -22,8 +22,8 @@ import modele.Paragraphe;
 /**
  * Servlet implementation class ParagraphesEcrit
  */
-@WebServlet(name = "ParagraphesEcrit", urlPatterns = {"/parag_ecrit"})
-public class ParagraphesEcrit extends HttpServlet {
+@WebServlet(name = "DeleteParagraphe", urlPatterns = {"/delete_parag"})
+public class DeleteParagraphe extends HttpServlet {
 
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
@@ -58,20 +58,10 @@ public class ParagraphesEcrit extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-        String button = request.getParameter("button");
-        if(button.equals("modifier")) {
-        	buttonModifier(request, response);
-        } else if(button.equals("supprimer")) {
-        	buttonSupprimer(request, response);
-            }
+        supprimerParag(request, response);
 	}
 	
-	private void buttonModifier(HttpServletRequest request, 
-			HttpServletResponse response) throws ServletException, IOException {
-		// TODO
-	}
-	
-	private void buttonSupprimer(HttpServletRequest request, 
+	private void supprimerParag(HttpServletRequest request, 
             HttpServletResponse response) throws ServletException, IOException {
                 ParagrapheDAO paragrapheDao = new ParagrapheDAO(ds);
                 HistoireDAO histoireDao = new HistoireDAO(ds);

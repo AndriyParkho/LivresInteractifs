@@ -30,7 +30,7 @@ public class HistoireDAO extends AbstractDataBaseDAO {
 	     Connection conn = getConn();
 	     Statement st = conn.createStatement();
 	     ) {
-            ResultSet rs = st.executeQuery("SELECT * FROM histoire WHERE datePubli IS NOT NULL");
+            ResultSet rs = st.executeQuery("SELECT * FROM histoire WHERE datePubli IS NOT NULL ORDER BY datepubli desc");
             while (rs.next()) {
                 Histoire histoire =
                     new Histoire(rs.getInt("idHist"), rs.getString("titre"), rs.getDate("datePubli"), rs.getInt("idAuteur"));
