@@ -48,6 +48,7 @@ public class WriteParagraph extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws IOException, ServletException {
+    	request.setCharacterEncoding("UTF-8");
     	int idHist = Integer.parseInt(request.getParameter("idHist"));
     	int numParag = Integer.parseInt(request.getParameter("numParag"));
     	String action = (String) request.getParameter("action");
@@ -99,7 +100,6 @@ public class WriteParagraph extends HttpServlet {
     			} catch (DAOException e) {
     				erreurBD(request, response, e);
     			}
-    			request.setCharacterEncoding("UTF-8");
     			request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
     		}
     	}
@@ -123,6 +123,7 @@ public class WriteParagraph extends HttpServlet {
     
     @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	request.setCharacterEncoding("UTF-8");
     	int idHist = Integer.parseInt(request.getParameter("idHist"));
     	int numParagActuel = Integer.parseInt(request.getParameter("numParag"));
     	ParagrapheDAO paragDao = new ParagrapheDAO(ds);
