@@ -41,6 +41,12 @@
 		<p>
 			${currentParag.texte}
 		</p>
+		<c:if test="${currentParag.nbChoix != 0}">
+			<div id="divBouton">
+				<a class="boutonParagRedige"
+					href="write_paragraph?idHist=${currentParag.idHist}&numParag=${currentParag.numParag}&modify=true">Modifier</a>
+			</div>
+		</c:if>
 	</div>
 	<c:if test="${choixParagSuite.size() gt 0}">
 		<h1>Choix déjà rédigé :</h1>

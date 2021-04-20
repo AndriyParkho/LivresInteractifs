@@ -87,3 +87,28 @@ div.choixEnRedaction{
 	border: solid #f2f2f2;
 	border-radius: 25px;
 }
+
+a.boutonParagRedige {
+	background-color: #378720;
+	box-shadow: 0 5px 0 darkgreen;
+	color: white;
+	padding: 1em 1.5em;
+	text-decoration: none;
+	border-radius: 10px;
+}
+
+a.boutonParagRedige:hover {
+	background-color: green;
+	cursor: pointer;
+}
+
+a.boutonParagRedige:active {
+	box-shadow: none;
+	top: 5px;
+}
+
+#divBouton {
+	justify-content: space-evenly;
+	display: flex;
+	margin: 2%;
+}
