@@ -7,7 +7,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>InteractiveStory</title>
-	<link rel="stylesheet" type="text/css" href="loginRegister.css" />
+	<link rel="stylesheet" type="text/css" href="styles/loginRegister.css" />
 </head>
 
 <body>

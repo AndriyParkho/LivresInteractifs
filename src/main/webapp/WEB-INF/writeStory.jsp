@@ -7,7 +7,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>InteractiveStory</title>
-	<link rel="stylesheet" type="text/css" href="writeStory.css" />
+	<link rel="stylesheet" type="text/css" href="styles/writeStory.css" />
 </head>
 
 <body>

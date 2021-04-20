@@ -13,7 +13,7 @@ and open the template in the editor.
 
 <body>
     <h1 style="text-align: center">Erreur de Controleur</h1>
-    <img src="images/scared.png" /><br />
+    <img src="styles/images/scared.png" /><br />
     Paramètres invalides : action <span style="color: red">${param.action}</span>
     et vue <span style="color: red">${param.view}</span>
 </body>

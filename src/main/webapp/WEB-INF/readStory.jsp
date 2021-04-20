@@ -7,8 +7,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>InteractiveStory</title>
-	<link rel="stylesheet" type="text/css" href="readStory.css" />
-	<script type="text/javascript" src="scriptReadStory.js"></script>
+	<link rel="stylesheet" type="text/css" href="styles/readStory.css" />
+	<script type="text/javascript" src="scripts/scriptReadStory.js"></script>
 </head>
 
 <body>

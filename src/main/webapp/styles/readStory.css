@@ -1,7 +1,7 @@
 body {
 color:white;
 background-color:black;
-background-image:url(background.jpg);
+background-image: url(images/background.jpg);
 background-position:center center;
 background-size: cover;
 font-family: Arial, sans-serif;
@@ -47,6 +47,7 @@ p{
 }
 
 #paragraphStory{
+	width : 60%;
 	overflow: hidden;
 	margin: 4% auto;
 	padding:3%;
@@ -76,11 +77,19 @@ a.choixSuite:hover{
 	font-size: 120%;
 }
 
-div.choixEnRedaction{
-	text-align: center;
-	margin: 4% auto;
+#changeBouton{
+	width: 20%;
+	margin: 2% auto;
+	padding:2%;
+	display:block;
+}
+
+div.choixHistorique{
+	width : 60%;
+	overflow: hidden;
+	margin: 1% auto;
 	padding:3%;
-	width: 40%;
+	width: 90%;
 	border-collapse: collapse;
 	color: black;
 	background-color: #4CAF50;
@@ -88,27 +97,30 @@ div.choixEnRedaction{
 	border-radius: 25px;
 }
 
-a.boutonParagRedige {
-	background-color: #378720;
-	box-shadow: 0 5px 0 darkgreen;
-	color: white;
-	padding: 1em 1.5em;
+a.TitreHistorique{
 	text-decoration: none;
+	color: black;
+	display:block;
+	padding:2%;
+	width: 10%;
+	border: solid #4CAF50;
 	border-radius: 10px;
+	background-color: white;
+	text-align: center;
 }
 
-a.boutonParagRedige:hover {
-	background-color: green;
-	cursor: pointer;
+
+#boutonSauvegarde{
+	text-decoration: none;
+	color: black;
+	display:block;
+	padding:2%;
+	width: 10%;
+	border: solid #4CAF50;
+	border-radius: 10px;
+	background-color: white;
+	text-align: center;
 }
 
-a.boutonParagRedige:active {
-	box-shadow: none;
-	top: 5px;
-}
 
-#divBouton {
-	justify-content: space-evenly;
-	display: flex;
-	margin: 2%;
-}
+

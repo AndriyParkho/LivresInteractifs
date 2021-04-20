@@ -5,8 +5,8 @@
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 			<title>InteractiveStory</title>
-			<link rel="stylesheet" type="text/css" href="writeParagraph.css" />
-			<script type="text/javascript" src="scriptWriteParagraphe.js"></script>
+			<link rel="stylesheet" type="text/css" href="styles/writeParagraph.css" />
+			<script type="text/javascript" src="scripts/scriptWriteParagraphe.js"></script>
 		</head>
 
 		<body>

@@ -15,7 +15,7 @@
 
 <body>
     <h1 style="text-align: center">Erreur</h1>
-    <img src="images/scared.png" alt="" />
+    <img src="styles/images/scared.png" alt="" />
     <p>Une erreur d’accès à la base de données vient de se produire.</p>
     <p>Message : </p>
     <pre>${erreurMessage}</pre>

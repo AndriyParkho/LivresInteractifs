@@ -5,8 +5,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>InteractiveStory</title>
-	<link rel="stylesheet" type="text/css" href="accueil.css" />
-	<script type="text/javascript" src="scriptAccueil.js"></script>
+	<link rel="stylesheet" type="text/css" href="styles/accueil.css" />
+	<script type="text/javascript" src="scripts/scriptAccueil.js"></script>
 </head>
 
 <body>
