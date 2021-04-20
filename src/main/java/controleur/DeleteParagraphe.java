@@ -18,6 +18,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import modele.Histoire;
 import modele.Paragraphe;
+import modele.Utilisateur;
 
 /**
  * Servlet implementation class ParagraphesEcrit
@@ -58,7 +59,13 @@ public class DeleteParagraphe extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-        supprimerParag(request, response);
+		HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+		if(user == null) {
+    		response.sendRedirect("accueil");
+    	} else {
+    		supprimerParag(request, response);
+    	}
 	}
 	
 	private void supprimerParag(HttpServletRequest request, 

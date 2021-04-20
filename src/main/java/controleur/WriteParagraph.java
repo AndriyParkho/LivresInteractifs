@@ -52,73 +52,77 @@ public class WriteParagraph extends HttpServlet {
     	int idHist = Integer.parseInt(request.getParameter("idHist"));
     	int numParag = Integer.parseInt(request.getParameter("numParag"));
     	String action = (String) request.getParameter("action");
-    	if(action == null) {
-    		ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
-    		String modify = (String) request.getParameter("modify");
-    		HttpSession sess = request.getSession(false);
-    		Utilisateur user = (Utilisateur) sess.getAttribute("user");
-    		Paragraphe paragToEdit = null;
-    		try {
-    			paragToEdit = paragrapheDAO.getParagraphe(idHist, numParag);
-    			if(paragToEdit.getIdWritter() == null) {
-    				paragrapheDAO.setWritter(idHist, numParag, user.getId());
-    			}
-    	
-			} catch (DAOException e) {
-				erreurBD(request, response, e);
-			}
-    		if((paragToEdit.getIdModifier() != 0) && (paragToEdit.getIdModifier() != user.getId())) {
-    			response.sendRedirect("accueil?button=storyToWrite&warning=paragIndisponible");
-    		} else {
-    			if (modify != null){
-	    			if(paragToEdit.getIdWritter() == user.getId()) {
-	    				request.setAttribute("author", true);
-	    			}else {
-	    				request.setAttribute("author", false);
-	    			}
-	    			request.setAttribute("modify", true);
-	    			try {
-	        			paragrapheDAO.setModifier(paragToEdit, user.getId());
-	        	
-	    			} catch (DAOException e) {
-	    				erreurBD(request, response, e);
-	    			}
-    			}
-    			request.setAttribute("texte", paragToEdit.getTexte());
-    			request.setAttribute("titreParag", paragToEdit.getTitre());
-    			request.setAttribute("idHist", idHist);
-    			request.setAttribute("numParag", numParag);
+    	HttpSession sess = request.getSession(false);
+    	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+    	if(user ==null) {
+    		response.sendRedirect("accueil");
+    	} else {
+    		if(action == null) {
+    			ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
+    			String modify = (String) request.getParameter("modify");
+    			Paragraphe paragToEdit = null;
     			try {
-    				int numChoix = paragrapheDAO.getNumChoix(paragToEdit);
-    				List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
-    				List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
-    				List<ParagrapheConditionnel> choixDejaFait = paragrapheDAO.getFollowingParag(paragToEdit);
-    				request.setAttribute("nbChoix", numChoix);
-    				request.setAttribute("paragrapheRedige", choixRedige);
-    				request.setAttribute("paragrapheCondition", choixCondition);
-    				request.setAttribute("ancienChoix", choixDejaFait);
+    				paragToEdit = paragrapheDAO.getParagraphe(idHist, numParag);
+    				if(paragToEdit.getIdWritter() == null) {
+    					paragrapheDAO.setWritter(idHist, numParag, user.getId());
+    				}
+    				
     			} catch (DAOException e) {
     				erreurBD(request, response, e);
     			}
-    			request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
+    			if((paragToEdit.getIdModifier() != 0) && (paragToEdit.getIdModifier() != user.getId())) {
+    				response.sendRedirect("accueil?button=storyToWrite&warning=paragIndisponible");
+    			} else {
+    				if (modify != null){
+    					if(paragToEdit.getIdWritter() == user.getId()) {
+    						request.setAttribute("author", true);
+    					}else {
+    						request.setAttribute("author", false);
+    					}
+    					request.setAttribute("modify", true);
+    					try {
+    						paragrapheDAO.setModifier(paragToEdit, user.getId());
+    						
+    					} catch (DAOException e) {
+    						erreurBD(request, response, e);
+    					}
+    				}
+    				request.setAttribute("texte", paragToEdit.getTexte());
+    				request.setAttribute("titreParag", paragToEdit.getTitre());
+    				request.setAttribute("idHist", idHist);
+    				request.setAttribute("numParag", numParag);
+    				try {
+    					int numChoix = paragrapheDAO.getNumChoix(paragToEdit);
+    					List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
+    					List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
+    					List<ParagrapheConditionnel> choixDejaFait = paragrapheDAO.getFollowingParag(paragToEdit);
+    					request.setAttribute("nbChoix", numChoix);
+    					request.setAttribute("paragrapheRedige", choixRedige);
+    					request.setAttribute("paragrapheCondition", choixCondition);
+    					request.setAttribute("ancienChoix", choixDejaFait);
+    				} catch (DAOException e) {
+    					erreurBD(request, response, e);
+    				}
+    				request.getRequestDispatcher("/WEB-INF/writeParagraph.jsp").forward(request, response);
+    			}
+    		}
+    		else if(action.equals("erase")) {
+    			ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
+    			Paragraphe parag = new Paragraphe(idHist, numParag);
+    			try {
+    				List<Paragraphe> paragToDelete = paragrapheDAO.getParagToDelete(parag);
+    				for(Paragraphe paraDelete : paragToDelete) {
+    					paragrapheDAO.delete(paraDelete);
+    				}
+    				paragrapheDAO.resetParagWrite(parag);
+    			} catch (DAOException e) {
+    				erreurBD(request, response, e);
+    			}
+    			response.sendRedirect("accueil"); 
+    		} else {
+    			invalidParameters(request, response);
     		}
     	}
-    	else if(action.equals("erase")) {
-        	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
-        	Paragraphe parag = new Paragraphe(idHist, numParag);
-            try {
-            	List<Paragraphe> paragToDelete = paragrapheDAO.getParagToDelete(parag);
-            	for(Paragraphe paraDelete : paragToDelete) {
-            		paragrapheDAO.delete(paraDelete);
-            	}
-            	paragrapheDAO.resetParagWrite(parag);
-            } catch (DAOException e) {
-            	erreurBD(request, response, e);
-            }
-            response.sendRedirect("accueil"); 
-        } else {
-            invalidParameters(request, response);
-        }
     }
     
     @Override

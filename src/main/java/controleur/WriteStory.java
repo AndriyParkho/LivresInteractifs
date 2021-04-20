@@ -56,48 +56,52 @@ public class WriteStory extends HttpServlet {
         
         HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
+    	
+    	if(user == null) {
+    		response.sendRedirect("accueil");
+    	} else {
+    		int idHist = Integer.parseInt(request.getParameter("idHist"));
+    		int numParagPere = Integer.parseInt(request.getParameter("numParagPere"));
+    		Integer numChoix;
+    		if(request.getParameter("choix") == null) numChoix = null;
+    		else numChoix = Integer.valueOf(request.getParameter("choix"));
+    		
+    		ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
+    		
+    		List<Paragraphe> choixParagAEcrire = new ArrayList<Paragraphe>();
+    		List<Paragraphe> choixParagVerouille = new ArrayList<Paragraphe>();
+    		
+    		try {
+    			if(numChoix == null) {
+    				currentParag = paragrapheDAO.getHistoireTreeToWrite(idHist);
+    				firstParag = currentParag;
+    			}
+    			else if(currentParag.getNumParag() != numParagPere) {
+    				HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
+    				currentParag = firstParag.findParag(numParagPere, dicoParag).getParagSuiv().get(numChoix);
+    			}
+    			else {
+    				currentParag = choixParagSuite.get(numChoix);
+    			}
+    			choixParagSuite = new ArrayList<Paragraphe>();
+    			for(Paragraphe parag: currentParag.getParagSuiv()) {
+    				if(parag.getIdWritter() == null) {
+    					choixParagAEcrire.add(parag);
+    				} else if(parag.isValide()){
+    					choixParagSuite.add(parag);
+    				} else {
+    					choixParagVerouille.add(parag);
+    				}
+    			}
+    			request.setAttribute("currentParag", currentParag);
+    			request.setAttribute("choixParagAEcrire", choixParagAEcrire);
+    			request.setAttribute("choixParagSuite", choixParagSuite);
+    			request.setAttribute("choixParagVerouille", choixParagVerouille);
+    			request.getRequestDispatcher("/WEB-INF/writeStory.jsp").forward(request, response);
+    		} catch (DAOException e) {
+    			erreurBD(request, response, e);
+    		}        		
+    	}
         
-        int idHist = Integer.parseInt(request.getParameter("idHist"));
-        int numParagPere = Integer.parseInt(request.getParameter("numParagPere"));
-        Integer numChoix;
-        if(request.getParameter("choix") == null) numChoix = null;
-        else numChoix = Integer.valueOf(request.getParameter("choix"));
-        
-        ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
-        
-        List<Paragraphe> choixParagAEcrire = new ArrayList<Paragraphe>();
-        List<Paragraphe> choixParagVerouille = new ArrayList<Paragraphe>();
-        
-        try {
-        	if(numChoix == null) {
-        		currentParag = paragrapheDAO.getHistoireTreeToWrite(idHist);
-        		firstParag = currentParag;
-        	}
-        	else if(currentParag.getNumParag() != numParagPere) {
-        		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
-        		currentParag = firstParag.findParag(numParagPere, dicoParag).getParagSuiv().get(numChoix);
-        		choixParagSuite = new ArrayList<Paragraphe>();
-        	}
-        	else {
-        		currentParag = choixParagSuite.get(numChoix);
-        		choixParagSuite = new ArrayList<Paragraphe>();
-        	}
-        	for(Paragraphe parag: currentParag.getParagSuiv()) {
-        		if(parag.getIdWritter() == null) {
-        			choixParagAEcrire.add(parag);
-        		} else if(parag.isValide()){
-        			choixParagSuite.add(parag);
-        		} else {
-        			choixParagVerouille.add(parag);
-        		}
-        	}
-        	request.setAttribute("currentParag", currentParag);
-        	request.setAttribute("choixParagAEcrire", choixParagAEcrire);
-        	request.setAttribute("choixParagSuite", choixParagSuite);
-        	request.setAttribute("choixParagVerouille", choixParagVerouille);
-        	request.getRequestDispatcher("/WEB-INF/writeStory.jsp").forward(request, response);
-        } catch (DAOException e) {
-            erreurBD(request, response, e);
-        }    
     }
 }
