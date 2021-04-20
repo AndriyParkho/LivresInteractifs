@@ -15,5 +15,6 @@ Conseils d'utilisation :
 	 email : mickael.ousset@grenoble-inp.org       ;    mdp : code
 5bis- Chaque identifiants a des histoires dont il est l'auteur et les deux derniers ont un paragraphe en cours de rédaction
 6- "Les trois pièces d'or" et "Monsieur Charles" sont des histoires dont vous pouvez apprécier la lecture et qui présente des boucles.
+	De plus "Monsieur Charles" présente un paragraphe conditionnel, il faut passer par "le petit ruisseau" et revenir au parc pour l'afficher.
 	Les autres histoires ont un titre qui indique leurs utilités (excepté random latin).
 7- Pour les autres fonctionnalités cf. manuel utilisateur.
