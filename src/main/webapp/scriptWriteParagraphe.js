@@ -111,34 +111,39 @@
 				document.getElementById("formCreate").submit();
 			} else{
 				if(checkChoice()){
-					if(document.getElementById("nbOldChoix").value > 0){
-						if(checkChoiceRedigeOld()){
-							if(checkSupress()){
-								if(checkUnconditionnalOld()){
-									document.getElementById("formCreate").submit();
+					if(checkChoice2(1)){
+						if(document.getElementById("nbOldChoix").value > 0){
+							if(checkChoiceRedigeOld()){
+								if(checkSupress()){
+									if(checkUnconditionnalOld()){
+										document.getElementById("formCreate").submit();
+									}
+									else{
+										alert("Au minimum un de vos choix doit être inconditionnel.")
+									}
+								} else{
+									alert("En prenant en compte vos suppression, vous n'avez plus de choix. Mettez un choix valide ou passez votre paragraphe en conclusion.");
 								}
-								else{
-									alert("Au minimum un de vos choix doit être inconditionnel.")
-								}
-							} else{
-								alert("En prenant en compte vos suppression, vous n'avez plus de choix. Mettez un choix valide ou passez votre paragraphe en conclusion.");
 							}
-    					}
-						else{
-							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensé à vérifier vos anciens choix vérifés !");
+							else{
+								alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensé à vérifier vos anciens choix vérifés !");
+							}
+						}else{
+							if(checkChoiceRedige()){
+								if(checkUnconditionnal()){
+										document.getElementById("formCreate").submit();
+									}
+									else{
+										alert("Au minimum un de vos choix doit être inconditionnel.")
+									}
+							}
+							else{
+								alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+							}
 						}
-					}else{
-						if(checkChoiceRedige()){
-							if(checkUnconditionnal()){
-									document.getElementById("formCreate").submit();
-								}
-								else{
-									alert("Au minimum un de vos choix doit être inconditionnel.")
-								}
-    					}
-						else{
-							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
-						}
+					}
+					else{
+						alert("Les choix doivent tous avoir un titre.");
 					}
     			}
     			else{
@@ -147,7 +152,7 @@
 			}
     	}
     	else{
-    		alert("Tous les champs doivent être remplis.");
+    		alert("Votre paragraphe ne peut pas être vide.");
     	} 
     }
     
@@ -171,10 +176,6 @@
     		}
     	}
     }
-    
-	function setChoice(){
-		nbChoixJs = document.getElementById("nbChoix").value;
-	}
 
     function checkChoiceRedige(){
     	let listOfChoice = [];
@@ -236,10 +237,28 @@
 			form.submit();
 		} else{
 			if(checkChoice()){
-				if(document.getElementById("nbOldChoix").value > 0){
-					if(checkChoiceRedigeOld()){
-						if(checkSupress()){
-							if(checkUnconditionnalOld()){
+				if(checkChoice2(1)){
+					if(document.getElementById("nbOldChoix").value > 0){
+						if(checkChoiceRedigeOld()){
+							if(checkSupress()){
+								if(checkUnconditionnalOld()){
+									var form = document.getElementById('formCreate');
+									form.action += "&save=true" ;
+									form.submit();
+								}
+								else{
+									alert("Au minimum un de vos choix doit être inconditionnel.")
+								}
+							} else{
+								alert("En prenant en compte vos suppression, vous n'avez plus de choix. Mettez un choix valide ou passez votre paragraphe en conclusion.");
+							}
+						}
+						else{
+							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensez à vérifier vos anciens choix vérifés !");
+						}
+					}else{
+						if(checkChoiceRedige()){
+							if(checkUnconditionnal()){
 								var form = document.getElementById('formCreate');
 								form.action += "&save=true" ;
 								form.submit();
@@ -247,27 +266,14 @@
 							else{
 								alert("Au minimum un de vos choix doit être inconditionnel.")
 							}
-						} else{
-							alert("En prenant en compte vos suppression, vous n'avez plus de choix. Mettez un choix valide ou passez votre paragraphe en conclusion.");
+						}
+						else{
+							alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
 						}
 					}
-					else{
-						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé. Pensez à vérifier vos anciens choix vérifés !");
-					}
-				}else{
-					if(checkChoiceRedige()){
-						if(checkUnconditionnal()){
-								var form = document.getElementById('formCreate');
-								form.action += "&save=true" ;
-								form.submit();
-							}
-							else{
-								alert("Au minimum un de vos choix doit être inconditionnel.")
-							}
-					}
-					else{
-						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
-					}
+				}
+				else{
+					alert("Les choix doivent tous avoir un titre.");
 				}
 			}
 			else{
@@ -350,11 +356,75 @@
 		for (let j = 1; j <= nbOldChoice; j++) {
 			buttonSupress = document.getElementById("supressOldChoix" + j.toString());
 			if(buttonSupress.checked){
-				if(document.getElementById('oldIsNotConditionnal' + i.toString()).checked){
+				if(document.getElementById('oldIsNotConditionnal' + j.toString()).checked){
 					return true;
 				}
 			}
 				
 		}
 		return false;
+	}
+
+	function checkChoice2(bool){
+		let choice;
+		let value;
+		for (let i = 1; i <= nbChoixJs; i++) {
+			choice = document.getElementById('choix' + i.toString());
+			if(choice.disabled == false){
+				value = choice.value;
+				if(value == ''){
+					return false;
+				}
+			}
+		}
+		if(bool == 1){
+			let nbOldChoice = document.getElementById("nbOldChoix").value;
+			for (let j = 1; j <= nbOldChoice; j++) {
+				buttonSupress = document.getElementById("supressOldChoix" + j.toString());
+				if(buttonSupress.checked){
+					choice = document.getElementById('oldChoix' + j.toString());
+					if(choice.disabled == false){
+						value = choice.value;
+						if(value == ''){
+							return false;
+						}
+					}
+				}	
+			}
+		}
+		return true;
+	}
+    
+	function deleteModif(){
+		var form = document.getElementById('formModify');
+			form.action += "&complement=delete" ;
+		form.submit();
+	}
+
+	function submitModify(bool){
+		if((bool == 0) || checkRequired()){
+			if(checkChoice()){
+				if(checkChoice2(0)){
+					if(checkChoiceRedige()){
+						var form = document.getElementById('formModify');
+						if(bool == 1){
+							form.action += "&complement=author" ;
+						}
+						form.submit();
+					}
+					else{
+						alert("Vous avez sélectionné deux fois ou plus le même choix rédigé, ce n'est pas autorisé.");
+					}
+				}
+				else{
+					alert("Les choix doivent tous avoir un titre.");
+				}
+			}
+			else{
+				alert("Appuyez sur le bouton 'Affichez les choix' pour mettre à jour vos choix.");
+			}
+		}
+		else{
+			alert("Votre paragraphe ne peut pas être vide.");
+		}
 	}

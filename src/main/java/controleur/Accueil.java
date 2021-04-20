@@ -116,7 +116,7 @@ public class Accueil extends HttpServlet {
     	
     	HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
-        Paragraphe paragraphe =  paragrapheDAO.getPragEnCours(user.getId());
+        Paragraphe paragraphe =  paragrapheDAO.getParagEnCours(user.getId());
     	
         List<Histoire> histoires = histoireDAO.getListeHistoiresAEcrire(user.getId());
         
@@ -138,7 +138,7 @@ public class Accueil extends HttpServlet {
     	
     	HttpSession sess = request.getSession(false);
     	Utilisateur user = (Utilisateur) sess.getAttribute("user");
-    	Paragraphe paragraphe =  paragrapheDAO.getPragEnCours(user.getId());
+    	Paragraphe paragraphe =  paragrapheDAO.getParagEnCours(user.getId());
     	
     	List<Utilisateur> users = null;
     	try {

@@ -35,7 +35,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				if(rs.wasNull()) nbchoix = null;
 				Integer idWritter = rs.getInt("idWritter");
 				if(rs.wasNull()) idWritter = null;
-                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getBoolean("valide") , nbchoix, idWritter);
+                result = new Paragraphe(idHist, numParag, rs.getString("titre"), rs.getString("texte"), rs.getBoolean("valide") , nbchoix, idWritter, rs.getInt("idModifier"));
             }
             st.close();
             conn.close();
@@ -170,7 +170,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
     	return firstParag;
     }
 	
-	public Paragraphe getPragEnCours(int idUtil) {
+	public Paragraphe getParagEnCours(int idUtil) {
 		Paragraphe result = null;
 		try (
 		     Connection conn = getConn();
@@ -197,11 +197,12 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	public boolean setWritter(int histId, int paragraphNum, int userId) {
 		try (
 				Connection conn = getConn();
-			    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idWritter=? WHERE idHist=? and numParag=?");
+			    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idWritter=?, idModifier =? WHERE idHist=? and numParag=?");
 			) {
 				ps.setInt(1, userId);
-				ps.setInt(2, histId);
-				ps.setInt(3, paragraphNum);
+				ps.setInt(2, userId);
+				ps.setInt(3, histId);
+				ps.setInt(4, paragraphNum);
 			 	ps.executeQuery();
 			 	ps.close();
 			 	conn.close();
@@ -209,6 +210,27 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
 		      }
 		return true;
+		
+	}
+	
+	public int getWritter(Paragraphe parag) {
+		int id = 0;
+		try (
+				Connection conn = getConn();
+			    PreparedStatement ps = conn.prepareStatement("SELECT idWritter FROM paragraphe WHERE idHist=? AND numParag=?");
+			) {
+				ps.setInt(1, parag.getIdHist());
+				ps.setInt(2, parag.getNumParag());
+				ResultSet rs = ps.executeQuery();
+				if(rs.next()) {
+					id = rs.getInt("idWritter");
+				}
+			 	ps.close();
+			 	conn.close();
+		      }catch (SQLException e) {
+		    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+		      }
+		return id;
 		
 	}
 	
@@ -275,7 +297,7 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 				Connection conn = getConn();
 			) {
 				Statement st = conn.createStatement();
-				st.executeQuery("UPDATE paragraphe SET idWritter=NULL, texte=NULL, nbChoix=0 WHERE idHist=" + parag.getIdHist() +" AND numParag=" + parag.getNumParag());
+				st.executeQuery("UPDATE paragraphe SET idWritter=NULL, idModifier=NULL, texte=NULL, nbChoix=0 WHERE idHist=" + parag.getIdHist() +" AND numParag=" + parag.getNumParag());
 				
 			 	conn.close();
 		      }catch (SQLException e) {
@@ -340,20 +362,35 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 	}
 	
 	public void saveParagraph(Paragraphe parag, int valide) {
-		try (
-			     Connection conn = getConn();
-						PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET valide=?, texte=? WHERE idHist=? and numParag=?");
-			     ) {
-					ps.setInt(1, valide);
-		            ps.setString(2, parag.getTexte());
-		            ps.setInt(3, parag.getIdHist());
-		            ps.setInt(4, parag.getNumParag());
-		            ps.executeQuery();
-		            ps.close();
-		            conn.close();
-		        } catch (SQLException e) {
-		            throw new DAOException("Erreur BD " + e.getMessage(), e);
-				}
+		if(valide == 1) {
+			try (
+				     Connection conn = getConn();
+							PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET valide=1, idModifier=NULL, texte=? WHERE idHist=? and numParag=?");
+				     ) {
+			            ps.setString(1, parag.getTexte());
+			            ps.setInt(2, parag.getIdHist());
+			            ps.setInt(3, parag.getNumParag());
+			            ps.executeQuery();
+			            ps.close();
+			            conn.close();
+			        } catch (SQLException e) {
+			            throw new DAOException("Erreur BD " + e.getMessage(), e);
+					}
+		} else {
+			try (
+				     Connection conn = getConn();
+							PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET texte=? WHERE idHist=? and numParag=?");
+				     ) {
+			            ps.setString(1, parag.getTexte());
+			            ps.setInt(2, parag.getIdHist());
+			            ps.setInt(3, parag.getNumParag());
+			            ps.executeQuery();
+			            ps.close();
+			            conn.close();
+			        } catch (SQLException e) {
+			            throw new DAOException("Erreur BD " + e.getMessage(), e);
+					}
+		}		
 	}
 	
 	public void setFollowing(Paragraphe parag1, Paragraphe parag2) {
@@ -634,7 +671,8 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
 		            ps.setInt(3, numParagFils);
 		            ResultSet rs = ps.executeQuery();
 		            if(rs.next() && (rs.getInt("conditionParag") != 0)) {
-		            	condition = new Paragraphe(idHist, rs.getInt("conditionParag"));
+		            	int numConditionParag = rs.getInt("conditionParag");
+		            	condition = getParagraphe(idHist, numConditionParag);
 		            }
 		            else {
 		            	condition = null;
@@ -699,5 +737,53 @@ public class ParagrapheDAO extends AbstractDataBaseDAO {
                 throw new DAOException("Erreur BD : "+sqle.getMessage(), sqle);
             }
         }
-	
+        
+        public void setModifier(Paragraphe parag, int userId) {
+        	try (
+        			Connection conn = getConn();
+        		    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idModifier =? WHERE idHist=? and numParag=?");
+        		) {
+        			ps.setInt(1, userId);
+        			ps.setInt(2, parag.getIdHist());
+        			ps.setInt(3, parag.getNumParag());
+        		 	ps.executeQuery();
+        		 	ps.close();
+        		 	conn.close();
+        	      }catch (SQLException e) {
+        	    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+        	      }
+        }
+        
+        public void deleteModifier(Paragraphe parag) {
+        	try (
+        			Connection conn = getConn();
+        		    PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idModifier = NULL WHERE idHist=? and numParag=?");
+        		) {
+        			ps.setInt(1, parag.getIdHist());
+        			ps.setInt(2, parag.getNumParag());
+        		 	ps.executeQuery();
+        		 	ps.close();
+        		 	conn.close();
+        	      }catch (SQLException e) {
+        	    	throw new DAOException("Erreur BD " + e.getMessage(), e);
+        	      }
+        }
+        
+        public void modifParag(Paragraphe parag) {
+        	try (
+				     Connection conn = getConn();
+							PreparedStatement ps = conn.prepareStatement("UPDATE paragraphe SET idModifier=NULL, texte=? WHERE idHist=? and numParag=?");
+				     ) {
+			            ps.setString(1, parag.getTexte());
+			            ps.setInt(2, parag.getIdHist());
+			            ps.setInt(3, parag.getNumParag());
+			            ps.executeQuery();
+			            ps.close();
+			            conn.close();
+			        } catch (SQLException e) {
+			            throw new DAOException("Erreur BD " + e.getMessage(), e);
+					}
+        }
+        
 }
+

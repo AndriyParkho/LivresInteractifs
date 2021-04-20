@@ -53,33 +53,49 @@ public class WriteParagraph extends HttpServlet {
     	String action = (String) request.getParameter("action");
     	if(action == null) {
     		ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
-    		Paragraphe paragToEdit = paragrapheDAO.getParagraphe(idHist, numParag);
+    		String modify = (String) request.getParameter("modify");
     		HttpSession sess = request.getSession(false);
     		Utilisateur user = (Utilisateur) sess.getAttribute("user");
-    		
-    		if(paragToEdit.getIdWritter() != null && paragToEdit.getIdWritter() != user.getId()) {
-    			response.sendRedirect("accueil?button=storyToWrite&warning=paragIndisponible");
-    		} else {    			
-    			String titreParag = request.getParameter("titreParag");
-    			Paragraphe parag = new Paragraphe(idHist, numParag);
-    			String texte = paragrapheDAO.getTexte(parag);
-    			if(texte != null) {
-    				request.setAttribute("texte", texte);
+    		Paragraphe paragToEdit = null;
+    		try {
+    			paragToEdit = paragrapheDAO.getParagraphe(idHist, numParag);
+    			if(paragToEdit.getIdWritter() == null) {
+    				paragrapheDAO.setWritter(idHist, numParag, user.getId());
     			}
-    			request.setAttribute("titreParag", titreParag);
+    	
+			} catch (DAOException e) {
+				erreurBD(request, response, e);
+			}
+    		if((paragToEdit.getIdModifier() != 0) && (paragToEdit.getIdModifier() != user.getId())) {
+    			response.sendRedirect("accueil?button=storyToWrite&warning=paragIndisponible");
+    		} else {
+    			if (modify != null){
+	    			if(paragToEdit.getIdWritter() == user.getId()) {
+	    				request.setAttribute("author", true);
+	    			}else {
+	    				request.setAttribute("author", false);
+	    			}
+	    			request.setAttribute("modify", true);
+	    			try {
+	        			paragrapheDAO.setModifier(paragToEdit, user.getId());
+	        	
+	    			} catch (DAOException e) {
+	    				erreurBD(request, response, e);
+	    			}
+    			}
+    			request.setAttribute("texte", paragToEdit.getTexte());
+    			request.setAttribute("titreParag", paragToEdit.getTitre());
     			request.setAttribute("idHist", idHist);
     			request.setAttribute("numParag", numParag);
-    			
     			try {
-    				int numChoix = paragrapheDAO.getNumChoix(parag);
+    				int numChoix = paragrapheDAO.getNumChoix(paragToEdit);
     				List<Paragraphe> choixRedige = paragrapheDAO.getParagrapheFromHist(idHist);
     				List<Paragraphe> choixCondition = paragrapheDAO.getConditionParag(idHist, numParag);
-    				List<ParagrapheConditionnel> choixDejaFait = paragrapheDAO.getFollowingParag(parag);
+    				List<ParagrapheConditionnel> choixDejaFait = paragrapheDAO.getFollowingParag(paragToEdit);
     				request.setAttribute("nbChoix", numChoix);
     				request.setAttribute("paragrapheRedige", choixRedige);
     				request.setAttribute("paragrapheCondition", choixCondition);
     				request.setAttribute("ancienChoix", choixDejaFait);
-    				paragrapheDAO.setWritter(idHist, numParag, user.getId());
     			} catch (DAOException e) {
     				erreurBD(request, response, e);
     			}
@@ -260,22 +276,85 @@ public class WriteParagraph extends HttpServlet {
                 }
             }
             response.sendRedirect("accueil");
-    	} else if(action.equals("erase")) {
-    		System.out.println("eeeeee");
-        	ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
-        	Paragraphe parag = new Paragraphe(idHist, numParagActuel);
-            try {
-            	List<Paragraphe> paragToDelete = paragrapheDAO.getParagToDelete(parag);
-            	for(Paragraphe paraDelete : paragToDelete) {
-            		paragrapheDAO.delete(paraDelete);
+    	}
+    	else if (action.equals("modify")) {
+    		Paragraphe paragActuel;
+    		String complement = (String) request.getParameter("complement");
+    	    if((complement != null ) && complement.equals("delete")) {
+    	    	paragActuel = new Paragraphe(idHist, numParagActuel);
+    			try {
+    				paragDao.deleteModifier(paragActuel);
+    			} catch (DAOException e) {
+    				erreurBD(request, response, e);
+    			}
+    		} else {
+    			if((complement != null ) && complement.equals("author")) {
+    				String titre = request.getParameter("titre");
+    	            String story = request.getParameter("story");
+    				paragActuel = new Paragraphe(idHist, numParagActuel, titre, story);
+    				try {
+        				paragDao.modifParag(paragActuel);
+        			} catch (DAOException e) {
+        				erreurBD(request, response, e);
+        			}
+        		}
+    			else {
+    				paragActuel = new Paragraphe(idHist, numParagActuel);
+    			}
+    			int nbChoix = Integer.parseInt(request.getParameter("nbChoix"));
+    			String newChoixTitle;
+            	int oldChoixNum;
+            	int numParagCondi;
+            	int nbParagMax = 1;
+            	try {
+                	nbParagMax = paragDao.getMaxNbParag(idHist);
+                } catch (DAOException e) {
+                	erreurBD(request, response, e);
+                }
+            	Paragraphe parag;
+            	Paragraphe paraCondition;
+    			for(int i = 1; i <= nbChoix; i++) {
+            		newChoixTitle = request.getParameter("choix" + Integer.toString(i));
+            		if((request.getParameter("paragrapheCondition" + Integer.toString(i))) != null) {
+            			numParagCondi = Integer.parseInt(request.getParameter("paragrapheCondition" + Integer.toString(i)));
+            			paraCondition = new Paragraphe(idHist, numParagCondi);
+            		} else {
+            			paraCondition = null;
+            		}
+            		if(newChoixTitle != null) {
+            			nbParagMax++;
+            			parag = new Paragraphe(idHist, nbParagMax, newChoixTitle);
+            			try {
+                    		paragDao.setParagraphe(parag);
+                    		if(paraCondition == null) {
+                    			paragDao.setFollowing(paragActuel, parag);
+                    		}
+                    		else {
+                    			paragDao.setFollowing(paragActuel, parag, paraCondition);
+                    		}
+                        } catch (DAOException e) {
+                        	erreurBD(request, response, e);
+                        }
+            		}
+            		else {
+            			oldChoixNum = Integer.parseInt(request.getParameter("paragrapheRedige" + Integer.toString(i)));
+            			parag = new Paragraphe(idHist, oldChoixNum);
+            			try {
+            				if(paraCondition == null) {
+                    			paragDao.setFollowing(paragActuel, parag);
+                    		}
+                    		else {
+                    			paragDao.setFollowing(paragActuel, parag, paraCondition);
+                    		}
+                        } catch (DAOException e) {
+                        	erreurBD(request, response, e);
+                        }
+            		}
             	}
-            	paragrapheDAO.resetParagWrite(parag);
-            } catch (DAOException e) {
-            	erreurBD(request, response, e);
-            }
-            response.sendRedirect("accueil"); 
-        }
-    	
+    			
+    		}
+    	    response.sendRedirect("accueil");
+    	}
     	else {
             invalidParameters(request, response);
         }

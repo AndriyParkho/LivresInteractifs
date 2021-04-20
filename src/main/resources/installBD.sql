@@ -24,6 +24,7 @@ CREATE TABLE Paragraphe (
        valide NUMBER(1,0) DEFAULT 0,
        nbChoix integer DEFAULT 0,
        idWritter integer REFERENCES Utilisateur(idUtil),
+       idModifier integer REFERENCES Utilisateur(idUtil),
        constraint pkParag PRIMARY KEY (numParag, idHist)
 );
 
@@ -53,3 +54,4 @@ CREATE TABLE IsFollowing (
        CONSTRAINT fkCondParag FOREIGN KEY(idHistParag, conditionParag) REFERENCES Paragraphe(idhist, numParag),
        CONSTRAINT pkIsFollowing PRIMARY KEY (idHistParag, numParagPere, numParagFils)
 );
+

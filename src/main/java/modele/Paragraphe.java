@@ -13,6 +13,20 @@ public class Paragraphe {
 	private ArrayList<Paragraphe> paragSuiv = new ArrayList<Paragraphe>();
 	private ArrayList<Integer> condParagSuiv = new ArrayList<Integer>();
 	private Integer idWritter;
+	private Integer idModifier;
+	
+	
+	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, Integer nbChoix, Integer idWritter, Integer idModifier) {
+		super();
+		this.idHist = idHist;
+		this.numParag = numParag;
+		this.titre = titre;
+		this.texte = texte;
+		this.valide = valide;
+		this.nbChoix = nbChoix;
+		this.idWritter = idWritter;
+		this.idModifier = idModifier;
+	}
 	
 	public Paragraphe(int idHist, int numParag, String titre, String texte, boolean valide, Integer nbChoix, Integer idWritter) {
 		super();
@@ -24,7 +38,7 @@ public class Paragraphe {
 		this.nbChoix = nbChoix;
 		this.idWritter = idWritter;
 	}
-	
+
 	public Paragraphe(int idHist, int numParag, String titre, String texte, Integer nbChoix) {
 		super();
 		this.idHist = idHist;
@@ -87,6 +101,10 @@ public class Paragraphe {
 	
 	public String getTitre() {
 		return titre;
+	}
+
+	public Integer getIdModifier() {
+		return idModifier;
 	}
 
 	public void addParagSuiv(Paragraphe parag) {
