@@ -27,6 +27,7 @@ public class WriteStory extends HttpServlet {
 
 	private Paragraphe currentParag;
 	private Paragraphe firstParag;
+	private List<Paragraphe> choixParagSuite = new ArrayList<Paragraphe>();
 	
     @Resource(name = "jdbc/projetWeb")
     private DataSource ds;
@@ -64,7 +65,6 @@ public class WriteStory extends HttpServlet {
         
         ParagrapheDAO paragrapheDAO = new ParagrapheDAO(ds);
         
-        List<Paragraphe> choixParagSuite = new ArrayList<Paragraphe>();
         List<Paragraphe> choixParagAEcrire = new ArrayList<Paragraphe>();
         List<Paragraphe> choixParagVerouille = new ArrayList<Paragraphe>();
         
@@ -76,9 +76,11 @@ public class WriteStory extends HttpServlet {
         	else if(currentParag.getNumParag() != numParagPere) {
         		HashMap<Integer, Paragraphe> dicoParag = new HashMap<Integer, Paragraphe>();
         		currentParag = firstParag.findParag(numParagPere, dicoParag).getParagSuiv().get(numChoix);
+        		choixParagSuite = new ArrayList<Paragraphe>();
         	}
         	else {
-        		currentParag = currentParag.getParagSuiv().get(numChoix);
+        		currentParag = choixParagSuite.get(numChoix);
+        		choixParagSuite = new ArrayList<Paragraphe>();
         	}
         	for(Paragraphe parag: currentParag.getParagSuiv()) {
         		if(parag.getIdWritter() == null) {

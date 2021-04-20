@@ -123,6 +123,7 @@ public class WriteParagraph extends HttpServlet {
     
     @Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	request.setCharacterEncoding("UTF-8");
     	int idHist = Integer.parseInt(request.getParameter("idHist"));
     	int numParagActuel = Integer.parseInt(request.getParameter("numParag"));
     	ParagrapheDAO paragDao = new ParagrapheDAO(ds);
