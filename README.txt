@@ -5,8 +5,8 @@ JEZEQUEL-ROYER Louis
 PARKHOMENKO Andriy
 
 Conseils d'utilisation :
-1- Modifier le password et username dans src/main/webapp/META-INF/context.xml par vos identifiants de adminer
-2- Exécuter dans netbeans ou sur adminer le script sql : src/main/resources/install_bd.sql
+1- Pour pouvoir tester le site il faut créer un fichier webapp/META-INF/context.xml et se connecter à une base de donnée.
+2- Exécuter le script sql : src/main/resources/install_bd.sql
 3- Démarrer votre serveur Tomcat dans netbeans ou eclipse.
 4- Lancer dans votre navigateur préféré http://localhost:8080/projetWeb/
 5- Pour vous connecter, vous pouvez utiliser l'un des identifiants suivants :
